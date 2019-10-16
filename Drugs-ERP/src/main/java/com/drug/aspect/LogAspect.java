@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 public class LogAspect {
 	//前置通知：调业务逻辑之前
+	//uiuhjiu
    public  void before(JoinPoint joinPoint){
 	   //类路径：调用的哪个类
 	   String className=joinPoint.getTarget().getClass().getName();
