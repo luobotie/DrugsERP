@@ -24,7 +24,8 @@ public class MenuController {
 	@ResponseBody
 	public Map<String,Object> queryByMenu(){
 		List<MenuDO> menuList = menuBiz.queryByMenu();
-		menuList.forEach(System.out::println);
+		//menuList.forEach(System.out::println);
+		menuList.forEach((t) -> System.out.println(t));
 		Map<String,Object> map = ToolClass.responseByData();
 		map.put("data", menuList);
 		return map;
