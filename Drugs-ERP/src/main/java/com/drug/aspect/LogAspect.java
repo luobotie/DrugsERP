@@ -19,7 +19,7 @@ public class LogAspect {
 	//前置通知：调业务逻辑之前
 	//检验同步问题
    public  void before(JoinPoint joinPoint){
-	   //类路径：调用的哪个类
+	   //类路径：调用的哪个类。
 	   String className=joinPoint.getTarget().getClass().getName();
 	   //调用了那个方法：方法名称
 	   String methodName=joinPoint.getSignature().getName();
