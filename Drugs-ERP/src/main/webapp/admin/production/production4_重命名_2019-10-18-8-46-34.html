@@ -3,25 +3,26 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-		<title>layout 废料管理</title>
+		<title>layout 退料管理</title>
 		<link rel="stylesheet" href="../layui/css/layui.css">
+	
 	</head>
 	<body class="layui-layout-body">
 		<table class="layui-hide" id="test" lay-filter="test"></table>
 		<script type="text/html" id="toolbarDemo">
-	<div class="layui-inline">
-	<button type="button" id="btn" class="layui-btn layui-btn-sm" lay-event="getCheckData">审核废料单</button>
-	  <div class="layui-inline">
-	  <label class="layui-form-label" style="width:130px">选择审核状态：</label>
-	  <div class="layui-input-inline">
-	    <select name="modules" lay-verify="required" lay-search="">
-	      <option value="">直接选择或搜索选择</option>
-	      <option value="1">已审核</option>
-	      <option value="2">未审核</option>
-	    </select>
-	  </div>
-	</div>
-  </div>
+			  <div class="layui-inline">
+<button type="button" id="btn" class="layui-btn layui-btn-sm" lay-event="getCheckData">审核退料单</button>
+    <div class="layui-inline">
+      <label class="layui-form-label" style="width:130px">选择审核状态：</label>
+      <div class="layui-input-inline">
+        <select name="modules" lay-verify="required" lay-search="">
+          <option value="">直接选择或搜索选择</option>
+          <option value="1">已审核</option>
+          <option value="2">未审核</option>
+        </select>
+      </div>
+    </div>
+    </div>
 </script>
 
 		<script type="text/html" id="barDemo">
@@ -34,27 +35,25 @@
 		<script>
 	
 	
-layui.use(['table','form','laydate'], function(){
+layui.use(['table','form'], function(){
   var table = layui.table;
   var form = layui.form;
   var $ = layui.$;
-  var laydate = layui.laydate;
-    laydate.render({
-    elem: '#test11'
-    ,format: 'yyyy年MM月dd日'
-  });
   table.render({
     elem: '#test'
     ,url:'../json/Produced.json'
     ,toolbar: '#toolbarDemo'
-    ,title: '废料数据表'
+    ,title: '退料数据表'
     ,cols: [[
       {type: 'checkbox', fixed: 'left'}
-      ,{field:'id', title:'ID', fixed: 'left', unresize: true, sort: true}
-      ,{field:'name', title:'废料名称', edit: 'text'}
-      ,{field:'number', title:'废料数量', sort: true}
-      ,{field:'joinTime', title:'加入时间'}
-	  ,{field:'state', title:'处理状态'}
+      ,{field:'id', title:'退料单编号', fixed: 'left', unresize: true, sort: true}
+      ,{field:'id2', title:'生产订单编号', edit: 'text'}
+      ,{field:'time', title:'申请时间'}
+	  ,{field:'state', title:'审核状态'}
+	  ,{field:'state2', title:'入库状态', sort: true}
+	  ,{field:'applicant', title:'申请人'}
+	  ,{field:'type', title:'入库类型'}
+	  ,{field:'auditor', title:'审核人'}
       ,{fixed: 'right', title:'操作', toolbar: '#barDemo'}
     ]]
     ,page: true
@@ -75,10 +74,10 @@ layui.use(['table','form','laydate'], function(){
         type:1,
         title: '确认',
         area:['400px','20%'],
-        content:'您确定审核此条退料单吗？',
-		btn:['确认','取消']
-		,yes: function(index, layero){
-			alert("审核成功！")
+        content:'您确定审核此条废料单吗？',
+		btn:['确认','取消'],
+		yes: function(index, layero){
+			alert("审核成功！");
 			}
         });
       break;
