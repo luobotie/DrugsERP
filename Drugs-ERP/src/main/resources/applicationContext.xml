@@ -49,7 +49,6 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<!-- 如果需要扫描多个包，中间用逗号隔开 -->
 		<!-- basePackage:基础包 凡是这个包下面的接口：都扫描 -->
-		<property name="basePackage" value="com.drug"></property>
 		<property name="basePackage" value="com.drug.*.mapper"></property>
 		<property name="sqlSessionFactory" ref="sqlSessionFactory"></property>
 	</bean>
