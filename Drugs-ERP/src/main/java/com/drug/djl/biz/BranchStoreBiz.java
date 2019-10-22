@@ -1,4 +1,4 @@
-package com.drugs.djl.biz;
+package com.drug.djl.biz;
 /**
  * 
  * 描述:分店信息业务逻辑层接口
