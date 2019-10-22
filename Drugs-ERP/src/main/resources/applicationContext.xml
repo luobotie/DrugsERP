@@ -43,7 +43,7 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<!-- 实体类的别名：默认用类名作为：mapper映射文件中的别名 -->
-		<property name="typeAliasesPackage" value="com.*.entity"></property>
+		<property name="typeAliasesPackage" value="com.drug"></property>
 	</bean>
 	<!--接口扫描：mapper接口开发 -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
