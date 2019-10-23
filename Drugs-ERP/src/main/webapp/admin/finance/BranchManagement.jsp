@@ -15,7 +15,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
  <link rel="stylesheet" href="../layui/css/layui.css" media="all">
   <script src="../layui/layui.js"></script>
-   <script type="text/javascript" src="../js/jquery-3.4.1.min.js"></script>
+  <script type="text/javascript" src="../../js/jquery-3.4.1.min.js"></script>
 <script type="text/javascript" >
 var cityList = new Array();
 cityList['北京市'] = ['朝阳区', '东城区', '西城区', '海淀区', '宣武区', '丰台区', '怀柔', '延庆', '房山'];
@@ -63,19 +63,23 @@ layui.use(['table','form','laydate'], function(){
   });
   table.render({
     elem: '#test',//table Id
-    url:'add1.do',//路劲
+    url:'../../selectAllBranchStore.do',//路径
     toolbar: '#toolbarDemo',
     title: '采购订单',//标题
+    page: true ,//启动分页
+    limit:5,
     limits: [5, 10, 15], //设置每页显示数
     cols: [[
     	{type: 'checkbox', fixed: 'left'},
-        {field:'stuId', title:'分店编号', fixed: 'left', unresize: true},
-        {field:'thId', title:'分店名称', },
-        {field:'stuName', title:'分店地址',edit: 'text', },
-        {field:'stuName', title:'签订时间'},
-        {field:'stuName', title:'合同状态'},
+        {field:'bsiId', title:'分店编号', fixed: 'left', unresize: true},
+        {field:'bsName', title:'分店名称', },
+        {field:'bslocation', title:'分店地址',edit: 'text', },
+        {field:'bsopendate', title:'签订时间'},
+        {field:'contact', title:'联系方式'},
+        {field:'email', title:'邮箱'},
+        {field:'regisiteredamount', title:'注册金额'},
     ]]
-    ,page: true //启动分页
+    
   });
   
    //单元格编辑事件
@@ -137,7 +141,6 @@ layui.use(['table','form','laydate'], function(){
         }
       break;
       case 'audit':
-    	 
                layer.open({
                    title:'新增分店',//标题
                    type:1,//样式

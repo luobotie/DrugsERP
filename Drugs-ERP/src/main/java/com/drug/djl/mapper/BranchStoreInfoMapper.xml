@@ -2,6 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <!--命名空间  实体类路径 包名点类名    mapper开发模式  接口的路径-->
 <mapper namespace="com.drug.djl.mapper.BranchStoreInfoMapper">
-	
+	<select id="selectALLBranchStores" resultType="Integer">
+		select count(*) from branchStoreInfo
+	</select>
+	<select id="selectAllBranchStore" resultType="BranchStoreInfo" parameterType="Map">
+		SELECT * FROM branchStoreInfo limit #{page},#{limit}
+	</select>
 	
 </mapper>
