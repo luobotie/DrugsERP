@@ -18,7 +18,7 @@ public class LoginController {
 	private EmployeeBiz biz;
 	 @RequestMapping("/login.do")
 	 @ResponseBody
-     public String login(String loginUsername,String loginPassword ){
+     public boolean login(String loginUsername,String loginPassword ){
 			// 明文123456
 			// 生成密文
 			String pwd = DigestUtils.md5DigestAsHex(loginPassword.getBytes());
@@ -27,9 +27,9 @@ public class LoginController {
 			if(login!=null){
 				HttpSession session = WebUtils.getHttpSession();
 				session.setAttribute("employee", login);
-				return "true";
+				return true;
 			}else {
-				return "false";
+				return false;
 			}
 			
 	 }

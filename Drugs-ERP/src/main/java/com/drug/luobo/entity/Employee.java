@@ -1,13 +1,11 @@
 package com.drug.luobo.entity;
 
-import org.springframework.stereotype.Component;
 
-@Component
 public class Employee {
-	private int employeeId;  //员工主键id
+	private Integer employeeId;  //员工主键id
 	private String	employeeName;//	员工姓名
 	private String	employeePwd;//员工密码
-	private int 	employeeAge;//员工年龄
+	private Integer	employeeAge;//员工年龄
 	private String	employeeSex;//员工性别
 	private String	employeeTel;//联系方式
 	private String	idCard;//身份证号码
@@ -16,12 +14,14 @@ public class Employee {
 	private String	studyUndergo;//	学历
 	private String	visibles;	//是否显示
 	private String	describe;//	员工描述
-	private String	roleId;//角色表Id
-	private String	depId;//部门表外键
-	public int getEmployeeId() {
+	private Integer	roleId;//角色表Id
+	private Integer	depId;//部门表外键
+	private String joinTime; //入职时间
+     
+	public Integer getEmployeeId() {
 		return employeeId;
 	}
-	public void setEmployeeId(int employeeId) {
+	public void setEmployeeId(Integer employeeId) {
 		this.employeeId = employeeId;
 	}
 	public String getEmployeeName() {
@@ -36,10 +36,10 @@ public class Employee {
 	public void setEmployeePwd(String employeePwd) {
 		this.employeePwd = employeePwd;
 	}
-	public int getEmployeeAge() {
+	public Integer getEmployeeAge() {
 		return employeeAge;
 	}
-	public void setEmployeeAge(int employeeAge) {
+	public void setEmployeeAge(Integer employeeAge) {
 		this.employeeAge = employeeAge;
 	}
 	public String getEmployeeSex() {
@@ -90,17 +90,23 @@ public class Employee {
 	public void setDescribe(String describe) {
 		this.describe = describe;
 	}
-	public String getRoleId() {
+	public Integer getRoleId() {
 		return roleId;
 	}
-	public void setRoleId(String roleId) {
+	public void setRoleId(Integer roleId) {
 		this.roleId = roleId;
 	}
-	public String getDepId() {
+	public Integer getDepId() {
 		return depId;
 	}
-	public void setDepId(String depId) {
+	public void setDepId(Integer depId) {
 		this.depId = depId;
+	}
+	public String getJoinTime() {
+		return joinTime;
+	}
+	public void setJoinTime(String joinTime) {
+		this.joinTime = joinTime;
 	}
 	public Employee() {
 		super();
@@ -110,6 +116,8 @@ public class Employee {
 		this.employeeName = employeeName;
 		this.employeePwd = employeePwd;
 	}
+	
+	
 	 
 	
 }
