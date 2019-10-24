@@ -29,4 +29,11 @@ public interface BranchStoreBiz {
 	 * 2019年10月23日上午11:06:08
 	 */
 	public Integer selectAllBranchStores();
+	
+	/**
+	 * 描述:添加分店信息表
+	 * @return 影响行数
+	 * 2019年10月23日下午2:41:22
+	 */
+	public int addBranchStore() ;
 }

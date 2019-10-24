@@ -2,11 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <!--命名空间  实体类路径 包名点类名    mapper开发模式  接口的路径-->
 <mapper namespace="com.drug.djl.mapper.BranchStoreInfoMapper">
+	<!-- 获得分店信息表总行数 -->
 	<select id="selectALLBranchStores" resultType="Integer">
 		select count(*) from branchStoreInfo
 	</select>
+	<!-- 从页面获得页数与每页显示数 -->
 	<select id="selectAllBranchStore" resultType="BranchStoreInfo" parameterType="Map">
 		SELECT * FROM branchStoreInfo limit #{page},#{limit}
 	</select>
-	
+	<!-- 添加分店信息 -->
+	<insert id="addBranchStore" parameterType="BranchStoreInfo">
+	INSERT INTO branchStoreInfo
+	(bsName,bslocationPro,bslocationCity,bslocation,bsopendate,empTable,crewSize,contact,email,regisiteredamount,standByField1,standByField2) 
+	VALUES(#{bsName},#{bslocationPro},#{bslocationCity},#{bslocation},#{bsopendate},#{empTable},#{crewSize},#{contact},#{email},#{regisiteredamount},#{standByField1},#{standByField2})
+	</insert>
 </mapper>

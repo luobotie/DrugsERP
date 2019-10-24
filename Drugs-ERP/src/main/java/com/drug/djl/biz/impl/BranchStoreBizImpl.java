@@ -33,4 +33,9 @@ public class BranchStoreBizImpl implements BranchStoreBiz {
 		return branchInfoMapper.selectALLBranchStores();
 	}
 
+	@Override
+	public int addBranchStore() {
+		return branchInfoMapper.addBranchStore();
+	}
+
 }

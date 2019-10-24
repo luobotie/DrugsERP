@@ -20,7 +20,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 var cityList = new Array();
 cityList['北京市'] = ['朝阳区', '东城区', '西城区', '海淀区', '宣武区', '丰台区', '怀柔', '延庆', '房山'];
 cityList['上海市'] = ['宝山区', '长宁区', '丰贤区', '虹口区', '黄浦区', '青浦区', '南汇区', '徐汇区', '卢湾区'];
-cityList['广州省'] = ['广州市', '惠州市', '汕头市', '珠海市', '佛山市', '中山市', '东莞市'];
+cityList['广东省'] = ['广州市', '惠州市', '汕头市', '珠海市', '佛山市', '中山市', '东莞市'];
 cityList['深圳市'] = ['福田区', '罗湖区', '盐田区', '宝安区', '龙岗区', '南山区', '深圳周边'];
 cityList['重庆市'] = ['俞中区', '南岸区', '江北区', '沙坪坝区', '九龙坡区', '渝北区', '大渡口区', '北碚区'];
 cityList['天津市'] = ['和平区', '河西区', '南开区', '河北区', '河东区', '红桥区', '塘古区', '开发区'];
@@ -55,11 +55,11 @@ window.onload = allProvince;
 layui.use(['table','form','laydate'], function(){
   var table = layui.table;
   var form = layui.form;
- var laydate = layui.laydate;
+  var laydate = layui.laydate;
   
   //常规用法
   laydate.render({
-    elem: '#test2'
+    elem: '#openDate',
   });
   table.render({
     elem: '#test',//table Id
@@ -67,17 +67,20 @@ layui.use(['table','form','laydate'], function(){
     toolbar: '#toolbarDemo',
     title: '采购订单',//标题
     page: true ,//启动分页
-    limit:5,
+    limit:5, //每页显示数默认
     limits: [5, 10, 15], //设置每页显示数
     cols: [[
     	{type: 'checkbox', fixed: 'left'},
         {field:'bsiId', title:'分店编号', fixed: 'left', unresize: true},
         {field:'bsName', title:'分店名称', },
-        {field:'bslocation', title:'分店地址',edit: 'text', },
+        {field:'bslocationPro', title:'所在省',edit: 'text', },
+        {field:'bslocationCity', title:'所在城市',edit: 'text', },
         {field:'bsopendate', title:'签订时间'},
         {field:'contact', title:'联系方式'},
         {field:'email', title:'邮箱'},
         {field:'regisiteredamount', title:'注册金额'},
+        {field:'standByField1', title:'是否签订合同'},
+        {fixed: 'right', title:'操作', toolbar: '#barDemo'}
     ]]
     
   });
@@ -160,6 +163,7 @@ layui.use(['table','form','laydate'], function(){
   table.on('tool(test)', function(obj){
 	  //得到选择的行的信息
     var data = obj.data;
+	  alert(data.bsiId);
 	  //判断是否选中删除
     if(obj.event === 'del'){
       layer.confirm('真的删除行么', function(index){
@@ -174,8 +178,8 @@ layui.use(['table','form','laydate'], function(){
 				}
 			})    
       });
-      //入库
-    } else if(obj.event === 'putin'){
+      //编辑按钮
+    } else if(obj.event === 'edit'){
     	
     }
   });
@@ -187,64 +191,75 @@ layui.use(['table','form','laydate'], function(){
 </script>
 </head>
       <table class="layui-hide" id="test1" lay-filter="test"></table>
-<table class="layui-hide" id="test" lay-filter="test"></table>
+	  <table class="layui-hide" id="test" lay-filter="test"></table>
 
 
 
-<script type="text/html" id="toolbarDemo">
-<div class="layui-input-inline">
- <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="audit">新增</button>
-      </div>
-</script>	
+	<script type="text/html" id="toolbarDemo">
+		<div class="layui-input-inline">
+ 		<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="audit">新增</button>
+      	</div>
+	</script>	
  
-<script type="text/html" id="barDemo"> 
-</script>
+	<!-- 每一行的工具toolbar -->
+	<script type="text/html" id="barDemo">
+  		<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+ 		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+	</script>
      
 <form class="layui-form" lay-filter="example" id="form2" style="display:none;align-content:center;" >
           
            
-          <div class="layui-form-item">
+   <div class="layui-form-item">
     <label class="layui-form-label">分店名称</label>
     <div class="layui-input-inline">
-      <input type="text" name="username" lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
+      <input type="text" name="bsName" lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
     </div>
   </div>
   
   <div class="layui-form-item">
     <label class="layui-form-label">请选择地区</label>
     <div class="layui-input-inline">
-     <select  id="province123"  onchange="changeCity()" lay-filter="cs">
+     <select  id="province123" name="bslocationPro"  onchange="changeCity()" lay-filter="cs">
         <option>请选择省/城市</option>
       </select> 
     </div>
     <div class="layui-input-inline">
-      <select  id="city123">
+      <select  id="city123" name="bslocationCity">
         <option>请选择城市/地区</option>
       </select>
     </div>
   </div>
-   <div class="layui-form-item">
-   <label class="layui-form-label">详细地址</label>
-    <div class="layui-input-inline">
-      <input type="text" name="username" style="width:300px;" lay-verify="required" placeholder="地址" autocomplete="off" class="layui-input">
-    </div>
-  </div>
+  
+  <div class="layui-form-item">
+		<label class="layui-form-label">详细地址</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="bslocation" placeholder="详细地址">
+		</div>
+	</div>
+	
+ 	<div class="layui-form-item">
+		<label class="layui-form-label">开业时间</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" id="openDate" name="bsopendate" placeholder="yyyy-MM-dd">
+		</div>
+	</div>
+  
   <div class="layui-form-item">
     <label class="layui-form-label">签订合同</label>
     <div class="layui-input-inline">
-      <select name="quiz1">
-        <option value="">是否签订</option>
+      <select name="standByField1" placeholder="是否签订">
         <option value="签订">签订</option>
-        <option value="不签订">不签订</option>
+        <option value="未签订">未签订</option>
       </select>
     </div>
-    </div>
+   </div>
    <div class="layui-form-item">
-    <br>
-    <div class="layui-input-block">
-     <button type="button" class="layui-btn layui-btn-sm layui-btn-normal" style="position:absolute;left:110px;" onclick="gitAudit();" >提交</button>
-    </div>
-  </div>
+   		<br>
+    	<div class="layui-input-block">
+     		<button type="submit" class="layui-btn layui-btn-sm layui-btn-normal" style="position:absolute;left:110px;" >提交</button>
+    	</div>
+  	</div>
    
 </form>  
  

@@ -1,6 +1,10 @@
 package com.drug.djl.entity;
 
+import java.util.Date;
+
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 /**
  * 
@@ -13,8 +17,11 @@ import org.springframework.stereotype.Component;
 public class BranchStoreInfo {
 	private Integer bsiId;//分店主键
 	private String bsName;//分店名称
-	private String bslocation; // 地址
-	private String bsopendate; //开业时间
+	private String bslocationPro ;// 所在省
+	private String bslocationCity ;//所在市
+	private String bslocation;//详细地址
+	@JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+	private Date bsopendate; //开业时间
 	private Integer  empTable; // (外键)指向员工表(店长)
 	private Integer crewSize;//员工人数
 	private String contact;	//联系方式
@@ -26,27 +33,14 @@ public class BranchStoreInfo {
 	public BranchStoreInfo() {
 	}
 	
-	/**
-	 * 
-	 * constructors
-	 * @param bsiId
-	 * @param bsName
-	 * @param bslocation
-	 * @param bsopendate
-	 * @param empTable
-	 * @param crewSize
-	 * @param contact
-	 * @param email
-	 * @param regisiteredamount
-	 * @param standByField1
-	 * @param standByField2
-	 */
-	public BranchStoreInfo(Integer bsiId, String bsName, String bslocation, String bsopendate, Integer empTable,
-			Integer crewSize, String contact, String email, double regisiteredamount, String standByField1,
-			String standByField2) {
+	public BranchStoreInfo(Integer bsiId, String bsName, String bslocationPro, String bslocationCity, String bslocation,
+			Date bsopendate, Integer empTable, Integer crewSize, String contact, String email,
+			double regisiteredamount, String standByField1, String standByField2) {
 		super();
 		this.bsiId = bsiId;
 		this.bsName = bsName;
+		this.bslocationPro = bslocationPro;
+		this.bslocationCity = bslocationCity;
 		this.bslocation = bslocation;
 		this.bsopendate = bsopendate;
 		this.empTable = empTable;
@@ -57,6 +51,36 @@ public class BranchStoreInfo {
 		this.standByField1 = standByField1;
 		this.standByField2 = standByField2;
 	}
+
+
+	public String getBslocationPro() {
+		return bslocationPro;
+	}
+
+
+	public void setBslocationPro(String bslocationPro) {
+		this.bslocationPro = bslocationPro;
+	}
+
+
+	public String getBslocationCity() {
+		return bslocationCity;
+	}
+
+
+	public void setBslocationCity(String bslocationCity) {
+		this.bslocationCity = bslocationCity;
+	}
+
+
+	public String getBslocation() {
+		return bslocation;
+	}
+
+	public void setBslocation(String bslocation) {
+		this.bslocation = bslocation;
+	}
+
 	public Integer getBsiId() {
 		return bsiId;
 	}
@@ -69,16 +93,11 @@ public class BranchStoreInfo {
 	public void setBsName(String bsName) {
 		this.bsName = bsName;
 	}
-	public String getBslocation() {
-		return bslocation;
-	}
-	public void setBslocation(String bslocation) {
-		this.bslocation = bslocation;
-	}
-	public String getBsopendate() {
+	
+	public Date getBsopendate() {
 		return bsopendate;
 	}
-	public void setBsopendate(String bsopendate) {
+	public void setBsopendate(Date bsopendate) {
 		this.bsopendate = bsopendate;
 	}
 	public Integer getEmpTable() {
