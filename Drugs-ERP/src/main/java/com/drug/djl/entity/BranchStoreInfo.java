@@ -20,8 +20,8 @@ public class BranchStoreInfo {
 	private String bslocationPro ;// 所在省
 	private String bslocationCity ;//所在市
 	private String bslocation;//详细地址
-	@JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
-	private Date bsopendate; //开业时间
+	//@JsonFormat(pattern="yyyy-MM-dd",timezone="GMT+8")
+	private String bsopendate; //开业时间
 	private Integer  empTable; // (外键)指向员工表(店长)
 	private Integer crewSize;//员工人数
 	private String contact;	//联系方式
@@ -30,28 +30,6 @@ public class BranchStoreInfo {
 	private String standByField1;//备用字段1
 	private String standByField2;// 备用字段2
 	
-	public BranchStoreInfo() {
-	}
-	
-	public BranchStoreInfo(Integer bsiId, String bsName, String bslocationPro, String bslocationCity, String bslocation,
-			Date bsopendate, Integer empTable, Integer crewSize, String contact, String email,
-			double regisiteredamount, String standByField1, String standByField2) {
-		super();
-		this.bsiId = bsiId;
-		this.bsName = bsName;
-		this.bslocationPro = bslocationPro;
-		this.bslocationCity = bslocationCity;
-		this.bslocation = bslocation;
-		this.bsopendate = bsopendate;
-		this.empTable = empTable;
-		this.crewSize = crewSize;
-		this.contact = contact;
-		this.email = email;
-		this.regisiteredamount = regisiteredamount;
-		this.standByField1 = standByField1;
-		this.standByField2 = standByField2;
-	}
-
 
 	public String getBslocationPro() {
 		return bslocationPro;
@@ -94,12 +72,15 @@ public class BranchStoreInfo {
 		this.bsName = bsName;
 	}
 	
-	public Date getBsopendate() {
+	
+	public String getBsopendate() {
 		return bsopendate;
 	}
-	public void setBsopendate(Date bsopendate) {
+
+	public void setBsopendate(String bsopendate) {
 		this.bsopendate = bsopendate;
 	}
+
 	public Integer getEmpTable() {
 		return empTable;
 	}

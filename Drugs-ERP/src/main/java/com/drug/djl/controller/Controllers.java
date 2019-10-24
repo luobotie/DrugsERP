@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.drug.djl.biz.BranchStoreBiz;
-import com.drug.djl.biz.impl.BranchStoreBizImpl;
 import com.drug.djl.entity.BranchStoreInfo;
 
 /**
@@ -23,7 +22,7 @@ import com.drug.djl.entity.BranchStoreInfo;
 @RestController
 public class Controllers {
 	@Autowired
-	private BranchStoreBizImpl branchStoreBiz;
+	private BranchStoreBiz branchStoreBiz;
 	
 	/**
 	 * 
@@ -52,8 +51,9 @@ public class Controllers {
 	
 	@RequestMapping("addBrachStore.do")
 	public int addBrachStore(BranchStoreInfo bStoreInfo) {
-		
-		
+		System.out.println(bStoreInfo.getBslocationPro());
+		int row=branchStoreBiz.addBranchStore(bStoreInfo);
+		return row;
 	}
 	
 	

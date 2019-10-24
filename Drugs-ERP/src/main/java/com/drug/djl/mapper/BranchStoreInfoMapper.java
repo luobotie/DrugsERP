@@ -35,5 +35,5 @@ public interface BranchStoreInfoMapper {
 	 * @return 影响行数
 	 * 2019年10月23日下午2:41:22
 	 */
-	public int addBranchStore() ;
+	public int addBranchStore(BranchStoreInfo bStoreInfo) ;
 }

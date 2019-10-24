@@ -34,8 +34,16 @@ public class BranchStoreBizImpl implements BranchStoreBiz {
 	}
 
 	@Override
-	public int addBranchStore() {
-		return branchInfoMapper.addBranchStore();
+	public int addBranchStore(BranchStoreInfo bStoreInfo) {
+		int row=0;
+		row=branchInfoMapper.addBranchStore(bStoreInfo);
+		if (row ==1 ) {
+			System.out.println("成功添加"+row+"行");
+			return row;
+		} else {
+			System.out.println("添加失败");
+			return row;
+		}
 	}
 
 }

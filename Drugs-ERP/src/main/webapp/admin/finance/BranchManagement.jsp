@@ -57,7 +57,7 @@ layui.use(['table','form','laydate'], function(){
   var form = layui.form;
   var laydate = layui.laydate;
   
-  //常规用法
+  //常规用法,时间选择器
   laydate.render({
     elem: '#openDate',
   });
@@ -113,41 +113,16 @@ layui.use(['table','form','laydate'], function(){
 			form.render();
   });      
         
-  
+  var inw;
   //头工具栏事件
   table.on('toolbar(test)', function(obj){
     var checkStatus = table.checkStatus(obj.config.id);
     switch(obj.event){
-    case 'getSearch':
-    	var time1= $("#test2").val();
-    		 table.reload('test', {
-      			  where: {time:time1} 
-      			});
-    		 laydate.render({
-    			    elem: '#test2'
-    			  });
-      break;
-      case 'getCheckData':
-        var data = checkStatus.data;
-        if(JSON.stringify(data)=="[]"){
-        	layer.msg("请选择审核的行");
-        }else if(data.length>1){
-        	layer.msg("一次只能审核一条");
-        } else{
-        	 $("#hid").val(data[0].stuId);
-             layer.open({
-                 title:'审核',//标题
-                 type:1,//样式
-                 area:['400px','240px'],//大小
-                 content:$("#form2"),
-             });
-        }
-      break;
       case 'audit':
-               layer.open({
+               inw=layer.open({
                    title:'新增分店',//标题
                    type:1,//样式
-                   area:['auto','480px'],//大小
+                   area:['600px','600px'],//大小
                    content:$("#form2"),
                });
                form.render();
@@ -163,7 +138,6 @@ layui.use(['table','form','laydate'], function(){
   table.on('tool(test)', function(obj){
 	  //得到选择的行的信息
     var data = obj.data;
-	  alert(data.bsiId);
 	  //判断是否选中删除
     if(obj.event === 'del'){
       layer.confirm('真的删除行么', function(index){
@@ -180,9 +154,43 @@ layui.use(['table','form','laydate'], function(){
       });
       //编辑按钮
     } else if(obj.event === 'edit'){
-    	
+    	alert("开始编辑");
     }
   });
+  
+//自定义验证规则  
+	form.verify({  
+	  bsName: function(value){  
+          if(value.length < 2 ){  
+            return '店名至少得2个字';  
+          }  
+        }
+        ,contact: [/^1[3|4|5|7|8]\d{9}$/, '手机必须11位，只能是数字！']  
+        ,email: [/^[a-z0-9._%-]+@([a-z0-9-]+\.)+[a-z]{2,4}$|^1[3|4|5|7|8]\d{9}$/, '邮箱格式不对']  
+  });  
+  
+//监听提交 增加窗口
+  form.on('submit(demo1)', function(data){
+	     $.ajax({
+          url: "../../addBrachStore.do",
+          type: "POST",
+          dataType: "json",
+          data:data.field,//将表单中的数据
+          success: function(back){
+              if(back == '1'){
+                  layer.msg("添加成功", {icon: 6});
+                //关闭弹出框
+				  layer.close(inw);//关闭弹窗
+                  table.reload('test',{  });
+              }else{
+                  layer.msg("添加失败", {icon: 5});
+              }
+              
+          }
+      });  
+	     return false;
+  }); 
+
   
   
   
@@ -190,6 +198,7 @@ layui.use(['table','form','laydate'], function(){
 
 </script>
 </head>
+<body>
       <table class="layui-hide" id="test1" lay-filter="test"></table>
 	  <table class="layui-hide" id="test" lay-filter="test"></table>
 
@@ -213,7 +222,7 @@ layui.use(['table','form','laydate'], function(){
    <div class="layui-form-item">
     <label class="layui-form-label">分店名称</label>
     <div class="layui-input-inline">
-      <input type="text" name="bsName" lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
+      <input type="text" name="bsName" lay-verify="bsName" placeholder="请输入名称" autocomplete="off" class="layui-input" required="required">
     </div>
   </div>
   
@@ -234,7 +243,7 @@ layui.use(['table','form','laydate'], function(){
   <div class="layui-form-item">
 		<label class="layui-form-label">详细地址</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="bslocation" placeholder="详细地址">
+			<input type="text" class="layui-input" name="bslocation" placeholder="详细地址" required="required">
 		</div>
 	</div>
 	
@@ -244,20 +253,65 @@ layui.use(['table','form','laydate'], function(){
 			<input type="text" class="layui-input" id="openDate" name="bsopendate" placeholder="yyyy-MM-dd">
 		</div>
 	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">店长</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="empTable" placeholder="店长id" required="required">
+		</div>
+	</div>
   
   <div class="layui-form-item">
+		<label class="layui-form-label">员工人数</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="crewSize" placeholder="员工人数" lay-verify="people">
+		</div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">联系方式</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="contact" placeholder="联系方式" lay-verify="contact">
+		</div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">电子邮箱</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="email" placeholder="电子邮箱" lay-verify="email">
+		</div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">注册金额</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="regisiteredamount" placeholder="注册金额" lay-verify="regisiteredamount">
+		</div>
+	</div>
+	
+	<div class="layui-form-item">
     <label class="layui-form-label">签订合同</label>
     <div class="layui-input-inline">
       <select name="standByField1" placeholder="是否签订">
         <option value="签订">签订</option>
-        <option value="未签订">未签订</option>
+        <option value="未签订" >未签订</option>
       </select>
     </div>
    </div>
+   
+	<div class="layui-form-item" hidden>
+		<label class="layui-form-label">备用字段2</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="standByField2" placeholder="备用字段2">
+		</div>
+	</div>
+	
+  
+   
    <div class="layui-form-item">
    		<br>
     	<div class="layui-input-block">
-     		<button type="submit" class="layui-btn layui-btn-sm layui-btn-normal" style="position:absolute;left:110px;" >提交</button>
+     		 <button class="layui-btn" lay-filter="demo1" lay-submit="">立即提交</button>  
     	</div>
   	</div>
    
