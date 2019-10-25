@@ -70,4 +70,10 @@ public class Controllers {
 		return row;
 	}
 	
+	@RequestMapping("updateBranchStore.do")
+	public int updateBranchStore(int id){
+		int row=branchStoreBiz.updateBranchStore(id);
+		return row;
+	}
+	
 }

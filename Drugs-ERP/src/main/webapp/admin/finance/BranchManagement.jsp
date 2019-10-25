@@ -44,8 +44,12 @@ cityList['黑龙江省'] = [ '哈尔滨市','齐齐哈尔市','大庆市'];
 function allProvince(){
 
 	var pro = document.getElementById("province123");
+	var proUpdate= document.getElementById("province123Update");
 	for (var i in cityList){
 		pro.add(new Option(i,i,null));
+	}
+	for (var i in cityList){
+		proUpdate.add(new Option(i,i,null));
 	}
 	
 }
@@ -111,7 +115,26 @@ layui.use(['table','form','laydate'], function(){
 				}
 			}	
 			form.render();
-  });      
+  });     
+	
+	//下拉框改变事件（更新表单）
+  form.on('select(csUpdate)', function(data){
+			// 获得省份框中的值 
+			var pros = document.getElementById("province123Update").value;
+			var city = document.getElementById("city123Update");	
+			// 将city 列表中的值清空,放置再选择省份后,出现城市乱增加的情况
+			city.options.length=0;
+			// 遍历
+			for (var i in cityList){
+				if (i==pros){
+					for (var j in cityList[i]){								
+						// 将 Option标签添加到Select中
+						city.add(new Option(cityList[i][j],cityList[i][j]),null);									
+					}
+				}
+			}	
+			form.render();
+  }); 
         
   var addBS;
   //头工具栏事件
@@ -131,7 +154,7 @@ layui.use(['table','form','laydate'], function(){
   });
   
   //声明一个变量用来接收更新窗口的index
-  var updateBS
+  var updateBS;
   //监听行工具事件
   table.on('tool(test)', function(obj){
 	  //得到选择的行的信息
@@ -165,7 +188,7 @@ layui.use(['table','form','laydate'], function(){
             	//直接将行数据填到表单中
        			form.val("exampleUpdate",data);
        			
-            	} 
+            } 
         });
         form.render();
     }
@@ -197,6 +220,28 @@ layui.use(['table','form','laydate'], function(){
                   table.reload('test',{  });
               }else{
                   layer.msg("添加失败", {icon: 5});
+              }
+              
+          }
+      });  
+	     return false;
+  }); 
+  
+//监听提交 增加窗口
+  form.on('submit(demo2)', function(data){
+	     $.ajax({
+          url: "../../updateBranchStore.do",
+          type: "POST",
+          dataType: "json",
+          data:data.field,//将表单中的数据
+          success: function(back){
+              if(back == '1'){
+                  layer.msg("修改成功", {icon: 6});
+                //关闭弹出框
+				  layer.close(updateBS);//关闭弹窗
+                  table.reload('test',{  });
+              }else{
+                  layer.msg("修改失败", {icon: 5});
               }
               
           }
@@ -341,7 +386,7 @@ layui.use(['table','form','laydate'], function(){
   <div class="layui-form-item">
     <label class="layui-form-label">请选择地区</label>
     <div class="layui-input-inline">
-     <select  id="province123Update" name="bslocationPro"  onchange="changeCity()" lay-filter="cs">
+     <select  id="province123Update" name="bslocationPro"  onchange="changeCity()" lay-filter="csUpdate">
         <option>请选择省/城市</option>
       </select> 
     </div>

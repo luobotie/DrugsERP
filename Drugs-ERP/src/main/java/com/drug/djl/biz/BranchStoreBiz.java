@@ -45,4 +45,13 @@ public interface BranchStoreBiz {
 	 * 2019年10月25日上午10:09:05
 	 */
 	int deleteBranchStore(int id);
+	
+	/**
+	 * 
+	 * 描述:修改分店信息表
+	 * @param id
+	 * @return 受影响行数
+	 * 2019年10月25日下午5:01:58
+	 */
+	int updateBranchStore(int id);
 }

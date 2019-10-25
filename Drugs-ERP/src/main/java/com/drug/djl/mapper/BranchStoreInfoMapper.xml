@@ -21,4 +21,13 @@
 	<delete id="deleteBranchStore" parameterType="Integer">
 		delete from branchStoreInfo where bsiId=#{id}
 	</delete>
+	
+	<!-- 修改分店信息 -->
+	<update id="updateBranchStore" parameterType="BranchStoreInfo">
+		UPDATE branchStoreInfo SET 
+		bsName=#{bsName},bslocationPro=#{bslocationPro},bslocationCity=#{bslocationCity},bslocation=#{bslocation},
+		bsopendate=#{bsopendate},empTable=#{empTable},crewSize=#{crewSize},contact=#{contact},
+		email=#{email},regisiteredamount=#{regisiteredamount},standByField1=#{standByField1},standByField2=#{standByField2})
+		WHERE bsiId=#{bsiId}
+	</update>
 </mapper>
