@@ -27,7 +27,7 @@
 		UPDATE branchStoreInfo SET 
 		bsName=#{bsName},bslocationPro=#{bslocationPro},bslocationCity=#{bslocationCity},bslocation=#{bslocation},
 		bsopendate=#{bsopendate},empTable=#{empTable},crewSize=#{crewSize},contact=#{contact},
-		email=#{email},regisiteredamount=#{regisiteredamount},standByField1=#{standByField1},standByField2=#{standByField2})
+		email=#{email},regisiteredamount=#{regisiteredamount},standByField1=#{standByField1},standByField2=#{standByField2}
 		WHERE bsiId=#{bsiId}
 	</update>
 </mapper>

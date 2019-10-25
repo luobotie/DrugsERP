@@ -71,8 +71,8 @@ public class Controllers {
 	}
 	
 	@RequestMapping("updateBranchStore.do")
-	public int updateBranchStore(int id){
-		int row=branchStoreBiz.updateBranchStore(id);
+	public int updateBranchStore(BranchStoreInfo bStoreInfo){
+		int row=branchStoreBiz.updateBranchStore(bStoreInfo);
 		return row;
 	}
 	

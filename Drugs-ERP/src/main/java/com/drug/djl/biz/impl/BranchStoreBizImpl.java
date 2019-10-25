@@ -58,8 +58,8 @@ public class BranchStoreBizImpl implements BranchStoreBiz {
 	}
 
 	@Override
-	public int updateBranchStore(int id) {
-		int row=branchInfoMapper.updateBranchStore(id);
+	public int updateBranchStore(BranchStoreInfo bStoreInfo) {
+		int row=branchInfoMapper.updateBranchStore(bStoreInfo);
 		if (row ==1 ) {
 			System.out.println("修改成功！");
 		} else {

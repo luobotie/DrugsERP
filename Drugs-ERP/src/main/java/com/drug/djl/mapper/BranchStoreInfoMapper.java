@@ -53,5 +53,5 @@ public interface BranchStoreInfoMapper {
 	 * @return 受影响行数
 	 * 2019年10月25日下午5:01:58
 	 */
-	int updateBranchStore(int id);
+	int updateBranchStore(BranchStoreInfo bStoreInfo);
 }

@@ -65,6 +65,10 @@ layui.use(['table','form','laydate'], function(){
   laydate.render({
     elem: '#openDate',
   });
+  
+  laydate.render({
+	    elem: '#openDateUpdate',
+   });
   table.render({
     elem: '#test',//table Id
     url:'../../selectAllBranchStore.do',//路径
@@ -75,7 +79,7 @@ layui.use(['table','form','laydate'], function(){
     limits: [5, 10, 15], //设置每页显示数
     cols: [[
     	{type: 'checkbox', fixed: 'left'},
-        {field:'bsiId', title:'分店编号', fixed: 'left', unresize: true},
+        {field:'bsiId', title:'分店编号', },
         {field:'bsName', title:'分店名称', },
         {field:'bslocationPro', title:'所在省',edit: 'text', },
         {field:'bslocationCity', title:'所在城市',edit: 'text', },
@@ -227,8 +231,9 @@ layui.use(['table','form','laydate'], function(){
 	     return false;
   }); 
   
-//监听提交 增加窗口
+//监听提交修改窗口
   form.on('submit(demo2)', function(data){
+     alert(data.bsName);
 	     $.ajax({
           url: "../../updateBranchStore.do",
           type: "POST",
@@ -375,7 +380,13 @@ layui.use(['table','form','laydate'], function(){
 
   <!-- 修改分店的表单 -->
 <form class="layui-form" lay-filter="exampleUpdate" id="form3" style="display:none;align-content:center;" >
-          
+    <div class="layui-form-item">
+      <label class="layui-form-label">分店ID</label>
+       <div class="layui-input-inline">
+        <input type="text" name="bsiId" lay-verify="bsiId"  autocomplete="off" class="layui-input" readOnly>
+       </div>
+    </div>
+       
    <div class="layui-form-item">
     <label class="layui-form-label">分店名称</label>
     <div class="layui-input-inline">
@@ -407,7 +418,7 @@ layui.use(['table','form','laydate'], function(){
  	<div class="layui-form-item">
 		<label class="layui-form-label">开业时间</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" id="openDate" name="bsopendate" placeholder="yyyy-MM-dd">
+			<input type="text" class="layui-input" id="openDateUpdate" name="bsopendate" placeholder="yyyy-MM-dd">
 		</div>
 	</div>
 	
