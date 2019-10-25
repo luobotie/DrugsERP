@@ -204,9 +204,14 @@ layui.use(['table','form','laydate'], function(){
           if(value.length < 2 ){  
             return '店名至少得2个字';  
           }  
-        }
-        ,contact: [/^1[3|4|5|7|8]\d{9}$/, '手机必须11位，只能是数字！']  
-        ,email: [/^[a-z0-9._%-]+@([a-z0-9-]+\.)+[a-z]{2,4}$|^1[3|4|5|7|8]\d{9}$/, '邮箱格式不对']  
+        },
+       bsLocation: function(value){  
+           if(value.length > 5 ){  
+               return '必选地区';  
+             }  
+        },
+       contact: [/^1[3|4|5|7|8]\d{9}$/, '手机必须11位，只能是数字！'],
+       email: [/^[a-z0-9._%-]+@([a-z0-9-]+\.)+[a-z]{2,4}$|^1[3|4|5|7|8]\d{9}$/, '邮箱格式不对']  
   });  
   
 //监听提交 增加窗口
@@ -233,7 +238,7 @@ layui.use(['table','form','laydate'], function(){
   
 //监听提交修改窗口
   form.on('submit(demo2)', function(data){
-     alert(data.bsName);
+     //alert(data.bsName);
 	     $.ajax({
           url: "../../updateBranchStore.do",
           type: "POST",
@@ -292,7 +297,7 @@ layui.use(['table','form','laydate'], function(){
   <div class="layui-form-item">
     <label class="layui-form-label">请选择地区</label>
     <div class="layui-input-inline">
-     <select  id="province123" name="bslocationPro"  onchange="changeCity()" lay-filter="cs">
+     <select  id="province123" name="bslocationPro"  onchange="changeCity()" lay-filter="cs" lay-verify="bsLocation">
         <option>请选择省/城市</option>
       </select> 
     </div>
@@ -397,7 +402,7 @@ layui.use(['table','form','laydate'], function(){
   <div class="layui-form-item">
     <label class="layui-form-label">请选择地区</label>
     <div class="layui-input-inline">
-     <select  id="province123Update" name="bslocationPro"  onchange="changeCity()" lay-filter="csUpdate">
+     <select  id="province123Update" name="bslocationPro"  onchange="changeCity()" lay-filter="csUpdate" lay-verify="bsLocation">
         <option>请选择省/城市</option>
       </select> 
     </div>
