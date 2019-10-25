@@ -49,6 +49,13 @@ public class Controllers {
 		return map;
 	}
 	
+	/**
+	 * 
+	 * 描述:添加分店信息
+	 * @param bStoreInfo
+	 * @return
+	 * 2019年10月25日上午10:11:24
+	 */
 	@RequestMapping("addBrachStore.do")
 	public int addBrachStore(BranchStoreInfo bStoreInfo) {
 		System.out.println(bStoreInfo.getBslocationPro());
@@ -56,5 +63,11 @@ public class Controllers {
 		return row;
 	}
 	
+	
+	@RequestMapping("deleteBranchStore.do")
+	public int deleteBranchStore(int id) {
+		int row=branchStoreBiz.deleteBranchStore(id);
+		return row;
+	}
 	
 }

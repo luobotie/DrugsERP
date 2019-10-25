@@ -8,12 +8,17 @@
 	</select>
 	<!-- 从页面获得页数与每页显示数 -->
 	<select id="selectAllBranchStore" resultType="BranchStoreInfo" parameterType="Map">
-		SELECT * FROM branchStoreInfo limit #{page},#{limit}
+		select * from branchStoreInfo limit #{page},#{limit}
 	</select>
 	<!-- 添加分店信息 -->
 	<insert id="addBranchStore" parameterType="BranchStoreInfo">
-	INSERT INTO branchStoreInfo
+	insert into branchStoreInfo
 	(bsName,bslocationPro,bslocationCity,bslocation,bsopendate,empTable,crewSize,contact,email,regisiteredamount,standByField1,standByField2) 
-	VALUES(#{bsName},#{bslocationPro},#{bslocationCity},#{bslocation},#{bsopendate},#{empTable},#{crewSize},#{contact},#{email},#{regisiteredamount},#{standByField1},#{standByField2})
+	values(#{bsName},#{bslocationPro},#{bslocationCity},#{bslocation},#{bsopendate},#{empTable},#{crewSize},#{contact},#{email},#{regisiteredamount},#{standByField1},#{standByField2})
 	</insert>
+	
+	<!-- 删除分店信息表 -->
+	<delete id="deleteBranchStore" parameterType="Integer">
+		delete from branchStoreInfo where bsiId=#{id}
+	</delete>
 </mapper>

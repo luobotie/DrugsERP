@@ -46,4 +46,15 @@ public class BranchStoreBizImpl implements BranchStoreBiz {
 		}
 	}
 
+	@Override
+	public int deleteBranchStore(int id) {
+		int row=branchInfoMapper.deleteBranchStore(id);
+		if (row ==1 ) {
+			System.out.println("删除成功！");
+		} else {
+			System.out.println("删除失败");
+		}
+		return row;
+	}
+
 }

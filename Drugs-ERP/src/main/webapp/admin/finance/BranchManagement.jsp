@@ -113,13 +113,13 @@ layui.use(['table','form','laydate'], function(){
 			form.render();
   });      
         
-  var inw;
+  var addBS;
   //头工具栏事件
   table.on('toolbar(test)', function(obj){
     var checkStatus = table.checkStatus(obj.config.id);
     switch(obj.event){
       case 'audit':
-               inw=layer.open({
+    	  addBS=layer.open({
                    title:'新增分店',//标题
                    type:1,//样式
                    area:['600px','600px'],//大小
@@ -127,13 +127,11 @@ layui.use(['table','form','laydate'], function(){
                });
                form.render();
       break;
-      case 'isAll':
-        layer.msg(checkStatus.isAll ? '全选': '未全选');
-      break;
     };
   });
   
-  
+  //声明一个变量用来接收更新窗口的index
+  var updateBS
   //监听行工具事件
   table.on('tool(test)', function(obj){
 	  //得到选择的行的信息
@@ -142,19 +140,34 @@ layui.use(['table','form','laydate'], function(){
     if(obj.event === 'del'){
       layer.confirm('真的删除行么', function(index){
     	  $.ajax({
-				url:'deleteStu.do',
-				data:'id='+data.stuId,
+				url:'../../deleteBranchStore.do',
+				data:'id='+data.bsiId,
 				success:function(back){
-					//关闭弹出框
-					layer.close(index);
-					//刷新表格数据
-					$(".layui-laypage-btn")[0].click()
+					if(back == '1'){
+		                  layer.msg("删除成功", {icon: 6});
+		                //关闭弹出框
+		                  table.reload('test',{  });
+		              }else{
+		                  layer.msg("添加失败", {icon: 5});
+		              }
 				}
 			})    
       });
       //编辑按钮
     } else if(obj.event === 'edit'){
-    	alert("开始编辑");
+    	//alert("开始编辑");
+    	updateBS=layer.open({
+            title:'更新分店信息',//标题
+            type:1,//样式
+            area:['600px','600px'],//大小
+            content:$("#form3"),
+            success: function(layero, index){
+            	//直接将行数据填到表单中
+       			form.val("exampleUpdate",data);
+       			
+            	} 
+        });
+        form.render();
     }
   });
   
@@ -180,7 +193,7 @@ layui.use(['table','form','laydate'], function(){
               if(back == '1'){
                   layer.msg("添加成功", {icon: 6});
                 //关闭弹出框
-				  layer.close(inw);//关闭弹窗
+				  layer.close(addBS);//关闭弹窗
                   table.reload('test',{  });
               }else{
                   layer.msg("添加失败", {icon: 5});
@@ -216,9 +229,9 @@ layui.use(['table','form','laydate'], function(){
  		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 	</script>
      
+     <!-- 添加分店的表单 -->
 <form class="layui-form" lay-filter="example" id="form2" style="display:none;align-content:center;" >
           
-           
    <div class="layui-form-item">
     <label class="layui-form-label">分店名称</label>
     <div class="layui-input-inline">
@@ -305,13 +318,110 @@ layui.use(['table','form','laydate'], function(){
 			<input type="text" class="layui-input" name="standByField2" placeholder="备用字段2">
 		</div>
 	</div>
-	
   
-   
    <div class="layui-form-item">
    		<br>
     	<div class="layui-input-block">
      		 <button class="layui-btn" lay-filter="demo1" lay-submit="">立即提交</button>  
+    	</div>
+  	</div>
+   
+</form>  
+
+  <!-- 修改分店的表单 -->
+<form class="layui-form" lay-filter="exampleUpdate" id="form3" style="display:none;align-content:center;" >
+          
+   <div class="layui-form-item">
+    <label class="layui-form-label">分店名称</label>
+    <div class="layui-input-inline">
+      <input type="text" name="bsName" lay-verify="bsName" placeholder="请输入名称" autocomplete="off" class="layui-input" required="required">
+    </div>
+  </div>
+  
+  <div class="layui-form-item">
+    <label class="layui-form-label">请选择地区</label>
+    <div class="layui-input-inline">
+     <select  id="province123Update" name="bslocationPro"  onchange="changeCity()" lay-filter="cs">
+        <option>请选择省/城市</option>
+      </select> 
+    </div>
+    <div class="layui-input-inline">
+      <select  id="city123Update" name="bslocationCity">
+        <option>请选择城市/地区</option>
+      </select>
+    </div>
+  </div>
+  
+  <div class="layui-form-item">
+		<label class="layui-form-label">详细地址</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="bslocation" placeholder="详细地址" required="required">
+		</div>
+	</div>
+	
+ 	<div class="layui-form-item">
+		<label class="layui-form-label">开业时间</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" id="openDate" name="bsopendate" placeholder="yyyy-MM-dd">
+		</div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">店长</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="empTable" placeholder="店长id" required="required">
+		</div>
+	</div>
+  
+  <div class="layui-form-item">
+		<label class="layui-form-label">员工人数</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="crewSize" placeholder="员工人数" lay-verify="people">
+		</div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">联系方式</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="contact" placeholder="联系方式" lay-verify="contact">
+		</div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">电子邮箱</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="email" placeholder="电子邮箱" lay-verify="email">
+		</div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">注册金额</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="regisiteredamount" placeholder="注册金额" lay-verify="regisiteredamount">
+		</div>
+	</div>
+	
+	<div class="layui-form-item">
+    <label class="layui-form-label">签订合同</label>
+    <div class="layui-input-inline">
+      <select name="standByField1" placeholder="是否签订">
+        <option value="签订">签订</option>
+        <option value="未签订" >未签订</option>
+      </select>
+    </div>
+   </div>
+   
+	<div class="layui-form-item" hidden>
+		<label class="layui-form-label">备用字段2</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="standByField2" placeholder="备用字段2">
+		</div>
+	</div>
+  
+   <div class="layui-form-item">
+   		<br>
+    	<div class="layui-input-block">
+     		 <button class="layui-btn" lay-filter="demo2" lay-submit="">立即提交</button>  
     	</div>
   	</div>
    

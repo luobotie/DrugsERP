@@ -21,19 +21,28 @@ public interface BranchStoreInfoMapper {
 	 * @return 分店信息的集合
 	 * 2019年10月23日上午11:06:22
 	 */
-	public List<BranchStoreInfo> selectAllBranchStore(Map<String , Object> branchPage);
+	List<BranchStoreInfo> selectAllBranchStore(Map<String , Object> branchPage);
 	
 	/**
 	 * 描述:分店信息表的行数
 	 * @return
 	 * 2019年10月23日上午11:06:08
 	 */
-	public Integer selectALLBranchStores();
+	Integer selectALLBranchStores();
 	
 	/**
 	 * 描述:添加分店信息表
 	 * @return 影响行数
 	 * 2019年10月23日下午2:41:22
 	 */
-	public int addBranchStore(BranchStoreInfo bStoreInfo) ;
+	int addBranchStore(BranchStoreInfo bStoreInfo) ;
+	
+	/**
+	 * 
+	 * 描述:删除分店信息表
+	 * @param id
+	 * @return
+	 * 2019年10月25日上午10:09:05
+	 */
+	int deleteBranchStore(int id);
 }
