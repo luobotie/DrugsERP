@@ -1,47 +1,53 @@
 package com.drug.luobo.entity;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public class Role {
-     private Integer roleId;
-     private Integer depId;
-     private String roleName;
-     private String describe;
-     private Integer visibles;
-	public Integer getRoleId() {
-		return roleId;
+    private Integer roleid;
+    
+    private  Integer depid;
+
+    private String rolename;
+
+    private String roledesc;
+
+    private Integer available;
+
+    public Integer getRoleid() {
+        return roleid;
+    }
+
+    public void setRoleid(Integer roleid) {
+        this.roleid = roleid;
+    }
+
+    public Integer getDepid() {
+		return depid;
 	}
-	public void setRoleId(Integer roleId) {
-		this.roleId = roleId;
+
+	public void setDepid(Integer depid) {
+		this.depid = depid;
 	}
-	public Integer getDepId() {
-		return depId;
-	}
-	public void setDepId(Integer depId) {
-		this.depId = depId;
-	}
-	public String getRoleName() {
-		return roleName;
-	}
-	public void setRoleName(String roleName) {
-		this.roleName = roleName;
-	}
-	public String getDescribe() {
-		return describe;
-	}
-	public void setDescribe(String describe) {
-		this.describe = describe;
-	}
-	public Integer getVisibles() {
-		return visibles;
-	}
-	public void setVisibles(Integer visibles) {
-		this.visibles = visibles;
-	}
-	public Role() {
-		super();
-	}
-     
-     
+
+	public String getRolename() {
+        return rolename;
+    }
+
+    public void setRolename(String rolename) {
+        this.rolename = rolename == null ? null : rolename.trim();
+    }
+
+    public String getRoledesc() {
+        return roledesc;
+    }
+
+    public void setRoledesc(String roledesc) {
+        this.roledesc = roledesc == null ? null : roledesc.trim();
+    }
+
+    public Integer getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(Integer available) {
+        this.available = available;
+    }
 }

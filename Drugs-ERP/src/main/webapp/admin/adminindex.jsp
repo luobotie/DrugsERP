@@ -24,7 +24,7 @@
 			<div class="layui-main mag0">
 				<a href="#" class="logo">医药ERP</a>
 				<!-- 显示/隐藏菜单 -->
-				<a href="javascript:;" class="seraph hideMenu icon-caidan"></a>
+				<a href="javascript:;" class="layui-icon layui-icon-shrink-right " style="color:red;"id="hidemenu" title="隐藏左边的导航栏"></a>
 			    <!-- 顶部右侧菜单 -->
 			    <ul class="layui-nav top_menu">
 					<li class="layui-nav-item" pc>
@@ -145,7 +145,7 @@
 		})
 
 		//隐藏左侧导航
-		$(".hideMenu").click(function(){
+		$("#hidemenu").click(function(){
 			if($(".topLevelMenus li.layui-this a").data("url")){
 				layer.msg("此栏目状态下左侧菜单不可展开");  //主要为了避免左侧显示的内容与顶部菜单不匹配
 				return false;
