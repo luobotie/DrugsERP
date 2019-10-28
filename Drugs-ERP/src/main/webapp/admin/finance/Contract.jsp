@@ -9,7 +9,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html>
 <head>
   <meta charset="utf-8">
-  <title>分店信息管理</title>
+  <title>合同管理</title>
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -17,44 +17,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <script src="../layui/layui.js"></script>
   <script type="text/javascript" src="../../js/jquery-3.4.1.min.js"></script>
 <script type="text/javascript" >
-var cityList = new Array();
-cityList['北京市'] = ['朝阳区', '东城区', '西城区', '海淀区', '宣武区', '丰台区', '怀柔', '延庆', '房山'];
-cityList['上海市'] = ['宝山区', '长宁区', '丰贤区', '虹口区', '黄浦区', '青浦区', '南汇区', '徐汇区', '卢湾区'];
-cityList['广东省'] = ['广州市', '惠州市', '汕头市', '珠海市', '佛山市', '中山市', '东莞市'];
-cityList['深圳市'] = ['福田区', '罗湖区', '盐田区', '宝安区', '龙岗区', '南山区', '深圳周边'];
-cityList['重庆市'] = ['俞中区', '南岸区', '江北区', '沙坪坝区', '九龙坡区', '渝北区', '大渡口区', '北碚区'];
-cityList['天津市'] = ['和平区', '河西区', '南开区', '河北区', '河东区', '红桥区', '塘古区', '开发区'];
-cityList['江苏省'] = ['南京市', '苏州市', '无锡市'];
-cityList['浙江省'] = ['杭州市', '宁波市', '温州市'];
-cityList['四川省'] = [ '成都市','广元市'];
-cityList['海南省'] = ['海口市','文昌市'];
-cityList['福建省'] = ['福州市', '厦门市', '泉州市', '漳州市'];
-cityList['山东省'] = ['济南市', '青岛市', '烟台市'];
-cityList['江西省'] = [ '南昌市','九江市','乐平市'];
-cityList['广西省'] = ['柳州市', '南宁市'];
-cityList['安徽省'] = [ '合肥市','淮北市','安庆市'];
-cityList['河北省'] = ['邯郸市', '石家庄市','唐山市'];
-cityList['河南省'] = ['郑州市', '洛阳市','开封市'];
-cityList['湖北省'] = ['武汉市', '宜昌市','当阳市'];
-cityList['湖南省'] = [ '长沙市','娄底市','株洲市','常德市','张家界','怀化市','涟源市'];
-cityList['陕西省'] = [ '西安市','延安市','兴平市'];
-cityList['山西省'] = [ '太原市','大同市','阳泉市','晋中市'];
-cityList['黑龙江省'] = [ '哈尔滨市','齐齐哈尔市','大庆市'];
-
-function allProvince(){
-
-	var pro = document.getElementById("province123");
-	var proUpdate= document.getElementById("province123Update");
-	for (var i in cityList){
-		pro.add(new Option(i,i,null));
-	}
-	for (var i in cityList){
-		proUpdate.add(new Option(i,i,null));
-	}
-	
-}
-
-window.onload = allProvince;
 //注册table，form
 layui.use(['table','form','laydate'], function(){
   var table = layui.table;
@@ -274,7 +236,17 @@ layui.use(['table','form','laydate'], function(){
 
 	<script type="text/html" id="toolbarDemo">
 		<div class="layui-input-inline">
- 		<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="audit">新增</button>
+ 			<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="audit">新增</button>
+      	</div>
+		<div class="layui-input-inline">
+ 			  <label class="layui-form-label">合同类型:</label>
+      	</div>
+		<div class="layui-input-inline">
+ 			<select  id="contractTypeChoice" lay-event="contractTypeChoice">
+        		<option value="分店合同" select="selected">分店合同</option>
+				<option value="采购合同">采购合同</option>
+				<option value="供应商合同">供应商合同</option>
+     		</select>
       	</div>
 	</script>	
  

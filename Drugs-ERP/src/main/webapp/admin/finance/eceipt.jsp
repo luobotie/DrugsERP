@@ -52,6 +52,8 @@ label{
 		    ,url:  '../json/demo1.json'//数据接口
 		    ,title: '分店退货单'
 		    ,page: true //开启分页
+		    ,limit:5 //默认行数
+		    ,limits:[5,10,15] //显示行数
 		    ,toolbar: '#toolbarDemo' //开启工具栏，此处显示默认图标，可以自定义模板，详见文档
 		    ,totalRow: true //开启合计行
 		    ,cols: [[ //表头
