@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.drug.luobo.biz.MenusBiz;
+import com.drug.luobo.entity.Employee;
 import com.drug.luobo.entity.Menus;
 import com.drug.luobo.mapper.MenusMapper;
 import com.drug.luobo.untils.LayuiPage;
@@ -14,8 +15,8 @@ public class MenusBizImpl implements MenusBiz {
     @Autowired
 	private MenusMapper mapper;
 	@Override
-	public List<Menus> getAllMenusByRoleId(Integer roleId) {
-		return mapper.getAllMenusByRoleId(roleId);
+	public List<Menus> getAllMenusByRoleId(Employee employee) {
+		return mapper.getAllMenusByRoleId(employee);
 	}
 	@Override
 	public List<Menus> loadMenuManagerLeftTree(LayuiPage layuiPage) {

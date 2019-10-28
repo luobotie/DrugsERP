@@ -37,7 +37,7 @@ public class MenusController {
     public List<TreeNode> loadIndexLeftMenu(){
     	//得到用户对象
     	Employee employee = (Employee) WebUtils.getHttpSession().getAttribute("employee");
-    	List<Menus> list=dao.getAllMenusByRoleId(employee.getRoleId());
+    	List<Menus> list=dao.getAllMenusByRoleId(employee);
     	List<TreeNode> nodes= new ArrayList<TreeNode>();
     	//把list里面的数据放到nodes
     	for (Menus menu : list) {
