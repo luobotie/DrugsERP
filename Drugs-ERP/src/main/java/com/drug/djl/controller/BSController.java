@@ -20,7 +20,7 @@ import com.drug.djl.entity.BranchStoreInfo;
  * version:1.0
  */
 @RestController
-public class Controllers {
+public class BSController {
 	@Autowired
 	private BranchStoreBiz branchStoreBiz;
 	

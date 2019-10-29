@@ -18,38 +18,52 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
   <script type="text/javascript" src="../../js/jquery-3.4.1.min.js"></script>
 <script type="text/javascript" >
 //注册table，form
-layui.use(['table','form','laydate'], function(){
+layui.use(['table','form','laydate','jquery'], function(){
   var table = layui.table;
   var form = layui.form;
   var laydate = layui.laydate;
+  var $=layui.jquery;
   
   //常规用法,时间选择器
   laydate.render({
-    elem: '#openDate',
+    elem: '#conEffectTime',
   });
-  
   laydate.render({
-	    elem: '#openDateUpdate',
+	    elem: '#conLostEffectTime',
    });
+  laydate.render({
+	    elem: '#conEndTime',
+ });
+  laydate.render({
+	    elem: '#conAuditTime',
+ });
   table.render({
     elem: '#test',//table Id
-    url:'../../selectAllBranchStore.do',//路径
+    url:'../../getAllContract.do',//路径
     toolbar: '#toolbarDemo',
-    title: '采购订单',//标题
+    title: '合同列表',//标题
     page: true ,//启动分页
     limit:5, //每页显示数默认
     limits: [5, 10, 15], //设置每页显示数
     cols: [[
     	{type: 'checkbox', fixed: 'left'},
-        {field:'bsiId', title:'分店编号', },
-        {field:'bsName', title:'分店名称', },
-        {field:'bslocationPro', title:'所在省',edit: 'text', },
-        {field:'bslocationCity', title:'所在城市',edit: 'text', },
-        {field:'bsopendate', title:'签订时间'},
-        {field:'contact', title:'联系方式'},
-        {field:'email', title:'邮箱'},
-        {field:'regisiteredamount', title:'注册金额'},
-        {field:'standByField1', title:'是否签订合同'},
+        {field:'conID', title:'合同ID', hide:true },
+        {field:'conName', title:'合同名称', },
+        {field:'conType', title:'合同类型',},
+        {field:'conNum', title:'合同编号',},
+        {field:'partyA', title:'甲方'},
+        {field:'partyB', title:'乙方'},
+        {field:'totalPrice', title:'合同总金额',},
+        {field:'conState', title:'合同状态'},
+        {field:'conChange', title:'是否变更',hide:true},
+        {field:'conUndertakerId', title:'承办人ID',hide:true},
+        {field:'conContact', title:'联系电话'},
+        {field:'partyBId', title:'供应商或分店ID',hide:true},
+        {field:'conAuditTime', title:'合同签订时间'},
+        {field:'conEffectTime', title:'合同生效时间'},
+        {field:'conLostEffectTime', title:'合同失效时间'},
+        {field:'conEndTime', title:'合同结束时间',hide:true},
+        {field:'note', title:'备注'},
         {fixed: 'right', title:'操作', toolbar: '#barDemo'}
     ]]
     
@@ -62,46 +76,52 @@ layui.use(['table','form','laydate'], function(){
       var date = obj.data; //所在行的所有相关数据  
       
     });
+   
+//监听行双击事件
+  table.on('rowDouble(test)', function(obj){
+    //obj 同上
+    layer.msg("这里会有一张合同表");
+  });
           
   
-	//下拉框改变事件
-  form.on('select(cs)', function(data){
-			// 获得省份框中的值 
-			var pros = document.getElementById("province123").value;
-			var city = document.getElementById("city123");	
-			// 将city 列表中的值清空,放置再选择省份后,出现城市乱增加的情况
-			city.options.length=0;
-			// 遍历
-			for (var i in cityList){
-				if (i==pros){
-					for (var j in cityList[i]){								
-						// 将 Option标签添加到Select中
-						city.add(new Option(cityList[i][j],cityList[i][j]),null);									
-					}
-				}
-			}	
-			form.render();
+	//下拉框改变事件,根据选择的不同下拉框内容产生不同事件
+  form.on('select(conType)', function(data){
+		// 根据不同的合同类型显示不同的div
+		switch(data.value){
+	      case '分店合同':
+		    	 $("#gys").hide();
+				 $("#fd").show();
+				 $("#cgdd").hide();
+	    	 break;
+	      case '采购合同':
+		    	  $("#gys").hide();
+				  $("#fd").hide();
+				  $("#cgdd").show();
+	    	  break;
+	      case '供应商合同':
+	    	 	 $("#gys").show();
+				 $("#fd").hide();
+				 $("#cgdd").hide();
+	    	  break;
+	      case '合同类型':
+    	  	 alert("啥都没有");
+	    	 	 $("#gys").hide();
+				 $("#fd").hide();
+				 $("#cgdd").hide();
+    	 	 break;
+	      /* case 'contractTypeChoice':
+	    	alert(obj.value);
+	      break; */
+	    };
   });     
 	
-	//下拉框改变事件（更新表单）
-  form.on('select(csUpdate)', function(data){
-			// 获得省份框中的值 
-			var pros = document.getElementById("province123Update").value;
-			var city = document.getElementById("city123Update");	
-			// 将city 列表中的值清空,放置再选择省份后,出现城市乱增加的情况
-			city.options.length=0;
-			// 遍历
-			for (var i in cityList){
-				if (i==pros){
-					for (var j in cityList[i]){								
-						// 将 Option标签添加到Select中
-						city.add(new Option(cityList[i][j],cityList[i][j]),null);									
-					}
-				}
-			}	
-			form.render();
+	//下拉框改变事件,头工具栏中的select选择表格中显示的合同类型
+  form.on('select(contractTypeChoice)', function(data){
+		alert(data.value);
+		
+		
   }); 
-        
+	 
   var addBS;
   //头工具栏事件
   table.on('toolbar(test)', function(obj){
@@ -109,15 +129,19 @@ layui.use(['table','form','laydate'], function(){
     switch(obj.event){
       case 'audit':
     	  addBS=layer.open({
-                   title:'新增分店',//标题
+                   title:'新增合同',//标题
                    type:1,//样式
                    area:['600px','600px'],//大小
                    content:$("#form2"),
                });
                form.render();
       break;
+      /* case 'contractTypeChoice':
+    	alert(obj.value);
+      break; */
     };
-  });
+  });  
+  
   
   //声明一个变量用来接收更新窗口的index
   var updateBS;
@@ -172,7 +196,7 @@ layui.use(['table','form','laydate'], function(){
                return '必选地区';  
              }  
         },
-       contact: [/^1[3|4|5|7|8]\d{9}$/, '手机必须11位，只能是数字！'],
+        conContact: [/^1[3|4|5|7|8]\d{9}$/, '手机必须11位，只能是数字！'],
        email: [/^[a-z0-9._%-]+@([a-z0-9-]+\.)+[a-z]{2,4}$|^1[3|4|5|7|8]\d{9}$/, '邮箱格式不对']  
   });  
   
@@ -238,12 +262,11 @@ layui.use(['table','form','laydate'], function(){
 		<div class="layui-input-inline">
  			<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="audit">新增</button>
       	</div>
-		<div class="layui-input-inline">
- 			  <label class="layui-form-label">合同类型:</label>
-      	</div>
-		<div class="layui-input-inline">
- 			<select  id="contractTypeChoice" lay-event="contractTypeChoice">
-        		<option value="分店合同" select="selected">分店合同</option>
+		 <!-- 下拉框改变页面显示的合同内容 -->
+     	<div class="layui-input-inline">
+ 			<select  id="contractTypeChoice" lay-filter="contractTypeChoice">
+				<option disabled selected hidden>--------合同类型------</option>
+        		<option value="分店合同" >分店合同</option>
 				<option value="采购合同">采购合同</option>
 				<option value="供应商合同">供应商合同</option>
      		</select>
@@ -256,76 +279,138 @@ layui.use(['table','form','laydate'], function(){
  		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 	</script>
      
-     <!-- 添加分店的表单 -->
+    
+     <!-- 添加合同的表单 -->
 <form class="layui-form" lay-filter="example" id="form2" style="display:none;align-content:center;" >
           
    <div class="layui-form-item">
-    <label class="layui-form-label">分店名称</label>
+    <label class="layui-form-label">合同名称</label>
     <div class="layui-input-inline">
-      <input type="text" name="bsName" lay-verify="bsName" placeholder="请输入名称" autocomplete="off" class="layui-input" required="required">
+      <input type="text" name="conName" lay-verify="conName" placeholder="请输入名称" autocomplete="off" class="layui-input" required="required">
     </div>
   </div>
   
   <div class="layui-form-item">
-    <label class="layui-form-label">请选择地区</label>
+    <label class="layui-form-label">合同类型</label>
     <div class="layui-input-inline">
-     <select  id="province123" name="bslocationPro"  onchange="changeCity()" lay-filter="cs" lay-verify="bsLocation">
-        <option>请选择省/城市</option>
+     <select  name="conType"  lay-verify="conType" onchange="conType()" lay-filter="conType">
+        <option value="分店合同" selected>分店合同</option>
+		<option value="采购合同">采购合同</option>
+		<option value="供应商合同">供应商合同</option>
       </select> 
     </div>
-    <div class="layui-input-inline">
-      <select  id="city123" name="bslocationCity">
-        <option>请选择城市/地区</option>
-      </select>
-    </div>
   </div>
   
-  <div class="layui-form-item">
-		<label class="layui-form-label">详细地址</label>
+  <div class="layui-form-item" hidden>
+		<label class="layui-form-label">合同编号</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="bslocation" placeholder="详细地址" required="required">
+			<input type="text" class="layui-input" name="conNum" placeholder="详细地址" required="required">
 		</div>
 	</div>
 	
  	<div class="layui-form-item">
-		<label class="layui-form-label">开业时间</label>
+		<label class="layui-form-label">甲方名称</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" id="openDate" name="bsopendate" placeholder="yyyy-MM-dd">
+			<input type="text" class="layui-input" id="partyA" name="partyA" placeholder="甲方名称" required="required">
 		</div>
 	</div>
 	
 	<div class="layui-form-item">
-		<label class="layui-form-label">店长</label>
+		<label class="layui-form-label">乙方名称</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="empTable" placeholder="店长id" required="required">
+			<input type="text" class="layui-input" name="partyB" placeholder="乙方名称" required="required">
 		</div>
 	</div>
   
   <div class="layui-form-item">
-		<label class="layui-form-label">员工人数</label>
+		<label class="layui-form-label">合同总金额</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="crewSize" placeholder="员工人数" lay-verify="people">
+			<input type="text" class="layui-input" name="totalPrice" placeholder="合同金额" lay-verify="totalPrice" required="required">
 		</div>
 	</div>
 	
 	<div class="layui-form-item">
-		<label class="layui-form-label">联系方式</label>
+		<label class="layui-form-label">合同状态</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="contact" placeholder="联系方式" lay-verify="contact">
+			<select  name="conState"  lay-verify="conState" onchange="conState()" lay-filter="cs">
+        		<option disabled selected hidden>--------合同状态------</option>
+        		<option value="草稿">草稿</option>
+				<option value="生效">生效</option>
+				<option value="作废">作废</option>
+      		</select> 
 		</div>
 	</div>
 	
 	<div class="layui-form-item">
-		<label class="layui-form-label">电子邮箱</label>
+		<label class="layui-form-label">是否变更</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="email" placeholder="电子邮箱" lay-verify="email">
+			<select  name="conChange"  lay-verify="conChange" onchange="conChange()" lay-filter="cs">
+        		<option value="否" selected>否</option>
+				<option value="是">是</option>
+      		</select> 
 		</div>
 	</div>
 	
 	<div class="layui-form-item">
-		<label class="layui-form-label">注册金额</label>
+		<label class="layui-form-label">承办人id</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="regisiteredamount" placeholder="注册金额" lay-verify="regisiteredamount">
+			<input type="text" class="layui-input" name="conUndertakerId" placeholder="注册金额" lay-verify="conUndertakerId" required="required">
+		</div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">联系电话</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="conContact" placeholder="联系电话" lay-verify="conContact" required="required">
+		</div>
+	</div>
+	
+	<div class="layui-form-item" id="gys" >
+		<label class="layui-form-label">供应商id</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="partyBId" placeholder="供应商id" lay-verify="partyBId" required="required">
+		</div>
+	</div>
+	
+	<div class="layui-form-item" id="fd">
+		<label class="layui-form-label" >分店id</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="partyBId" placeholder="分店id" lay-verify="partyBId" required="required">
+		</div>
+	</div>
+	
+	<div class="layui-form-item" id="cgdd">
+		<label class="layui-form-label">采购订单id</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="partyBId" placeholder="采购订单id" lay-verify="partyBId" required="required">
+		</div>
+	</div>
+	
+	<div class="layui-form-item" >
+		<label class="layui-form-label">合同生效时间</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" id="conEffectTime" name="conEffectTime" placeholder="合同生效时间" lay-verify="conEffectTime" required="required">
+		</div>
+	</div>
+	
+	<div class="layui-form-item" >
+		<label class="layui-form-label">合同失效时间</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" id="conLostEffectTime" name="conLostEffectTime" placeholder="合同生效时间" lay-verify="conLostEffectTime" required="required">
+		</div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">合同失效时间</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" id="conEndTime" name="conEndTime" placeholder="合同结束时间" lay-verify="conEndTime" required="required">
+		</div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">合同签订时间</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" id="conAuditTime" name="conAuditTime" placeholder="合同签订时间" lay-verify="conAuditTime" required="required">
 		</div>
 	</div>
 	
