@@ -23,6 +23,8 @@
     <link rel="stylesheet" href="../css/custom.css">
     <!-- Favicon-->
     <link rel="shortcut icon" href="">
+    <link rel="stylesheet" type="text/css" href="layui/css/layui.css">
+    <script src="layui/layui.js"></script>
   </head>
   <body>
     <div class="page login-page">
@@ -44,15 +46,15 @@
             <div class="col-lg-6 bg-white">
               <div class="form d-flex align-items-center">
                 <div class="content">
-                  <form method="post" class="form-validate">
+                  <form method="post" class="form-validate" id="myform">
                     <div class="form-group">
-                      <input id="login-username" type="text" name="loginUsername" required data-msg="Please enter your username" class="input-material">
+                      <input id="username" type="text" name="loginUsername" required data-msg="Please enter your username" class="input-material" onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;">
                       <label for="login-username" class="label-material">User Name</label>
                     </div>
                     <div class="form-group">
-                      <input id="login-password" type="password" name="loginPassword" required data-msg="Please enter your password" class="input-material">
+                      <input id="pwd" type="password" name="loginPassword" required data-msg="Please enter your password" class="input-material" onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;">
                       <label for="login-password" class="label-material">Password</label>
-                    </div><a id="login" href="adminindex.jsp" class="btn btn-primary">Login</a>
+                    </div><a id="login"  class="btn btn-primary">Login</a>
                     <!-- This should be submit button but I replaced it with <a> for demo purposes-->
                   </form><a href="" class="forgot-pass">Forgot Password?</a><br><small>Do not have an account? </small><a href="" class="signup">Signup</a>
                 </div>
@@ -68,7 +70,7 @@
       </div>
     </div>
     <!-- JavaScript files-->
-    <script src="../js/jquery-3.4.1.min.js"></script>
+   <script src="../js/jquery-3.4.1.min.js"></script>
     <script src="../js/popper.min.js"> </script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/jquery.cookie.js"> </script>
@@ -76,5 +78,41 @@
     <script src="../js/jquery.validate.min.js"></script>
     <!-- Main File-->
     <script src="../js/front.js"></script>
+    <script type="text/javascript">
+    layui.use([ "element", "jquery", "layer"],
+			function() {
+				var $ = layui.jquery;
+				var element = layui.element;
+				var layer = layui.layer;
+				
+				  $("#login").click(function(){
+			        	var username=$("#username").val();
+			            var pwd=$("#pwd").val();
+			            if(username=="" || pwd==""){
+			            	layer.msg('用户名或密码不能为空', {
+			            		  icon: 2,
+			            		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+			            		});
+			            }else{
+			            	 $.post("../login.do",$("#myform").serialize(),function(back){
+			            		if(back){
+			            			window.location.assign("../admin/adminindex.jsp");
+			            		}else{
+			            			layer.msg('用户名或密码输入错误请重新输入登录', {
+					            		  icon: 2,
+					            		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+					            		});
+			            		}
+			            		
+			            	}) 
+			            }
+			          
+			        })	
+    
+    })    
+    
+      
+    </script> 
+    
   </body>
 </html>
