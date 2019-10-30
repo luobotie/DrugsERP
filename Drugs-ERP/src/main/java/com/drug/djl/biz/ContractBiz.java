@@ -37,4 +37,22 @@ public interface ContractBiz {
 	 * 2019年10月29日下午3:19:57
 	 */
 	int addContract(Contract contract);
+	
+	/**
+	 * 
+	 * 描述:更改合同状态
+	 * @param id
+	 * @return 受影响行数
+	 * 2019年10月29日下午4:05:05
+	 */
+	int lostContract(Map map);
+	
+	/**
+	 * 
+	 * 描述:彻底删除某个合同
+	 * @param id
+	 * @return
+	 * 2019年10月30日上午10:33:58
+	 */
+	int delContract(Integer id);
 }

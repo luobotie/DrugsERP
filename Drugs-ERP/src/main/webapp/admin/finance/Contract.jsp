@@ -62,7 +62,6 @@ layui.use(['table','form','laydate','jquery'], function(){
         {field:'conAuditTime', title:'合同签订时间'},
         {field:'conEffectTime', title:'合同生效时间'},
         {field:'conLostEffectTime', title:'合同失效时间'},
-        {field:'conEndTime', title:'合同结束时间',hide:true},
         {field:'note', title:'备注'},
         {fixed: 'right', title:'操作', toolbar: '#barDemo'}
     ]]
@@ -125,7 +124,8 @@ layui.use(['table','form','laydate','jquery'], function(){
   var addBS;
   //头工具栏事件
   table.on('toolbar(test)', function(obj){
-    var checkStatus = table.checkStatus(obj.config.id);
+    var checkStatus = table.checkStatus(obj.config.id)
+    ,data = checkStatus.data; //选中行的数据
     switch(obj.event){
       case 'audit':
     	  addBS=layer.open({
@@ -135,6 +135,30 @@ layui.use(['table','form','laydate','jquery'], function(){
                    content:$("#form2"),
                });
                form.render();
+      break;
+      case 'delete':
+    	 if(data.length === 0){
+              layer.msg('请选择一行');
+           } else if(data.length > 1){
+        	  layer.msg('只能选择一行');
+           }else {
+        	   layer.msg(data[0].conID);
+        	   /* layer.confirm('真的永久删除该合同么', function(index){
+           	  $.ajax({
+       				url:'../../lostContract.do',
+       				data:'id='+data.conID,
+       				success:function(back){
+       					if(back == '1'){
+       		                  layer.msg("删除失效成功", {icon: 6});
+       		                //关闭弹出框
+       		                  table.reload('test',{  });
+       		              }else{
+       		                  layer.msg("删除失效失败", {icon: 5});
+       		              }
+       				}
+       			})    
+             }); */ 
+           }
       break;
       /* case 'contractTypeChoice':
     	alert(obj.value);
@@ -151,17 +175,17 @@ layui.use(['table','form','laydate','jquery'], function(){
     var data = obj.data;
 	  //判断是否选中删除
     if(obj.event === 'del'){
-      layer.confirm('真的删除行么', function(index){
+      layer.confirm('真的失效该合同么', function(index){
     	  $.ajax({
-				url:'../../deleteBranchStore.do',
-				data:'id='+data.bsiId,
+				url:'../../lostContract.do',
+				data:'id='+data.conID,
 				success:function(back){
 					if(back == '1'){
-		                  layer.msg("删除成功", {icon: 6});
+		                  layer.msg("合同失效成功", {icon: 6});
 		                //关闭弹出框
 		                  table.reload('test',{  });
 		              }else{
-		                  layer.msg("添加失败", {icon: 5});
+		                  layer.msg("合同失效失败", {icon: 5});
 		              }
 				}
 			})    
@@ -203,7 +227,7 @@ layui.use(['table','form','laydate','jquery'], function(){
 //监听提交 增加窗口
   form.on('submit(demo1)', function(data){
 	     $.ajax({
-          url: "../../addBrachStore.do",
+          url: "../../addContract.do",
           type: "POST",
           dataType: "json",
           data:data.field,//将表单中的数据
@@ -260,12 +284,13 @@ layui.use(['table','form','laydate','jquery'], function(){
 
 	<script type="text/html" id="toolbarDemo">
 		<div class="layui-input-inline">
- 			<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="audit">新增</button>
+ 			<button type="button" class="layui-btn layui-btn-sm" lay-event="audit"><i class="layui-icon"></i></button>
+			<button type="button" class="layui-btn layui-btn-sm" lay-event="delete"><i class="layui-icon">永久删除</i></button>
       	</div>
 		 <!-- 下拉框改变页面显示的合同内容 -->
      	<div class="layui-input-inline">
  			<select  id="contractTypeChoice" lay-filter="contractTypeChoice">
-				<option disabled selected hidden>--------合同类型------</option>
+				<option disabled  selected hidden>--------合同类型------</option>
         		<option value="分店合同" >分店合同</option>
 				<option value="采购合同">采购合同</option>
 				<option value="供应商合同">供应商合同</option>
@@ -276,7 +301,7 @@ layui.use(['table','form','laydate','jquery'], function(){
 	<!-- 每一行的工具toolbar -->
 	<script type="text/html" id="barDemo">
   		<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
- 		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+ 		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">失效</a>
 	</script>
      
     
@@ -335,7 +360,7 @@ layui.use(['table','form','laydate','jquery'], function(){
 			<select  name="conState"  lay-verify="conState" onchange="conState()" lay-filter="cs">
         		<option disabled selected hidden>--------合同状态------</option>
         		<option value="草稿">草稿</option>
-				<option value="生效">生效</option>
+				<option value="生效" selected="selected">生效</option>
 				<option value="作废">作废</option>
       		</select> 
 		</div>
@@ -354,7 +379,7 @@ layui.use(['table','form','laydate','jquery'], function(){
 	<div class="layui-form-item">
 		<label class="layui-form-label">承办人id</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="conUndertakerId" placeholder="注册金额" lay-verify="conUndertakerId" required="required">
+			<input type="text" class="layui-input" name="conUndertakerId" placeholder="承办人id" lay-verify="conUndertakerId" required="required">
 		</div>
 	</div>
 	
@@ -365,7 +390,7 @@ layui.use(['table','form','laydate','jquery'], function(){
 		</div>
 	</div>
 	
-	<div class="layui-form-item" id="gys" >
+	<div class="layui-form-item" id="gys" hidden >
 		<label class="layui-form-label">供应商id</label>
 		<div class="layui-input-inline">
 			<input type="text" class="layui-input" name="partyBId" placeholder="供应商id" lay-verify="partyBId" required="required">
@@ -373,13 +398,13 @@ layui.use(['table','form','laydate','jquery'], function(){
 	</div>
 	
 	<div class="layui-form-item" id="fd">
-		<label class="layui-form-label" >分店id</label>
+		<label class="layui-form-label"  >分店id</label>
 		<div class="layui-input-inline">
 			<input type="text" class="layui-input" name="partyBId" placeholder="分店id" lay-verify="partyBId" required="required">
 		</div>
 	</div>
 	
-	<div class="layui-form-item" id="cgdd">
+	<div class="layui-form-item" id="cgdd" hidden >
 		<label class="layui-form-label">采购订单id</label>
 		<div class="layui-input-inline">
 			<input type="text" class="layui-input" name="partyBId" placeholder="采购订单id" lay-verify="partyBId" required="required">
@@ -401,11 +426,11 @@ layui.use(['table','form','laydate','jquery'], function(){
 	</div>
 	
 	<div class="layui-form-item">
-		<label class="layui-form-label">合同失效时间</label>
+		<label class="layui-form-label">合同结束时间</label>
 		<div class="layui-input-inline">
 			<input type="text" class="layui-input" id="conEndTime" name="conEndTime" placeholder="合同结束时间" lay-verify="conEndTime" required="required">
 		</div>
-	</div>
+	</div> 
 	
 	<div class="layui-form-item">
 		<label class="layui-form-label">合同签订时间</label>
@@ -424,6 +449,12 @@ layui.use(['table','form','laydate','jquery'], function(){
     </div>
    </div>
    
+   <div class="layui-form-item" hidden>
+		<label class="layui-form-label">备用字段2</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="standByField1" placeholder="备用字段2">
+		</div>
+	</div>
 	<div class="layui-form-item" hidden>
 		<label class="layui-form-label">备用字段2</label>
 		<div class="layui-input-inline">

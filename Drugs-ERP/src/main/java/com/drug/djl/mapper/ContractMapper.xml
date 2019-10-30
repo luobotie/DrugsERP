@@ -20,4 +20,15 @@
 		,#{totalPrice},#{conState},#{conChange},#{conUndertakerId},#{conContact},#{partyBId}
 		,#{conEffectTime},#{conLostEffectTime},#{conEndTime},#{conAuditTime},#{note},NULL,NULL)
 	</insert>
+	
+	<!-- 更改某个合同的状态 -->
+	<update id="lostContract" parameterType="Map">
+		UPDATE contract SET conState=#{lost},conLostEffectTime=#{lostTime} WHERE conID=#{id}
+	</update>
+	
+	<!-- 永久删除某条合同 -->
+	<delete id="delContract" parameterType="Integer" >
+		delete from contract where conID=#{id}
+	</delete>
+	
 </mapper>
