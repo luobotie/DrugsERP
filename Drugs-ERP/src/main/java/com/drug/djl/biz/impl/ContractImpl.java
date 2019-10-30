@@ -60,5 +60,16 @@ public class ContractImpl implements ContractBiz{
 		}
 		return row;
 	}
+
+	@Override
+	public int delContract(Integer id) {
+		int row=contractMapper.delContract(id);
+		if (row == 1 ) {
+			System.out.println("删除成功");
+		} else {
+			System.out.println("删除失败");
+		}
+		return row;
+	}
 	
 }
