@@ -59,7 +59,6 @@ layui.use(['table','form','laydate','jquery'], function(){
         {field:'conUndertakerId', title:'承办人ID',hide:true},
         {field:'conContact', title:'联系电话'},
         {field:'partyBId', title:'供应商或分店ID',hide:true},
-        {field:'conAuditTime', title:'合同签订时间'},
         {field:'conEffectTime', title:'合同生效时间'},
         {field:'conLostEffectTime', title:'合同失效时间'},
         {field:'note', title:'备注'},
@@ -143,21 +142,21 @@ layui.use(['table','form','laydate','jquery'], function(){
         	  layer.msg('只能选择一行');
            }else {
         	   layer.msg(data[0].conID);
-        	   /* layer.confirm('真的永久删除该合同么', function(index){
-           	  $.ajax({
-       				url:'../../lostContract.do',
-       				data:'id='+data.conID,
-       				success:function(back){
-       					if(back == '1'){
-       		                  layer.msg("删除失效成功", {icon: 6});
-       		                //关闭弹出框
-       		                  table.reload('test',{  });
-       		              }else{
-       		                  layer.msg("删除失效失败", {icon: 5});
-       		              }
-       				}
-       			})    
-             }); */ 
+        	   layer.confirm('真的永久删除该合同么', function(index){
+	           	  $.ajax({
+	       				url:'../../delContract.do',
+	       				data:'id='+data[0].conID,
+	       				success:function(back){
+	       					if(back == '1'){
+	       		                  layer.msg("删除成功", {icon: 6});
+	       		                //关闭弹出框
+	       		                  table.reload('test',{  });
+	       		              }else{
+	       		                  layer.msg("删除失败", {icon: 5});
+	       		              }
+	       				}
+	       			})    
+             }); 
            }
       break;
       /* case 'contractTypeChoice':
@@ -268,6 +267,9 @@ layui.use(['table','form','laydate','jquery'], function(){
       });  
 	     return false;
   }); 
+
+ 
+
 
   
   
@@ -466,87 +468,142 @@ layui.use(['table','form','laydate','jquery'], function(){
    		<br>
     	<div class="layui-input-block">
      		 <button class="layui-btn" lay-filter="demo1" lay-submit="">立即提交</button>  
+     		 <button type="reset" class="layui-btn layui-btn-primary">重置</button>  
     	</div>
   	</div>
    
 </form>  
 
-  <!-- 修改分店的表单 -->
+  <!-- 修改合同的表单 -->
 <form class="layui-form" lay-filter="exampleUpdate" id="form3" style="display:none;align-content:center;" >
     <div class="layui-form-item">
-      <label class="layui-form-label">分店ID</label>
-       <div class="layui-input-inline">
-        <input type="text" name="bsiId" lay-verify="bsiId"  autocomplete="off" class="layui-input" readOnly>
-       </div>
-    </div>
-       
-   <div class="layui-form-item">
-    <label class="layui-form-label">分店名称</label>
+    <label class="layui-form-label">合同名称</label>
     <div class="layui-input-inline">
-      <input type="text" name="bsName" lay-verify="bsName" placeholder="请输入名称" autocomplete="off" class="layui-input" required="required">
+      <input type="text" name="conName" lay-verify="conName" placeholder="请输入名称" autocomplete="off" class="layui-input" required="required">
     </div>
   </div>
   
   <div class="layui-form-item">
-    <label class="layui-form-label">请选择地区</label>
+    <label class="layui-form-label">合同类型</label>
     <div class="layui-input-inline">
-     <select  id="province123Update" name="bslocationPro"  onchange="changeCity()" lay-filter="csUpdate" lay-verify="bsLocation">
-        <option>请选择省/城市</option>
+     <select  name="conType"  lay-verify="conType" onchange="conType()" lay-filter="conType">
+        <option value="分店合同" selected>分店合同</option>
+		<option value="采购合同">采购合同</option>
+		<option value="供应商合同">供应商合同</option>
       </select> 
     </div>
-    <div class="layui-input-inline">
-      <select  id="city123Update" name="bslocationCity">
-        <option>请选择城市/地区</option>
-      </select>
-    </div>
   </div>
   
-  <div class="layui-form-item">
-		<label class="layui-form-label">详细地址</label>
+  <div class="layui-form-item" hidden>
+		<label class="layui-form-label">合同编号</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="bslocation" placeholder="详细地址" required="required">
+			<input type="text" class="layui-input" name="conNum" placeholder="详细地址" required="required">
 		</div>
 	</div>
 	
  	<div class="layui-form-item">
-		<label class="layui-form-label">开业时间</label>
+		<label class="layui-form-label">甲方名称</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" id="openDateUpdate" name="bsopendate" placeholder="yyyy-MM-dd">
+			<input type="text" class="layui-input" id="partyA" name="partyA" placeholder="甲方名称" required="required">
 		</div>
 	</div>
 	
 	<div class="layui-form-item">
-		<label class="layui-form-label">店长</label>
+		<label class="layui-form-label">乙方名称</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="empTable" placeholder="店长id" required="required">
+			<input type="text" class="layui-input" name="partyB" placeholder="乙方名称" required="required">
 		</div>
 	</div>
   
   <div class="layui-form-item">
-		<label class="layui-form-label">员工人数</label>
+		<label class="layui-form-label">合同总金额</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="crewSize" placeholder="员工人数" lay-verify="people">
+			<input type="text" class="layui-input" name="totalPrice" placeholder="合同金额" lay-verify="totalPrice" required="required">
 		</div>
 	</div>
 	
 	<div class="layui-form-item">
-		<label class="layui-form-label">联系方式</label>
+		<label class="layui-form-label">合同状态</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="contact" placeholder="联系方式" lay-verify="contact">
+			<select  name="conState"  lay-verify="conState" onchange="conState()" lay-filter="cs">
+        		<option disabled selected hidden>--------合同状态------</option>
+        		<option value="草稿">草稿</option>
+				<option value="生效" selected="selected">生效</option>
+				<option value="作废">作废</option>
+      		</select> 
 		</div>
 	</div>
 	
 	<div class="layui-form-item">
-		<label class="layui-form-label">电子邮箱</label>
+		<label class="layui-form-label">是否变更</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="email" placeholder="电子邮箱" lay-verify="email">
+			<select  name="conChange"  lay-verify="conChange" onchange="conChange()" lay-filter="cs">
+        		<option value="否" selected>否</option>
+				<option value="是">是</option>
+      		</select> 
 		</div>
 	</div>
 	
 	<div class="layui-form-item">
-		<label class="layui-form-label">注册金额</label>
+		<label class="layui-form-label">承办人id</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="regisiteredamount" placeholder="注册金额" lay-verify="regisiteredamount">
+			<input type="text" class="layui-input" name="conUndertakerId" placeholder="承办人id" lay-verify="conUndertakerId" required="required">
+		</div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">联系电话</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="conContact" placeholder="联系电话" lay-verify="conContact" required="required">
+		</div>
+	</div>
+	
+	<div class="layui-form-item" id="gys" hidden >
+		<label class="layui-form-label">供应商id</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="partyBId" placeholder="供应商id" lay-verify="partyBId" required="required">
+		</div>
+	</div>
+	
+	<div class="layui-form-item" id="fd">
+		<label class="layui-form-label"  >分店id</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="partyBId" placeholder="分店id" lay-verify="partyBId" required="required">
+		</div>
+	</div>
+	
+	<div class="layui-form-item" id="cgdd" hidden >
+		<label class="layui-form-label">采购订单id</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="partyBId" placeholder="采购订单id" lay-verify="partyBId" required="required">
+		</div>
+	</div>
+	
+	<div class="layui-form-item" >
+		<label class="layui-form-label">合同生效时间</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" id="conEffectTime" name="conEffectTime" placeholder="合同生效时间" lay-verify="conEffectTime" required="required">
+		</div>
+	</div>
+	
+	<div class="layui-form-item" >
+		<label class="layui-form-label">合同失效时间</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" id="conLostEffectTime" name="conLostEffectTime" placeholder="合同生效时间" lay-verify="conLostEffectTime" required="required">
+		</div>
+	</div>
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">合同结束时间</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" id="conEndTime" name="conEndTime" placeholder="合同结束时间" lay-verify="conEndTime" required="required">
+		</div>
+	</div> 
+	
+	<div class="layui-form-item">
+		<label class="layui-form-label">合同签订时间</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" id="conAuditTime" name="conAuditTime" placeholder="合同签订时间" lay-verify="conAuditTime" required="required">
 		</div>
 	</div>
 	
@@ -555,11 +612,17 @@ layui.use(['table','form','laydate','jquery'], function(){
     <div class="layui-input-inline">
       <select name="standByField1" placeholder="是否签订" >
         <option value="签订">签订</option>
-        <option value="未签订" >未签订</option>
+        <option value="未签订" selected="selected" >未签订</option>
       </select>
     </div>
    </div>
    
+   <div class="layui-form-item" hidden>
+		<label class="layui-form-label">备用字段2</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="standByField1" placeholder="备用字段2">
+		</div>
+	</div>
 	<div class="layui-form-item" hidden>
 		<label class="layui-form-label">备用字段2</label>
 		<div class="layui-input-inline">
@@ -570,7 +633,8 @@ layui.use(['table','form','laydate','jquery'], function(){
    <div class="layui-form-item">
    		<br>
     	<div class="layui-input-block">
-     		 <button class="layui-btn" lay-filter="demo2" lay-submit="">立即提交</button>  
+     		 <button class="layui-btn" lay-filter="demo2" lay-submit="">立即提交</button> 
+     		 <button type="reset" class="layui-btn layui-btn-primary">重置</button>
     	</div>
   	</div>
    

@@ -85,6 +85,18 @@ public class ContractController {
 		return row;
 	}
 	
+	/**
+	 * 
+	 * 描述:永久删除合同
+	 * @return
+	 * 2019年10月30日上午10:55:12
+	 */
+	@RequestMapping("delContract.do")
+	public int delContract(Integer id){
+		int row=contractBiz.delContract(id);
+		return row;
+	}
+	
 	
 	
 	
