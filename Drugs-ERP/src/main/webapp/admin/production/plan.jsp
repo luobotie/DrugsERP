@@ -22,34 +22,24 @@
 }
 </style>
 </head>
+<style type="text/css">
+.layui-table-cell{
+	text-align:center;
+	height: 100%;
+	white-space: normal;
+}
+.layui-table img{
+	max-width:100%;
+}
+</style>
 <body>
 	<table class="layui-hide" id="test" lay-filter="test"></table>
-	<div id="table2Div">
-		<table class="layui-hide" style="display: none" id="test2"
+	<div id="table2Div" style="width:100%;height:100%;">
+		<table class="layui-hide" style="display: none;" id="test2"
 			lay-data="{id: 'idTest'}" lay-filter="test2"></table>
 	</div>
-
-
-	<script type="text/html" id="toolbarDemo">
-  <div class="layui-inline" style="padding-left:20px;">
-      <label width="120px" style="margin:0 5px 0 0px;font-size:13px;">请选择月份</label>
-      <div class="layui-input-inline">
-        <input type="text" class="layui-input" id="test3" placeholder="yyyy-MM">
-      </div>
 	
-	<label width="120px" style="margin:0 5px 0 20px;font-size:13px;">请选择状态</label>
-	<div class="layui-input-inline">
-		<select name="city" lay-verify="">
-  			<option value="">审核状态</option>
-  			<option value="010">未审核</option>
-  			<option value="021">审核未通过</option>
- 			<option value="0571">审核通过</option>
-		</select>  
-	</div>
-	<button type="button" class="layui-btn layui-btn-normal">查询</button>
-
-  </div>
-
+<script type="text/html" id="toolbarDemo">
   <div class="layui-btn-container" style="margin-top:20px;padding-left:20px;">
     <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckData"><i class="layui-icon layui-icon-add-1"></i>制定月计划 </button>
     <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckLength"><i class="layui-icon layui-icon-add-1"></i>制定日计划</button>
@@ -58,44 +48,23 @@
 </script>
 
 <div id="toolbarDemo2" style="display:none">
-<form class="layui-form" action="">
+<form class="layui-form" action="javaScript:void(0)" id="we" method="post" lay-filter="formTest">
 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 0px;">
-  <legend>添加采购商品</legend>
+<legend>添加采购商品</legend>
 </fieldset>
 	<div class="layui-inline" style="padding-left:0px;">
 	    <div class="layui-inline">
-      <label class="layui-form-label">搜索</label>
+      <label class="layui-form-label">药品名</label>
       <div class="layui-input-inline">
-        <select name="modules" lay-verify="required" lay-search="">
-          <option value="">直接选择或搜索选择</option>
-          <option value="1">layer</option>
-          <option value="2">form</option>
-          <option value="3">layim</option>
-          <option value="4">element</option>
-          <option value="5">laytpl</option>
-          <option value="6">upload</option>
-          <option value="7">laydate</option>
-          <option value="8">laypage</option>
-          <option value="9">flow</option>
-          <option value="10">util</option>
-          <option value="11">code</option>
-          <option value="12">tree</option>
-          <option value="13">layedit</option>
-          <option value="14">nav</option>
-          <option value="15">tab</option>
-          <option value="16">table</option>
-          <option value="17">select</option>
-          <option value="18">checkbox</option>
-          <option value="19">switch</option>
-          <option value="20">radio</option>
+        <select name="proId" lay-verify="required" id="typeselectBox">
         </select>
       </div>
     </div>
 	<label width="120px" style="margin:0 5px 0 20px;font-size:13px;">输入生产数量</label>
 	<div class="layui-input-inline">
-		 <input type="text" name="drugNum" lay-verify="number" placeholder="请输入" autocomplete="off" class="layui-input">
+		 <input type="text" name="produceNum" lay-verify="number" placeholder="请输入" autocomplete="off" class="layui-input">
 	</div>
-	<button type="button" class="layui-btn layui-btn-normal">添加</button>
+	<button class="layui-btn layui-btn-normal" lay-event="update" lay-filter="tianjia">添加</button>
   </div>
  </form>	
 </div>
@@ -115,6 +84,23 @@
 					var table = layui.table;
 					var laydate = layui.laydate;
 					var form = layui.form;
+					
+					var option = "<option value='-1'>请选择药品</option>";//初始化option的选项
+			        $.ajax({
+			            url: "../../getChineseName.do",
+			            type: 'POST'
+			        })
+			        .done(function(data) {
+			            for(var i=0;i<data.length;i++){                	
+			                option+="<option value='"+data[i]['proId']+"'>"+data[i]['chineseName']+"</option>";//拼接option中的内容
+			                	$("#typeselectBox").html(option);//将option的拼接内容加入select中，注意选择器是select的ID
+			            }
+			            form.render('select');//重点：重新渲染select
+			        })
+			        .fail(function() {
+			            console.log("error");
+			        });
+		
 
 					table.render({
 						elem : '#test',
@@ -134,6 +120,22 @@
 							edit: 'text',
 							unresize : true
 						}, {
+							field : 'monthPlanRealNum',
+							title : '实际生产总数量',
+							hide : true,
+							edit: 'text',
+							unresize : true
+						}, {
+							field : 'monthStartTime',
+							title : '开始时间',
+							hide : true,
+							unresize : true
+						}, {
+							field : 'monthCompleteTime',
+							title : '结束时间',
+							hide : true,
+							unresize : true
+						}, {
 							field : 'monthApplicationTime',
 							title : '申请时间',
 							unresize : true
@@ -150,6 +152,15 @@
 							title : '审核状态',
 							unresize : true
 						}, {
+							field : 'visibles',
+							title : '显示状态',
+							hide : true,
+							unresize : true
+						}, {
+							field : 'proState',
+							title : '生产状态',
+							unresize : true
+						}, {
 							field : 'empId',
 							title : '审核人编号',
 							unresize : true
@@ -161,8 +172,8 @@
 							unresize : true
 						} ] ],
 						page : true
-						,limit:5
-						,limits:[5,10,20,30]   
+						,limit:10
+						,limits:[10,20,30,50]   
 					});
 
 					//年月选择器
@@ -173,10 +184,12 @@
 					//常规用法
 					laydate.render({
 						elem : '#test5'
+						,type: 'datetime'
 					});
 					//常规用法
 					laydate.render({
 						elem : '#test1'
+						,type: 'datetime'
 					});
 
 					//工具栏事件
@@ -191,34 +204,59 @@
 								offset : [ '5%', '15%' ],//设置位移
 								btn : [ '确认', '取消' ], 
 								yes : function(index, layero) {
-									var index2 = layer.confirm('你确认制定该生产计划？', {
-										btn : [ '确认', '取消' ] //可以无限个按钮
-										,
-										btn2 : function(index, layero) {
-											layer.close(index2);
-										}
-									}, function(layero) {
-										layer.close(index2);
-										var index88 = layer.open({
-											type : 1,
-											shade : 0.25,
-											area : [ '400px', '350px' ],
-											content : $('#nameAndTimeDiv'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-											success : function(layero, index) {
-												form.render();
-											},
-											btn : [ '确认', '取消' ],
-											yes : function(layero) {
-												layer.close(index);
-												layer.close(index88);
-												layer.msg('计划制定成功');
-											},
-											btn2 : function(index, layero) {
-												layer.close(index88);
+									//点击确认添加,验证是否添加了商品
+									$.ajax({
+										  url:'../../selectMonthPlanDetailIfNull.do',
+										  type:'post',
+										  dataType:'json',
+										  success:function(data){
+											if(data != '0'){
+												var index2 = layer.confirm('你确认制定该生产计划？', {
+													btn : [ '确认', '取消' ] //可以无限个按钮
+													,
+													btn2 : function(index, layero) {
+														layer.close(index2);
+													}
+												}, function(layero) {
+													layer.close(index2);
+													var index88 = layer.open({
+														type : 1,
+														shade : 0.25,
+														area : [ '400px', '350px' ],
+														content : $('#nameAndTimeDiv'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+														success : function(layero, index) {
+															form.render();
+														},
+														btn : [ '确认', '取消' ],
+														yes : function(layero) {
+															$.ajax({
+																  url:'../../insertAndUpdate.do',
+																  data:$("#formIdOne").serialize(),
+																  type:'post',
+																  dataType:'json',
+																  success:function(data){
+																	if(data == '1'){
+																		layer.msg('执行成功');
+																		table.reload("test2",{});
+																	}else{
+																		layer.msg('执行失败');
+																	}
+																  }
+											                  //return false;
+											                }); 
+															layer.close(index);
+															layer.close(index88);
+														},
+														btn2 : function(index, layero) {
+															layer.close(index88);
+														}
+													});
+												});
+											}else{
+												layer.msg('请添加商品');
 											}
-										});
-
-									});
+										  }
+					                }); 
 								},
 								btn2 : function(index, layero) {
 									layer.close(index);
@@ -233,31 +271,95 @@
 									$('[lay-id="test2"]').css("display", "none");
 								}
 							});
-
+							
+							//监听事件
+							table.on('toolbar(test2)', function(obj){
+							  var checkStatus = table.checkStatus(obj.config.id);
+							  switch(obj.event){
+							    case 'update':
+							    	//监听button
+						            	//获取表单区域所有值
+						            	//alert(data.field.titletype);
+						            	//console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+						            	$.ajax({
+											  url:'../../insertMonthPlanDetails.do',
+											  data:$("#we").serialize(),
+											  type:'post',
+											  dataType:'json',
+											  success:function(data){
+												if(data == '1'){
+													layer.msg('添加成功');
+													table.render({
+														elem : '#test2',
+														url : '../../selectMonthPlanDetails.do',
+														toolbar : '#toolbarDemo2',
+														totalRow : true,
+														cols : [ [ {
+															type : 'numbers'
+														}, {
+															field : 'monthPlanDetailId',
+															title : '药品详情编号',
+															hide : true,
+															unresize : true
+														}, {
+															field : 'proId',
+															title : '药品编号',
+															unresize : true
+														}, {
+															field : 'chineseName',
+															title : '药品名称',
+															edit : 'text',
+															unresize : true
+														}, {
+															field : 'produceNum',
+															title : '生产数量',
+															totalRow : true,
+															edit : 'text',
+															unresize : true
+														}, {
+															align : 'center',
+															toolbar : '#barDemo2',
+															unresize : true
+														} ] ]
+													});
+												}else{
+													layer.msg('添加失败');
+												}
+											  }
+						                  //return false;
+						                }); 
+							    break;
+							  };
+							});
+							
 							table.render({
 								elem : '#test2',
-								url : '../json/demo1.json',
+								url : '../../selectMonthPlanDetails.do',
 								toolbar : '#toolbarDemo2',
 								totalRow : true,
 								cols : [ [ {
 									type : 'numbers'
 								}, {
-									field : 'id',
+									field : 'monthPlanDetailId',
+									title : '药品详情编号',
+									hide : true,
+									unresize : true
+								}, {
+									field : 'proId',
 									title : '药品编号',
 									unresize : true
 								}, {
-									field : 'username',
+									field : 'chineseName',
 									title : '药品名称',
 									edit : 'text',
 									unresize : true
 								}, {
-									field : 'experience',
+									field : 'produceNum',
 									title : '生产数量',
 									totalRow : true,
 									edit : 'text',
 									unresize : true
 								}, {
-
 									align : 'center',
 									toolbar : '#barDemo2',
 									unresize : true
@@ -268,8 +370,8 @@
 							var data = checkStatus.data;
 							if (data.length == 1) {
 								//判断月计划审核状态
-								if (data[0].sex == '男') {
-									var index2 = layer.confirm('你确认制定该生产计划？', {
+								if (data[0].reviewStatus == '已审核') {
+									var index2 = layer.confirm('你确认制定该生产日计划？', {
 										btn : [ '确认', '取消' ] //可以无限个按钮
 										,
 										btn2 : function(index, layero) {
@@ -331,9 +433,23 @@
 											},
 											btn : [ '确认', '取消' ],
 											yes : function(layero) {
+												$.ajax({
+													  url:'../../updateThisMonthPlanReviewStatus.do?monthPlanId='+data[0].monthPlanId,
+													  data:$("#formIdOne2").serialize(),
+													  type:'post',
+													  dataType:'json',
+													  success:function(data){
+														  if(data == '1'){
+															  layer.msg('计划审核成功');
+															  table.reload("test",{});
+														  }else{
+															  layer.msg('计划审核失败');
+														  }
+													  }
+								                  //return false;
+								                }); 
 												layer.close(index);
 												layer.close(index88);
-												layer.msg('计划审核成功');
 											},
 											btn2 : function(index, layero) {
 												layer.close(index88);
@@ -355,9 +471,11 @@
 						;
 					});
 
-					//监听工具条
+					//监听工具条(test)
 					table.on('tool(test)', function(obj) {
-						var data = obj.data;
+						var data = obj.data; //获得当前行数据
+						var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+						var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
 						if (obj.event === 'detail') {
 							layer.open({
 								title : '计划详情',//标题
@@ -378,37 +496,53 @@
 							});
 							table.render({
 								elem : '#test2',
-								url : '../json/demo1.json',
+								url : '../../getPlanDetails.do?monthPlanId='+data.monthPlanId,
 								totalRow : true,
 								cols : [ [ {
 									type : 'numbers'
 								}, {
-									field : 'id',
+									field : 'proId',
 									title : '药品编号',
 									unresize : true
 								}, {
-									field : 'username',
+									field : 'proImage',
+									title : '药品图片描述',
+									unresize : true,
+									templet:'<div><img  src="{{ d.proImage }}"></div>'
+								}, {
+									field : 'chineseName',
 									title : '药品名称',
 									unresize : true
 								}, {
-									field : 'experience',
+									field : 'produceNum',
 									title : '生产数量',
 									totalRow : true,
 									unresize : true
 								} ] ]
 							});
-
 						} else if (obj.event === 'del') {
 							layer.confirm('确认删除该计划吗？', function(index) {
-								obj.del();
+								$.ajax({
+									  url:'../../deleteThisMonthPlan.do?monthPlanId='+data.monthPlanId,
+									  type:'post',
+									  success:function(data){
+										if(data == '1'){
+											layer.msg('删除成功');
+											table.reload("test",{});
+										}else{
+											layer.msg('删除失败');
+										}
+									  }
+				                  //return false;
+				                }); 
 								layer.close(index);
 							});
 						} else if (obj.event === 'edit') {
-							if (data.sex == '男') {
-								layer.alert('当前订单已审核,无法修改', {
+							if (data.reviewStatus == '未审核') {
+								layer.alert('当前订单未审核,无法修改生产状态', {
 									icon : 2
 								});
-							} else if (data.sex == '女') {
+							} else if (data.reviewStatus == '已审核') {
 
 								var index = layer.open({
 									title : '修改计划详情',//标题
@@ -417,11 +551,7 @@
 									offset : [ '5%', '15%' ],//设置位移
 									btn : [ '确认', '取消' ],
 									yes : function(index, layero) {
-										layer.confirm('确定修改该计划？', function(
-												index) {
 											layer.close(index);
-											alert("好的已修改");
-										});
 									},
 									btn2 : function(index, layero) {
 										layer.close(index);
@@ -438,50 +568,159 @@
 												"none");
 									}
 								});
+								
 								table.render({
 									elem : '#test2',
-									url : '../json/demo1.json',
-									toolbar : '#toolbarDemo2',
+									url : '../../selectThisMonthPlan.do?monthPlanId='+data.monthPlanId,
+									//toolbar : '#toolbarDemo2',
 									totalRow : true,
 									cols : [ [ {
 										type : 'numbers'
 									}, {
-										field : 'id',
-										title : '药品编号',
+										field : 'monthPlanId',
+										title : '月计划编号',
 										unresize : true
 									}, {
-										field : 'username',
-										title : '药品名称',
-										edit : 'text',
+										field : 'monthStartTime',
+										title : '开始时间',
+										event: 'dates', 
+										edit: 'text',
+										data_field: 'monthStartTime',
 										unresize : true
 									}, {
-										field : 'experience',
-										title : '生产数量',
-										totalRow : true,
-										edit : 'text',
+										field : 'monthCompleteTime',
+										title : '结束时间',
+										event: 'dates',
+										edit: 'text',
+										data_field: 'monthCompleteTime',
 										unresize : true
 									}, {
-
-										align : 'center',
-										toolbar : '#barDemo2',
+										field : 'monthPlanNum',
+										title : '生产总数量',
 										unresize : true
-									} ] ]
+									}, {
+										field : 'monthPlanRealNum',
+										title : '实际生产总数量',
+										edit: 'text',
+										unresize : true
+									}] ],
 								});
+								
+								//监听单元格事件
+								table.on('tool(test2)', function (obj) {
+									var data = obj.data;
+									var newdata = {};
+									if (obj.event === 'dates') {
+										var field = $(this).data('field');
+										laydate.render({
+										elem: this.firstChild
+										, show: true //直接显示
+										, closeStop: this
+										, type: 'datetime'
+										//, format : 'yyyy-MM-dd HH:mm:ss'
+										, done: function (value, date) {
+											newdata[field] = value;
+											obj.update(newdata);
+											//layui.event("test2", "dates", obj)
+										}
+										});
+									}
+								});  
 							}
 						}
 					});
+					
+					
+					//监听单元格编辑
+					  table.on('edit(test2)', function(obj){ //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+						  $.ajax({
+							  url:'../../updateThisMonthPlan.do',
+							  data:obj.data,
+							  type:'post',
+							  dataType:'json',
+							  success:function(data){
+								if(data == '1'){
+									layer.msg('修改成功');
+									table.reload("test",{});
+								}else{
+									layer.msg('修改失败');
+								}
+							  }
+						  });
+						});
+					
+					  /* table.on('tool(test)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+						  var data = obj.data; //获得当前行数据
+						  var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+						  var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+						 
+						  if(layEvent === 'detail'){ //查看
+						    //do somehing
+						  } else if(layEvent === 'del'){ //删除
+						    layer.confirm('真的删除行么', function(index){
+						      obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+						      layer.close(index);
+						      //向服务端发送删除指令
+						    });
+						  } else if(layEvent === 'edit'){ //编辑
+						    //do something
+						    
+						    //同步更新缓存对应的值
+						    obj.update({
+						      username: '123'
+						      ,title: 'xxx'
+						    });
+						  } else if(layEvent === 'LAYTABLE_TIPS'){
+						    layer.alert('Hi，头部工具栏扩展的右侧图标。');
+						  }
+						}); */
+						//
+						//监听工具条(test2)
+						table.on('tool(test2)', function(obj){ //注：tool 是工具条事件名，test 是 table 原始容器的属性 lay-filter="对应的值"
+							  var data = obj.data; //获得当前行数据
+							  var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+							  var tr = obj.tr; //获得当前行 tr 的 DOM 对象（如果有的话）
+							 if(obj.event === 'manageMe'){ //删除
+							    layer.confirm('真的删除行么', function(index){
+							      obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
+							      $.ajax({
+									  url:'../../deleteThisMonthPlanDetailId.do?monthPlanDetailId='+data.monthPlanDetailId,
+									  type:'post',
+									  success:function(data){
+										if(data == '1'){
+											layer.msg('删除成功');
+											table.reload("test2",{});
+										}else{
+											layer.msg('删除失败');
+										}
+									  }
+				                  //return false;
+				                });
+							      layer.close(index);
+							      //向服务端发送删除指令
+							    });
+							  } 
+							});
+					//监听下拉框
+					  /* form.on('select(selectvalues)', function(data){
+						  //console.log(data.elem); //得到select原始DOM对象
+						  //console.log(data.value); //得到被选中的值
+						  //console.log(data.othis); //得到美化后的DOM对象
+						  alert(data.value);
+						}); */ 
+
 				});
+		
 	</script>
 
 	<!-- 制定人和制定时间 -->
 	<div style="display: none;" id="nameAndTimeDiv">
-
 		<form class="layui-form" lay-filter="formAuthority" id="formIdOne">
 			<div class="layui-inline"
 				style="padding-left: 0px; margin-top: 20px;">
 				<label width="120px" style="margin: 0 5px 0 20px; font-size: 13px;">制定日期</label>
 				<div class="layui-input-inline">
-					<input type="text" class="layui-input" id="test1"
+					<input type="text" class="layui-input" id="test1" name="monthApplicationTime"
 						placeholder="yyyy-MM-dd">
 				</div>
 			</div>
@@ -507,14 +746,12 @@
 	</div>
 	<!-- 审核人和审核时间 -->
 	<div style="display: none;" id="nameAndTimeDiv2">
-
 		<form class="layui-form" lay-filter="formAuthority2" id="formIdOne2">
-
 			<div class="layui-inline"
 				style="padding-left: 0px; margin-top: 20px;">
 				<label width="120px" style="margin: 0 5px 0 20px; font-size: 13px;">审核日期</label>
 				<div class="layui-input-inline">
-					<input type="text" class="layui-input" id="test5"
+					<input type="text" class="layui-input" id="test5" name="reviewDate"
 						placeholder="yyyy-MM-dd">
 				</div>
 			</div>
