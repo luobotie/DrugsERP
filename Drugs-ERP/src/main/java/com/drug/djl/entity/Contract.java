@@ -29,35 +29,7 @@ public class Contract {
 	private String standByField2; // 备用字段2
 	
 	
-	public Contract() {
-	}
 	
-	
-	public Contract(int conID, String conName, String conType, String conNum, String partyA, String partyB,
-			Double totalPrice, String conState, String conChange, int conUndertakerId, String conContact, int partyBId,
-			String conEffectTime, String conLostEffectTime, String conEndTime, String conAuditTime, String note,
-			String standByField1, String standByField2) {
-		super();
-		this.conID = conID;
-		this.conName = conName;
-		this.conType = conType;
-		this.conNum = conNum;
-		this.partyA = partyA;
-		this.partyB = partyB;
-		this.totalPrice = totalPrice;
-		this.conState = conState;
-		this.conChange = conChange;
-		this.conUndertakerId = conUndertakerId;
-		this.conContact = conContact;
-		this.partyBId = partyBId;
-		this.conEffectTime = conEffectTime;
-		this.conLostEffectTime = conLostEffectTime;
-		this.conEndTime = conEndTime;
-		this.conAuditTime = conAuditTime;
-		this.note = note;
-		this.standByField1 = standByField1;
-		this.standByField2 = standByField2;
-	}
 	public int getConID() {
 		return conID;
 	}

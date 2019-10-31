@@ -377,7 +377,8 @@ layui.use(['table','form','laydate'], function(){
    <div class="layui-form-item">
    		<br>
     	<div class="layui-input-block">
-     		 <button class="layui-btn" lay-filter="demo1" lay-submit="">立即提交</button>  
+     		 <button class="layui-btn" lay-filter="demo1" lay-submit="">立即提交</button>
+     		  <button type="reset" class="layui-btn layui-btn-primary">重置</button>
     	</div>
   	</div>
    
@@ -482,7 +483,8 @@ layui.use(['table','form','laydate'], function(){
    <div class="layui-form-item">
    		<br>
     	<div class="layui-input-block">
-     		 <button class="layui-btn" lay-filter="demo2" lay-submit="">立即提交</button>  
+     		 <button class="layui-btn" lay-filter="demo2" lay-submit="">立即提交</button>
+     		  <button type="reset" class="layui-btn layui-btn-primary">重置</button>  
     	</div>
   	</div>
    

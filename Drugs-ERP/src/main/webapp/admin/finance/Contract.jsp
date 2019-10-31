@@ -37,14 +37,30 @@ layui.use(['table','form','laydate','jquery'], function(){
   laydate.render({
 	    elem: '#conAuditTime',
  });
-  table.render({
+  laydate.render({
+	    elem: '#conEffectTimeUp',
+  });
+  laydate.render({
+	    elem: '#conLostEffectTimeUp',
+  });
+  laydate.render({
+	    elem: '#conEndTimeUp',
+ });
+  laydate.render({
+    	elem: '#conAuditTimeUp',
+});
+  
+  //var type=$("#contractTypeChoice").val();
+  //var state=$("#contractStateChoice").val();
+  var tableCon=table.render({
     elem: '#test',//table Id
-    url:'../../getAllContract.do',//路径
+    url:'../../getAllContract.do?',//路径
     toolbar: '#toolbarDemo',
     title: '合同列表',//标题
     page: true ,//启动分页
-    limit:5, //每页显示数默认
+    limit:10, //每页显示数默认
     limits: [5, 10, 15], //设置每页显示数
+    
     cols: [[
     	{type: 'checkbox', fixed: 'left'},
         {field:'conID', title:'合同ID', hide:true },
@@ -61,7 +77,6 @@ layui.use(['table','form','laydate','jquery'], function(){
         {field:'partyBId', title:'供应商或分店ID',hide:true},
         {field:'conEffectTime', title:'合同生效时间'},
         {field:'conLostEffectTime', title:'合同失效时间'},
-        {field:'note', title:'备注'},
         {fixed: 'right', title:'操作', toolbar: '#barDemo'}
     ]]
     
@@ -113,12 +128,21 @@ layui.use(['table','form','laydate','jquery'], function(){
 	    };
   });     
 	
-	//下拉框改变事件,头工具栏中的select选择表格中显示的合同类型
+/* 	//下拉框改变事件,头工具栏中的select选择表格中显示的合同类型
   form.on('select(contractTypeChoice)', function(data){
 		alert(data.value);
 		
-		
   }); 
+	
+  form.on('select(contractStateChoice)', function(data){
+	  //先判断合同类型是否有值
+	  var type=${"contractTypeChoice"}.value
+		if(type=="null"){
+			alert(data.value)
+		}else{
+			alert(type)
+		}
+}); */
 	 
   var addBS;
   //头工具栏事件
@@ -158,6 +182,13 @@ layui.use(['table','form','laydate','jquery'], function(){
 	       			})    
              }); 
            }
+      break;
+      case 'search':
+    	var type=$("#contractTypeChoice").val();
+    	var state=$("#contractStateChoice").val();
+    	tableCon.reload({
+			url:"../../getAllContract.do?type="+type+"&state="+state
+		})
       break;
       /* case 'contractTypeChoice':
     	alert(obj.value);
@@ -289,15 +320,30 @@ layui.use(['table','form','laydate','jquery'], function(){
  			<button type="button" class="layui-btn layui-btn-sm" lay-event="audit"><i class="layui-icon"></i></button>
 			<button type="button" class="layui-btn layui-btn-sm" lay-event="delete"><i class="layui-icon">永久删除</i></button>
       	</div>
+		<div class="layui-input-inline">
+			<label class="layui-form-label">查询:</label>
+		</div>
 		 <!-- 下拉框改变页面显示的合同内容 -->
      	<div class="layui-input-inline">
  			<select  id="contractTypeChoice" lay-filter="contractTypeChoice">
-				<option disabled  selected hidden>--------合同类型------</option>
+				<option disabled selected hidden >--------合同类型------</option>
         		<option value="分店合同" >分店合同</option>
 				<option value="采购合同">采购合同</option>
 				<option value="供应商合同">供应商合同</option>
      		</select>
       	</div>
+		<!-- 下拉框改变页面显示的合同内容 -->
+     	<div class="layui-input-inline">
+ 			<select  id="contractStateChoice" lay-filter="contractStateChoice">
+				<option disabled  selected hidden >--------合同状态------</option>
+        		<option value="生效" >生效</option>
+				<option value="失效">失效</option>
+				<option value="作废">作废</option>
+     		</select>
+      	</div>
+		<div class="layui-input-inline">
+		      <button type="button" class="layui-btn " id="doSearch" lay-event="search"><i class="layui-icon layui-icon-search"></i> </button>
+		</div>
 	</script>	
  
 	<!-- 每一行的工具toolbar -->
@@ -361,7 +407,7 @@ layui.use(['table','form','laydate','jquery'], function(){
 		<div class="layui-input-inline">
 			<select  name="conState"  lay-verify="conState" onchange="conState()" lay-filter="cs">
         		<option disabled selected hidden>--------合同状态------</option>
-        		<option value="草稿">草稿</option>
+        		<option value="失效">失效</option>
 				<option value="生效" selected="selected">生效</option>
 				<option value="作废">作废</option>
       		</select> 
@@ -479,14 +525,14 @@ layui.use(['table','form','laydate','jquery'], function(){
     <div class="layui-form-item">
     <label class="layui-form-label">合同名称</label>
     <div class="layui-input-inline">
-      <input type="text" name="conName" lay-verify="conName" placeholder="请输入名称" autocomplete="off" class="layui-input" required="required">
+      <input type="text" name="conName" lay-verify="conName" placeholder="请输入名称" autocomplete="off" class="layui-input" readonly>
     </div>
   </div>
   
   <div class="layui-form-item">
     <label class="layui-form-label">合同类型</label>
     <div class="layui-input-inline">
-     <select  name="conType"  lay-verify="conType" onchange="conType()" lay-filter="conType">
+     <select  name="conType"  lay-verify="conType" onchange="conType()" lay-filter="conType" readonly>
         <option value="分店合同" selected>分店合同</option>
 		<option value="采购合同">采购合同</option>
 		<option value="供应商合同">供应商合同</option>
@@ -494,17 +540,17 @@ layui.use(['table','form','laydate','jquery'], function(){
     </div>
   </div>
   
-  <div class="layui-form-item" hidden>
+  <div class="layui-form-item" >
 		<label class="layui-form-label">合同编号</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="conNum" placeholder="详细地址" required="required">
+			<input type="text" class="layui-input" name="conNum" placeholder="详细地址" required="required" readonly>
 		</div>
 	</div>
 	
  	<div class="layui-form-item">
 		<label class="layui-form-label">甲方名称</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" id="partyA" name="partyA" placeholder="甲方名称" required="required">
+			<input type="text" class="layui-input" id="partyA" name="partyA" placeholder="甲方名称" required="required" >
 		</div>
 	</div>
 	
@@ -518,7 +564,7 @@ layui.use(['table','form','laydate','jquery'], function(){
   <div class="layui-form-item">
 		<label class="layui-form-label">合同总金额</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="totalPrice" placeholder="合同金额" lay-verify="totalPrice" required="required">
+			<input type="text" class="layui-input" name="totalPrice" placeholder="合同金额" lay-verify="totalPrice" readonly>
 		</div>
 	</div>
 	
@@ -527,7 +573,7 @@ layui.use(['table','form','laydate','jquery'], function(){
 		<div class="layui-input-inline">
 			<select  name="conState"  lay-verify="conState" onchange="conState()" lay-filter="cs">
         		<option disabled selected hidden>--------合同状态------</option>
-        		<option value="草稿">草稿</option>
+        		<option value="失效">失效</option>
 				<option value="生效" selected="selected">生效</option>
 				<option value="作废">作废</option>
       		</select> 
@@ -582,28 +628,28 @@ layui.use(['table','form','laydate','jquery'], function(){
 	<div class="layui-form-item" >
 		<label class="layui-form-label">合同生效时间</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" id="conEffectTime" name="conEffectTime" placeholder="合同生效时间" lay-verify="conEffectTime" required="required">
+			<input type="text" class="layui-input" id="conEffectTimeUp" name="conEffectTime" placeholder="合同生效时间" lay-verify="conEffectTime" required="required">
 		</div>
 	</div>
 	
 	<div class="layui-form-item" >
 		<label class="layui-form-label">合同失效时间</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" id="conLostEffectTime" name="conLostEffectTime" placeholder="合同生效时间" lay-verify="conLostEffectTime" required="required">
+			<input type="text" class="layui-input" id="conLostEffectTimeUp" name="conLostEffectTime" placeholder="合同生效时间" lay-verify="conLostEffectTime" required="required">
 		</div>
 	</div>
 	
 	<div class="layui-form-item">
 		<label class="layui-form-label">合同结束时间</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" id="conEndTime" name="conEndTime" placeholder="合同结束时间" lay-verify="conEndTime" required="required">
+			<input type="text" class="layui-input" id="conEndTimeUp" name="conEndTime" placeholder="合同结束时间" lay-verify="conEndTime" required="required">
 		</div>
 	</div> 
 	
 	<div class="layui-form-item">
 		<label class="layui-form-label">合同签订时间</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" id="conAuditTime" name="conAuditTime" placeholder="合同签订时间" lay-verify="conAuditTime" required="required">
+			<input type="text" class="layui-input" id="conAuditTimeUp" name="conAuditTime" placeholder="合同签订时间" lay-verify="conAuditTime" required="required">
 		</div>
 	</div>
 	

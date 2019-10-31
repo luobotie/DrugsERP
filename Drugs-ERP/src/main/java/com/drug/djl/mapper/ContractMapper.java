@@ -20,7 +20,7 @@ public interface ContractMapper {
 	 * @return 总行数
 	 * 2019年10月28日下午4:20:58
 	 */
-	int countContract();
+	int countContract(Map<String, Object> map);
 	
 	/**
 	 * 

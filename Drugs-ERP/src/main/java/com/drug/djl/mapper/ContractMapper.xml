@@ -3,12 +3,30 @@
 <!--命名空间 实体类路径 包名点类名 mapper开发模式 接口的路径 -->
 <mapper namespace="com.drug.djl.mapper.ContractMapper">
 	<!-- 获取表格总行数 -->
-	<select id="countContract" resultType="int">
+	<select id="countContract" resultType="int" parameterType="Map">
 		select count(*) from
 		contract
+		<where>
+			<if test="type != null and type !=''">
+				and conType like  concat("%",#{type},"%")
+			</if>
+			<if test="state != null and state !=''">
+				and conState like  concat("%",#{state},"%")
+			</if>
+		</where>
+		
 	</select>
 	<select id="getAllContract" resultType="Contract" parameterType="Map">
-		SELECT * FROM contract limit #{page},#{limit}
+		SELECT * FROM contract
+		<where>
+			<if test="type != null and type !=''">
+			  and	conType like  concat("%",#{type},"%")
+			</if>
+			<if test="state != null and state !=''">
+			  and	conState like  concat("%",#{state},"%")
+			</if>
+		</where>
+		 limit #{page},#{limit}
 	</select>
 
 	<!-- 新增合同表 -->

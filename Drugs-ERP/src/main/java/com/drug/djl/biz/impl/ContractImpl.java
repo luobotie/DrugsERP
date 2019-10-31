@@ -25,8 +25,8 @@ public class ContractImpl implements ContractBiz{
 	@Autowired
 	private ContractMapper contractMapper;
 	@Override
-	public int countContract() {
-		return contractMapper.countContract();
+	public int countContract(Map<String, Object> map) {
+		return contractMapper.countContract(map);
 	}
 
 	@Override
@@ -36,11 +36,6 @@ public class ContractImpl implements ContractBiz{
 
 	@Override
 	public int addContract(Contract contract) {
-		//编号用时间格式化代替
-		Date date = new Date();
-		SimpleDateFormat format=new SimpleDateFormat("yyyyMMddHHmmssSS");
-		String conNum=format.format(date);
-		contract.setConNum(conNum);
 		int row=contractMapper.addContract(contract);
 		if (row == 1 ) {
 			System.out.println("添加成功");
