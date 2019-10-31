@@ -42,8 +42,19 @@ public class ContractController {
 	@RequestMapping("getAllContract.do")
 	public Map<String, Object> getAllContract(int page,int limit,String type,String state) {
 		System.out.println(page+"\t"+limit);
-		System.out.println("模糊查询："+type);
-		System.out.println("模糊查询："+state);
+		//先判断前台接收的数据是否为null
+		if(type!=null){
+			if(type.equals("null")){
+				type=null;
+			}
+		}
+		if(state!=null){
+			if(state.equals("null")){
+				state=null;
+			}
+		}
+		System.out.println("模糊:"+"\t"+type);
+		System.out.println("模糊:"+"\t"+state);
 		//分页查询的Map
 		Map<String, Object> map = new HashMap<String, Object>();
 		//总行数

@@ -8,7 +8,7 @@ package com.drug.djl.entity;
  * version:1.0
  */
 public class Contract {
-	private int conID;	// 合同表主键
+	private Integer conID;	// 合同表主键
 	private String conName; // 合同名称
 	private String conType;// 合同类型(xxxx)
 	private String conNum;	// 合同编号
@@ -17,9 +17,9 @@ public class Contract {
 	private Double totalPrice;	//总金额
 	private String conState;	//合同状态(草稿、生效，作废)
 	private String conChange;	// 是否变更(默认为‘否’)			
-	private int conUndertakerId; // 外键	承办人id			
+	private Integer conUndertakerId; // 外键	承办人id			
 	private String conContact;// 联系电话
-	private int partyBId;   // 供应商id或者分店id，取决于合同类型		
+	private Integer partyBId;   // 供应商id或者分店id，取决于合同类型		
 	private String conEffectTime;// 合同生效时间
 	private String conLostEffectTime;//合同失效时间
 	private String conEndTime;	// 合同结束时间
@@ -28,12 +28,10 @@ public class Contract {
 	private String standByField1; // 备用字段1
 	private String standByField2; // 备用字段2
 	
-	
-	
-	public int getConID() {
+	public Integer getConID() {
 		return conID;
 	}
-	public void setConID(int conID) {
+	public void setConID(Integer conID) {
 		this.conID = conID;
 	}
 	public String getConName() {
@@ -84,10 +82,10 @@ public class Contract {
 	public void setConChange(String conChange) {
 		this.conChange = conChange;
 	}
-	public int getConUndertakerId() {
+	public Integer getConUndertakerId() {
 		return conUndertakerId;
 	}
-	public void setConUndertakerId(int conUndertakerId) {
+	public void setConUndertakerId(Integer conUndertakerId) {
 		this.conUndertakerId = conUndertakerId;
 	}
 	public String getConContact() {
@@ -96,10 +94,10 @@ public class Contract {
 	public void setConContact(String conContact) {
 		this.conContact = conContact;
 	}
-	public int getPartyBId() {
+	public Integer getPartyBId() {
 		return partyBId;
 	}
-	public void setPartyBId(int partyBId) {
+	public void setPartyBId(Integer partyBId) {
 		this.partyBId = partyBId;
 	}
 	public String getConEffectTime() {
@@ -144,6 +142,8 @@ public class Contract {
 	public void setStandByField2(String standByField2) {
 		this.standByField2 = standByField2;
 	}
+	
+	
 	
 	
 }

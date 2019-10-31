@@ -186,9 +186,24 @@ layui.use(['table','form','laydate','jquery'], function(){
       case 'search':
     	var type=$("#contractTypeChoice").val();
     	var state=$("#contractStateChoice").val();
-    	tableCon.reload({
+    	 tableCon.reload({
 			url:"../../getAllContract.do?type="+type+"&state="+state
-		})
+		}) 
+    	/* if(type == null && state == null ){
+    		table.reload("test", {})
+    	}else if (state == null){
+    		tableCon.reload({
+    			url:"../../getAllContract.do?type="+type
+    		})
+    	} else if (type == null ){
+    		tableCon.reload({
+    			url:"../../getAllContract.do?state="+state
+    		})
+    	}else{
+    		tableCon.reload({
+    			url:"../../getAllContract.do?type="+type+"&state="+state
+    		})
+    	}  */
       break;
       /* case 'contractTypeChoice':
     	alert(obj.value);
@@ -240,16 +255,31 @@ layui.use(['table','form','laydate','jquery'], function(){
   
 //自定义验证规则  
 	form.verify({  
-	  bsName: function(value){  
+		conName: function(value){  
           if(value.length < 2 ){  
-            return '店名至少得2个字';  
+            return '合同名称至少得2个字';  
           }  
         },
-       bsLocation: function(value){  
-           if(value.length > 5 ){  
-               return '必选地区';  
+        totalPrice: function(value){  
+           if(value.length == 0 ){  
+               return '必填';  
              }  
         },
+        conEffectTime: function(value){  
+            if(value.length == 0 ){  
+                return '请选择时间';  
+              }  
+         },
+         conLostEffectTime: function(value){  
+             if(value.length == 0 ){  
+                 return '请选择时间';  
+               }  
+          },
+          conAuditTime: function(value){  
+              if(value.length == 0 ){  
+                  return '请选择时间';  
+                }  
+           },
         conContact: [/^1[3|4|5|7|8]\d{9}$/, '手机必须11位，只能是数字！'],
        email: [/^[a-z0-9._%-]+@([a-z0-9-]+\.)+[a-z]{2,4}$|^1[3|4|5|7|8]\d{9}$/, '邮箱格式不对']  
   });  
@@ -310,10 +340,7 @@ layui.use(['table','form','laydate','jquery'], function(){
 </script>
 </head>
 <body>
-      <table class="layui-hide" id="test1" lay-filter="test"></table>
 	  <table class="layui-hide" id="test" lay-filter="test"></table>
-
-
 
 	<script type="text/html" id="toolbarDemo">
 		<div class="layui-input-inline">
@@ -446,7 +473,7 @@ layui.use(['table','form','laydate','jquery'], function(){
 	</div>
 	
 	<div class="layui-form-item" id="fd">
-		<label class="layui-form-label"  >分店id</label>
+		<label class="layui-form-label" >分店id</label>
 		<div class="layui-input-inline">
 			<input type="text" class="layui-input" name="partyBId" placeholder="分店id" lay-verify="partyBId" required="required">
 		</div>
