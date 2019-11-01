@@ -66,5 +66,16 @@ public class ContractImpl implements ContractBiz{
 		}
 		return row;
 	}
+
+	@Override
+	public int updateContract(Contract contract) {
+		int row=contractMapper.updateContract(contract);
+		if (row == 1 ) {
+			System.out.println("修改成功");
+		} else {
+			System.out.println("修改失败");
+		}
+		return row;
+	}
 	
 }

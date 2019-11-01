@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.SimpleFormatter;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +89,7 @@ public class ContractController {
 		//编号用时间格式化代替
 		Date date = new Date();
 		SimpleDateFormat format=new SimpleDateFormat("yyyyMMddHHmmssSS");
+		SimpleDateFormat format2=new SimpleDateFormat("yyyyMMdd");
 		String conNum=format.format(date);
 		contract.setConNum(conNum);
 		int row=contractBiz.addContract(contract);
@@ -126,23 +128,24 @@ public class ContractController {
 		return row;
 	}
 
-
-
-
-
+	/**
+	 * 
+	 * 描述:修改合同表的信息
+	 * @param id
+	 * @return
+	 * 2019年10月31日下午4:16:39
+	 */
+	@RequestMapping("updateContract.do")
+	public int updateContract(Contract contract){
+		int row=contractBiz.updateContract(contract);
+		return row;
+	}
 
 
 	public static void main(String[] args) {
-		int a=1;
-		int b=2;
-		if (a==1 && b!=2) {
-			System.out.println(a);
-		} else if (b==2 && a!=1) {
-			System.out.println(b);
-		} else if ( a==1 && b==2){
-			System.out.println(a+b);
-		}
-
+		Random ro = new Random();
+		
+		System.out.println(ro.nextInt(100));
 		
 		
 

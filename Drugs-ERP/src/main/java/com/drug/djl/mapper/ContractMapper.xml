@@ -50,5 +50,12 @@
 	</delete>
 	
 	<!-- 修改合同 -->
+	<update id="updateContract" parameterType="Contract">
+		UPDATE contract SET 
+		conName=#{conName},conType=#{conType},conNum=#{conNum},partyA=#{partyA},partyB=#{partyB},totalPrice=#{totalPrice},conState=#{conState},conChange=#{conChange},
+		conUndertakerId=#{conUndertakerId},conContact=#{conContact},partyBId=#{partyBId},conEffectTime=#{conEffectTime},conLostEffectTime=#{conLostEffectTime},
+		conEndTime=#{conEndTime},conAuditTime=#{conAuditTime},note=#{note},standByField1=NULL,standByField2=NULL
+		WHERE conID=#{conID}
 	
+	</update>
 </mapper>

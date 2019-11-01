@@ -45,7 +45,7 @@ public interface ContractBiz {
 	 * @return 受影响行数
 	 * 2019年10月29日下午4:05:05
 	 */
-	int lostContract(Map map);
+	int lostContract(Map<String,Object> map);
 	
 	/**
 	 * 
@@ -55,4 +55,13 @@ public interface ContractBiz {
 	 * 2019年10月30日上午10:33:58
 	 */
 	int delContract(Integer id);
+	
+	/**
+	 * 
+	 * 描述:修改某个合同
+	 * @param id
+	 * @return
+	 * 2019年10月31日下午3:26:58
+	 */
+	int updateContract(Contract contract);
 }
