@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.drug.djl.entity.BranchStoreInfo;
+import com.drug.djl.entity.Contract;
 
 /**
  * 
@@ -54,4 +55,12 @@ public interface BranchStoreBiz {
 	 * 2019年10月25日下午5:01:58
 	 */
 	int updateBranchStore(BranchStoreInfo bStoreInfo);
+	
+	/**
+	 * 
+	 * 描述:得到所有已签合同的分店
+	 * @return 已签合同的分店
+	 * 2019年11月1日上午9:15:45
+	 */
+	List<Contract> getAllBSContract();
 }

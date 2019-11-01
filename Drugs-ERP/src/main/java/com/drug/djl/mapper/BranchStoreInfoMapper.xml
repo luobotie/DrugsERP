@@ -32,7 +32,7 @@
 	</update>
 	
 	<!-- 查看所有已签合同的分店 -->
-	<select id="getAllBSContract">
+	<select id="getAllBSContract" resultType="Contract">
 		SELECT * FROM contract WHERE  conType ='分店合同' AND conState='生效'
 	</select>
 </mapper>

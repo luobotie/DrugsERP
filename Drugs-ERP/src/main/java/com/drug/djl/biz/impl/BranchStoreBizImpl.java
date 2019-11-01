@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.drug.djl.biz.BranchStoreBiz;
 import com.drug.djl.entity.BranchStoreInfo;
+import com.drug.djl.entity.Contract;
 import com.drug.djl.mapper.BranchStoreInfoMapper;
 
 /**
@@ -66,6 +67,11 @@ public class BranchStoreBizImpl implements BranchStoreBiz {
 			System.out.println("修改失败");
 		}
 		return row;
+	}
+
+	@Override
+	public List<Contract> getAllBSContract() {
+		return branchInfoMapper.getAllBSContract();
 	}
 
 }

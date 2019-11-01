@@ -1,5 +1,6 @@
 package com.drug.djl.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.drug.djl.biz.BranchStoreBiz;
 import com.drug.djl.entity.BranchStoreInfo;
+import com.drug.djl.entity.Contract;
 
 /**
  * 
@@ -74,6 +76,12 @@ public class BSController {
 	public int updateBranchStore(BranchStoreInfo bStoreInfo){
 		int row=branchStoreBiz.updateBranchStore(bStoreInfo);
 		return row;
+	}
+	
+	@RequestMapping("getAllBSContract.do")
+	public List<Contract> getAllBSContract() {
+		List<Contract> bsContracts=branchStoreBiz.getAllBSContract();
+		return bsContracts;
 	}
 	
 }

@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import com.drug.djl.entity.BranchStoreInfo;
+import com.drug.djl.entity.Contract;
 
 /**
  * 描述:分店信息管理表的Mapper映射接口（持久层）
@@ -54,4 +55,13 @@ public interface BranchStoreInfoMapper {
 	 * 2019年10月25日下午5:01:58
 	 */
 	int updateBranchStore(BranchStoreInfo bStoreInfo);
+
+	
+	/**
+	 * 
+	 * 描述:得到所有已签合同的分店
+	 * @return 已签合同的分店
+	 * 2019年11月1日上午9:15:45
+	 */
+	List<Contract> getAllBSContract();
 }

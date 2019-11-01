@@ -56,10 +56,11 @@ function allProvince(){
 
 window.onload = allProvince;
 //注册table，form
-layui.use(['table','form','laydate'], function(){
+layui.use(['table','form','laydate','jquery'], function(){
   var table = layui.table;
   var form = layui.form;
   var laydate = layui.laydate;
+  var $=layui.jquery;
   
   //常规用法,时间选择器
   laydate.render({
@@ -146,13 +147,29 @@ layui.use(['table','form','laydate'], function(){
     var checkStatus = table.checkStatus(obj.config.id);
     switch(obj.event){
       case 'audit':
+    	  var bsNameSelect=$("#bsName");
+    	  //给下拉框赋值
+    	  bsNameSelect.empty();//清空下拉列表数据
+    	  $.ajax({
+				url:'../../getAllBSContract.do',
+				success:function(back){
+					if(back != null){
+		                for (var i = 0; i < back.length; i++) {
+		                	//alert(back[i].conName)
+		                	//bsNameSelect.add(new Option(back[i].partyB,back[i].partyB));
+		                	bsNameSelect.append("<option value="+back[i].partyB+">"+back[i].partyB+"</option>");
+						} 
+		                form.render();
+		            }
+				}
+			})    
     	  addBS=layer.open({
                    title:'新增分店',//标题
                    type:1,//样式
                    area:['600px','600px'],//大小
                    content:$("#form2"),
                });
-               form.render();
+              
       break;
     };
   });
@@ -290,7 +307,8 @@ layui.use(['table','form','laydate'], function(){
    <div class="layui-form-item">
     <label class="layui-form-label">分店名称</label>
     <div class="layui-input-inline">
-      <input type="text" name="bsName" lay-verify="bsName" placeholder="请输入名称" autocomplete="off" class="layui-input" required="required">
+       <select  id="bsName" name="bsName"  onchange="changeCity()"  lay-verify="bsName" placeholder="请选择分店" required="required">
+      </select> 
     </div>
   </div>
   
@@ -396,7 +414,8 @@ layui.use(['table','form','laydate'], function(){
    <div class="layui-form-item">
     <label class="layui-form-label">分店名称</label>
     <div class="layui-input-inline">
-      <input type="text" name="bsName" lay-verify="bsName" placeholder="请输入名称" autocomplete="off" class="layui-input" required="required">
+    	<select   name="bsName"  onchange="changeCity()" lay-filter="cs" lay-verify="bsName" placeholder="请选择分店" required="required" readOnly>
+      </select>
     </div>
   </div>
   
