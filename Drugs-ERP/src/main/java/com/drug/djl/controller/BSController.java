@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.drug.djl.biz.BranchStoreBiz;
 import com.drug.djl.entity.BranchStoreInfo;
 import com.drug.djl.entity.Contract;
+import com.drug.djl.entity.LikeSelectBS;
 
 /**
  * 
@@ -35,14 +36,18 @@ public class BSController {
 	 * 2019年10月23日上午11:10:11
 	 */
 	@RequestMapping("selectAllBranchStore.do")
-	public Map<String, Object> selectAllBranchStore(int page,int limit) {
+	public Map<String, Object> selectAllBranchStore(LikeSelectBS likeSelectBS) {
+		System.out.println("模糊查询:"+likeSelectBS.getBsopendate());
+		System.out.println("模糊查询:"+likeSelectBS.getBslocationCity());
+		System.out.println("模糊查询:"+likeSelectBS.getBslocationPro());
+		System.out.println("模糊查询:"+likeSelectBS.getLimit());
 		//总行数
-		int counts=branchStoreBiz.selectAllBranchStores();
+		int counts=branchStoreBiz.selectAllBranchStores(likeSelectBS);
 		//为分页查询创建map
 		Map<String, Object> branchPage=new HashMap<>();
-		branchPage.put("page", (page-1)*limit);//当前页数-1*每页显示数量
-		branchPage.put("limit", limit);//每页显示数
-		List<BranchStoreInfo> branchStores=branchStoreBiz.selectAllBranchStore(branchPage);
+		branchPage.put("page", (likeSelectBS.getPage()-1)*likeSelectBS.getLimit());//当前页数-1*每页显示数量
+		branchPage.put("limit", likeSelectBS.getLimit());//每页显示数
+		List<BranchStoreInfo> branchStores=branchStoreBiz.selectAllBranchStore(likeSelectBS);
 		//分页查询的Map
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code", 0);

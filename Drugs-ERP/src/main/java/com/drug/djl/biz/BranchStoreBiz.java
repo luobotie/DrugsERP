@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.drug.djl.entity.BranchStoreInfo;
 import com.drug.djl.entity.Contract;
+import com.drug.djl.entity.LikeSelectBS;
 
 /**
  * 
@@ -21,7 +22,7 @@ public interface BranchStoreBiz {
 	 * @return 分店信息的集合
 	 * 2019年10月23日
 	 */
-	List<BranchStoreInfo> selectAllBranchStore(Map<String , Object> page);
+	List<BranchStoreInfo> selectAllBranchStore(LikeSelectBS likeSelectBS);
 	
 	/**
 	 * 
@@ -29,7 +30,7 @@ public interface BranchStoreBiz {
 	 * @return
 	 * 2019年10月23日上午11:06:08
 	 */
-	Integer selectAllBranchStores();
+	Integer selectAllBranchStores(LikeSelectBS likeSelectBS);
 	
 	/**
 	 * 描述:添加分店信息表

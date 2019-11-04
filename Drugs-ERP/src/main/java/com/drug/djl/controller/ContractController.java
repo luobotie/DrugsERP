@@ -63,7 +63,7 @@ public class ContractController {
 		countmap.put("type", type);//模糊查询
 		countmap.put("state", state);//模糊查询
 		int counts=contractBiz.countContract(countmap);
-		//为分页查询创建map
+		//表中所有数据
 		Map<String, Object> branchPage=new HashMap<>();
 		branchPage.put("page", (page-1)*limit);//当前页数-1*每页显示数量
 		branchPage.put("limit", limit);//每页显示数

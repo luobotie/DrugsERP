@@ -175,7 +175,7 @@ label{
       </div>
     </div>
 
-<div class="layui-inline" >
+	<div class="layui-inline" >
 			<button class="layui-btn layui-btn-normal" data-type="reload">搜索</button>		
 		</div>    
 </form>

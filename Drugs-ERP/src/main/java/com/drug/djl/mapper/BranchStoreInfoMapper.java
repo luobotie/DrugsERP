@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.drug.djl.entity.BranchStoreInfo;
 import com.drug.djl.entity.Contract;
+import com.drug.djl.entity.LikeSelectBS;
 
 /**
  * 描述:分店信息管理表的Mapper映射接口（持久层）
@@ -22,14 +23,14 @@ public interface BranchStoreInfoMapper {
 	 * @return 分店信息的集合
 	 * 2019年10月23日上午11:06:22
 	 */
-	List<BranchStoreInfo> selectAllBranchStore(Map<String , Object> branchPage);
+	List<BranchStoreInfo> selectAllBranchStore(LikeSelectBS likeSelectBS);
 	
 	/**
 	 * 描述:分店信息表的行数
 	 * @return
 	 * 2019年10月23日上午11:06:08
 	 */
-	Integer selectALLBranchStores();
+	Integer selectALLBranchStores(LikeSelectBS likeSelectBS);
 	
 	/**
 	 * 描述:添加分店信息表

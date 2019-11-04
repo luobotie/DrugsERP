@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.drug.djl.biz.BranchStoreBiz;
 import com.drug.djl.entity.BranchStoreInfo;
 import com.drug.djl.entity.Contract;
+import com.drug.djl.entity.LikeSelectBS;
 import com.drug.djl.mapper.BranchStoreInfoMapper;
 
 /**
@@ -25,13 +26,13 @@ public class BranchStoreBizImpl implements BranchStoreBiz {
 	private BranchStoreInfoMapper branchInfoMapper;
 	
 	@Override
-	public List<BranchStoreInfo> selectAllBranchStore(Map<String , Object> branchPage) {
-		return branchInfoMapper.selectAllBranchStore(branchPage);
+	public List<BranchStoreInfo> selectAllBranchStore(LikeSelectBS likeSelectBS) {
+		return branchInfoMapper.selectAllBranchStore(likeSelectBS);
 	}
 
 	@Override
-	public Integer selectAllBranchStores() {
-		return branchInfoMapper.selectALLBranchStores();
+	public Integer selectAllBranchStores(LikeSelectBS likeSelectBS) {
+		return branchInfoMapper.selectALLBranchStores(likeSelectBS);
 	}
 
 	@Override
