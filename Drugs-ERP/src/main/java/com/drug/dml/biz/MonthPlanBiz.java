@@ -2,6 +2,7 @@ package com.drug.dml.biz;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.drug.dml.entity.DrugsMonthPlan;
@@ -51,7 +52,7 @@ public interface MonthPlanBiz {
 	 * @param proId 产品ID
 	 * @return List<PlanDetails>
 	 */
-	List<PlanDetails> selectMonthPlanDetailsByProId(int proId);
+	List<PlanDetails> selectMonthPlanDetailsByProId(Integer proId);
 	
 	/**
 	 * 多表联合查询月计划详情表、药品表得到月计划详情单
@@ -63,7 +64,7 @@ public interface MonthPlanBiz {
 	 * 更改月计划详情药品数量(药品id重复情况下)
 	 * @return Integer
 	 */
-	Integer updateProduceNum(int produceNum,int monthPlanDetailId);
+	Integer updateProduceNum(Integer produceNum,Integer monthPlanDetailId);
 	
 	/**
 	 * 新增月计划
@@ -83,14 +84,14 @@ public interface MonthPlanBiz {
 	 * @param monthPlanId
 	 * @return Integer
 	 */
-	Integer updateMonthPlanDetailsByMonthPlanId(int monthPlanId);
+	Integer updateMonthPlanDetailsByMonthPlanId(Integer monthPlanId);
 	
 	/**
 	 * 指定月计划查询编辑
 	 * @param monthPlanId
 	 * @return List<DrugsMonthPlan>
 	 */
-	List<DrugsMonthPlan> selectThisMonthPlan(int monthPlanId);
+	List<DrugsMonthPlan> selectThisMonthPlan(Integer monthPlanId);
 	
 	/**
 	 * 根据月计划ID修改月计划(开始时间、结束时间、实际生产数量)
@@ -108,43 +109,68 @@ public interface MonthPlanBiz {
 	 * 根据月计划ID修改月计划(开始时间、结束时间、实际生产数量)的生产状态
 	 * @return Integer
 	 */
-	Integer updateThisMonthPlanProState(int monthPlanId);
+	Integer updateThisMonthPlanProState(Integer monthPlanId);
 	
 	/**
 	 * 删除指定月计划
 	 * @return Integer
 	 */
-	Integer deleteThisMonthPlan(int monthPlanId);
+	Integer deleteThisMonthPlan(Integer monthPlanId);
 	
 	/**
 	 * 根据月计划ID删除月计划详情
 	 * @param monthPlanId
 	 * @return Integer
 	 */
-	Integer deleteThisMonthPlanAndMonthPlanDetail(int monthPlanId);
+	Integer deleteThisMonthPlanAndMonthPlanDetail(Integer monthPlanId);
 	
 	/**
 	 * 删除指定月计划详情
 	 * @return Integer
 	 */
-	Integer deleteThisMonthPlanDetailId(int monthPlanDetailId);
+	Integer deleteThisMonthPlanDetailId(Integer monthPlanDetailId);
+	
+	/**
+	 * 根据月计划ID修改月计划(审核状态、审核时间、审核人ID)(修改月计划)
+	 * @param monthPlanId 月计划Id
+	 * @return Integer
+	 */
+	Integer updateThisMonthPlanStatus(Integer monthPlanId);
 	
 	/**
 	 * 多表联合查询月计划详情表、月计划表(获得该月计划中月计划详情所有药品的数量)
 	 * @param monthPlanId
 	 * @return Integer
 	 */
-	Integer selectMonPlanAndPlanDetails(int monthPlanId);
+	Integer selectMonPlanAndPlanDetails(Integer monthPlanId);
 	
 	/**
 	 * 更新月计划总数量
 	 * @return Integer
 	 */
-	Integer updateMonthPlan(int monthPlanNum,int monthPlanId);
+	Integer updateMonthPlan(Integer monthPlanNum,Integer monthPlanId);
 	
 	/**
 	 * 用于验证商品是否为空
 	 * @return Integer
 	 */
 	Integer selectMonthPlanDetailIfNull();
+	
+	/**
+	 * 修改月计划用于验证商品是否为空
+	 * @return Integer
+	 */
+	Integer selectMonthPlanDetailIfNullAgain(Integer monthPlanId);
+	
+	/**
+	 * 多表联合查询月计划详情表、药品表得到月计划详情单(修改月计划操作)
+	 * @return List<PlanDetails>
+	 */
+	List<PlanDetails> selectDrugsMonthPlanDetailsAgain(Integer monthPlanId);
+	
+	/**
+	 * 新增月计划详情(修改月计划)
+	 * @return Integer
+	 */
+	Integer insertMonthPlanDetailsAgain(Integer monthPlanId,Integer proId,Integer produceNum);
 }

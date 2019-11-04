@@ -65,9 +65,8 @@ public class ProductBizImpl implements ProductBiz{
 	}
 
 	@Override
-	public Integer insertProduct() {
-		// TODO Auto-generated method stub
-		return null;
+	public Integer insertProduct(ProductInfo productInfo) {
+		return productMapper.insertProduct(productInfo);
 	}
 
 	@Override
@@ -78,6 +77,51 @@ public class ProductBizImpl implements ProductBiz{
 	@Override
 	public List<ProductType> selectProType() {
 		return productMapper.selectProType();
+	}
+
+	@Override
+	public Integer insertProductRecipe(String recipeName) {
+		return productMapper.insertProductRecipe(recipeName);
+	}
+
+	@Override
+	public Integer seletctProductRecipeTop() {
+		return productMapper.seletctProductRecipeTop();
+	}
+
+	@Override
+	public Integer updateProductByProId(Integer recipeId,Integer proId) {
+		return productMapper.updateProductByProId(recipeId,proId);
+	}
+
+	@Override
+	public Integer seletctProductInfoTop() {
+		return productMapper.seletctProductInfoTop();
+	}
+
+	@Override
+	public Integer updateProduct(String proStaData, Integer proId) {
+		return productMapper.updateProduct(proStaData, proId);
+	}
+
+	@Override
+	public Integer updateProductRecipeStatues(Integer recipeId) {
+		return productMapper.updateProductRecipeStatues(recipeId);
+	}
+
+	@Override
+	public Integer updateProductRecipeStatuesAgain(Integer recipeId) {
+		return productMapper.updateProductRecipeStatuesAgain(recipeId);
+	}
+
+	@Override
+	public Integer selectRecipeIdByProId(Integer proId) {
+		return productMapper.selectRecipeIdByProId(proId);
+	}
+
+	@Override
+	public Integer selectRecipeIdByPrdId(Integer prdId) {
+		return productMapper.selectRecipeIdByPrdId(prdId);
 	}
 	
 	

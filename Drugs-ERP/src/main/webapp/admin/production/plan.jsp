@@ -42,6 +42,7 @@
 <script type="text/html" id="toolbarDemo">
   <div class="layui-btn-container" style="margin-top:20px;padding-left:20px;">
     <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckData"><i class="layui-icon layui-icon-add-1"></i>制定月计划 </button>
+	<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="details"><i class="layui-icon layui-icon-add-1"></i>修改月计划</button>
     <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckLength"><i class="layui-icon layui-icon-add-1"></i>制定日计划</button>
     <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="isAll"><i class="layui-icon layui-icon-friends"></i>审核月计划</button>
   </div>
@@ -50,7 +51,7 @@
 <div id="toolbarDemo2" style="display:none">
 <form class="layui-form" action="javaScript:void(0)" id="we" method="post" lay-filter="formTest">
 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 0px;">
-<legend>添加采购商品</legend>
+<legend>添加月计划</legend>
 </fieldset>
 	<div class="layui-inline" style="padding-left:0px;">
 	    <div class="layui-inline">
@@ -62,9 +63,30 @@
     </div>
 	<label width="120px" style="margin:0 5px 0 20px;font-size:13px;">输入生产数量</label>
 	<div class="layui-input-inline">
-		 <input type="text" name="produceNum" lay-verify="number" placeholder="请输入" autocomplete="off" class="layui-input">
+		 <input type="text" name="produceNum" id="produceNum" lay-verify="number" placeholder="请输入" autocomplete="off" class="layui-input" onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;">
 	</div>
 	<button class="layui-btn layui-btn-normal" lay-event="update" lay-filter="tianjia">添加</button>
+  </div>
+ </form>	
+</div>
+<div id="toolbarDemo3" style="display:none">
+<form class="layui-form" action="javaScript:void(0)" id="wo" method="post" lay-filter="formTest1">
+<fieldset class="layui-elem-field layui-field-title" style="margin-top: 0px;">
+<legend>修改月计划</legend>
+</fieldset>
+	<div class="layui-inline" style="padding-left:0px;">
+	    <div class="layui-inline">
+      <label class="layui-form-label">药品名</label>
+      <div class="layui-input-inline">
+        <select name="proId" lay-verify="required" id="typeselectBox1">
+        </select>
+      </div>
+    </div>
+	<label width="120px" style="margin:0 5px 0 20px;font-size:13px;">输入生产数量</label>
+	<div class="layui-input-inline">
+		 <input type="text" name="produceNum" id="produceNum2" lay-verify="number" placeholder="请输入" autocomplete="off" class="layui-input" onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;">
+	</div>
+	<button class="layui-btn layui-btn-normal" lay-event="update2" >添加</button>
   </div>
  </form>	
 </div>
@@ -100,16 +122,32 @@
 			        .fail(function() {
 			            console.log("error");
 			        });
+					
+					//修改月计划
+			        var options = "<option value='-1'>请选择药品</option>";//初始化option的选项
+			        $.ajax({
+			            url: "../../getChineseName.do",
+			            type: 'POST'
+			        })
+			        .done(function(data) {
+			            for(var i=0;i<data.length;i++){                	
+			                options+="<option value='"+data[i]['proId']+"'>"+data[i]['chineseName']+"</option>";//拼接option中的内容
+			                	$("#typeselectBox1").html(options);//将option的拼接内容加入select中，注意选择器是select的ID
+			            }
+			            form.render('select');//重点：重新渲染select
+			        })
+			        .fail(function() {
+			            console.log("error");
+			        });
 		
 
-					table.render({
+					var table2=table.render({
 						elem : '#test',
 						url : '../../getAllMonthPlan.do',
 						toolbar : '#toolbarDemo',
 						title : '用户数据表',
 						cols : [ [ {
 							type : 'checkbox',
-							fixed : 'left'
 						}, {
 							field : 'monthPlanId',
 							title : '月计划编号',
@@ -165,7 +203,6 @@
 							title : '审核人编号',
 							unresize : true
 						}, {
-							fixed : 'right',
 							width : 178,
 							align : 'center',
 							toolbar : '#barDemo',
@@ -195,10 +232,11 @@
 					//工具栏事件
 					table.on('toolbar(test)', function(obj) {
 						var checkStatus = table.checkStatus(obj.config.id);
+						//获得选择的对象
+						var data = checkStatus.data;
 						switch (obj.event) {
 						case 'getCheckData':
 							var index = layer.open({
-								title : '制定计划详情',//标题
 								type : 1,//样式
 								shade : 0,
 								offset : [ '5%', '15%' ],//设置位移
@@ -237,7 +275,7 @@
 																  success:function(data){
 																	if(data == '1'){
 																		layer.msg('执行成功');
-																		table.reload("test2",{});
+																		table2.reload();
 																	}else{
 																		layer.msg('执行失败');
 																	}
@@ -281,7 +319,15 @@
 						            	//获取表单区域所有值
 						            	//alert(data.field.titletype);
 						            	//console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
-						            	$.ajax({
+							    	var typeselectBox = $("#typeselectBox").val();
+									var produceNum = $("#produceNum").val();
+									if(typeselectBox == '-1'||produceNum == ''||produceNum <= '0'){
+										layer.msg('信息有误', {
+						            		  icon: 2,
+						            		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+						            		});
+									}else{
+										$.ajax({
 											  url:'../../insertMonthPlanDetails.do',
 											  data:$("#we").serialize(),
 											  type:'post',
@@ -289,54 +335,22 @@
 											  success:function(data){
 												if(data == '1'){
 													layer.msg('添加成功');
-													table.render({
-														elem : '#test2',
-														url : '../../selectMonthPlanDetails.do',
-														toolbar : '#toolbarDemo2',
-														totalRow : true,
-														cols : [ [ {
-															type : 'numbers'
-														}, {
-															field : 'monthPlanDetailId',
-															title : '药品详情编号',
-															hide : true,
-															unresize : true
-														}, {
-															field : 'proId',
-															title : '药品编号',
-															unresize : true
-														}, {
-															field : 'chineseName',
-															title : '药品名称',
-															edit : 'text',
-															unresize : true
-														}, {
-															field : 'produceNum',
-															title : '生产数量',
-															totalRow : true,
-															edit : 'text',
-															unresize : true
-														}, {
-															align : 'center',
-															toolbar : '#barDemo2',
-															unresize : true
-														} ] ]
-													});
+													table3.reload();
 												}else{
 													layer.msg('添加失败');
 												}
 											  }
 						                  //return false;
 						                }); 
+									}
 							    break;
 							  };
 							});
 							
-							table.render({
+							var table3 = table.render({
 								elem : '#test2',
 								url : '../../selectMonthPlanDetails.do',
 								toolbar : '#toolbarDemo2',
-								totalRow : true,
 								cols : [ [ {
 									type : 'numbers'
 								}, {
@@ -356,7 +370,6 @@
 								}, {
 									field : 'produceNum',
 									title : '生产数量',
-									totalRow : true,
 									edit : 'text',
 									unresize : true
 								}, {
@@ -365,6 +378,155 @@
 									unresize : true
 								} ] ]
 							});
+							break;
+						case 'details':
+							if (data.length == 1) {
+								var index = layer.open({
+									type : 1,//样式
+									shade : 0,
+									offset : [ '5%', '15%' ],//设置位移
+									btn : [ '确认', '取消' ], 
+									yes : function(index, layero) {
+										/* //点击确认添加,验证是否添加了商品
+										$.ajax({
+											  url:'../../selectMonthPlanDetailIfNullAgain.do?monthPlanId='+data[0].monthPlanId,
+											  type:'post',
+											  dataType:'json',
+											  success:function(data){
+												if(data != '0'){
+													
+												}else{
+													layer.msg('请添加商品');
+												}
+											  }
+						                });  */
+											var index88 = layer.open({
+												type : 1,
+												shade : 0.25,
+												area : [ '400px', '350px' ],
+												content : $('#nameAndTimeDiv'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+												success : function(layero, index) {
+													form.render();
+												},
+												btn : [ '确认', '取消' ],
+												yes : function(layero) {
+														$.ajax({
+															  url:'../../insertAndUpdateAgain.do?monthPlanId='+data[0].monthPlanId,
+															  data:$("#formIdOne").serialize(),
+															  type:'post',
+															  dataType:'json',
+															  success:function(data){
+																if(data == '1'){
+																	layer.msg('执行成功');
+																	table2.reload();
+																}else{
+																	layer.msg('执行失败');
+																}
+															  }
+										                  //return false;
+										                }); 
+														layer.close(index);
+														layer.close(index88);
+												},//yes按钮结束
+												btn2 : function(index, layero) {
+													layer.close(index88);
+												}
+											});
+									},
+									btn2 : function(index, layero) {
+										layer.close(index);
+									},
+									area : [ '880px', '550px' ],
+									content : $("#table2Div"),
+									success : function(layero) {
+										var mask = $(".layui-layer-shade");
+										mask.appendTo(layero.parent());
+									},
+									end : function() {
+										$('[lay-id="test2"]').css("display", "none");
+									}
+								});
+								
+								//监听事件
+								table.on('toolbar(test2)', function(obj){
+								  var checkStatus = table.checkStatus(obj.config.id);
+								  switch(obj.event){
+								    case 'update2':
+								    	//监听button
+							            	//获取表单区域所有值
+							            	//alert(data.field.titletype);
+							            	//console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+								    	var typeselectBox1 = $("#typeselectBox1").val();
+										var produceNum2 = $("#produceNum2").val();
+										if(typeselectBox1 == '-1'||produceNum2 == ''||produceNum2 <= '0'){
+											layer.msg('信息有误', {
+							            		  icon: 2,
+							            		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+							            		});
+										}else{
+											$.ajax({
+												  url:'../../insertMonthPlanDetailsAgain.do?monthPlanId='+data[0].monthPlanId,
+												  data:$("#wo").serialize(),
+												  type:'post',
+												  dataType:'json',
+												  success:function(data){
+													if(data == '1'){
+														layer.msg('添加成功');
+														table.reload("test",{});
+														table4.reload();
+													}else{
+														layer.msg('添加失败');
+													}
+												  }
+							                  //return false;
+							                }); 
+										}
+								    break;
+								  };
+								});
+								
+								var table4 = table.render({
+									elem : '#test2',
+									url : '../../selectMonthPlanDetailsAgain.do?monthPlanId='+data[0].monthPlanId,
+									toolbar : '#toolbarDemo3',
+									cols : [ [ {
+										type : 'numbers'
+									}, {
+										field : 'monthPlanId',
+										title : '月计划编号',
+										unresize : true
+									}, {
+										field : 'monthPlanDetailId',
+										title : '月计划详情编号',
+										hide : true,
+										unresize : true
+									}, {
+										field : 'proId',
+										title : '药品编号',
+										unresize : true
+									}, {
+										field : 'chineseName',
+										title : '药品名称',
+										edit : 'text',
+										unresize : true
+									}, {
+										field : 'produceNum',
+										title : '生产数量',
+										edit : 'text',
+										unresize : true
+									}, {
+										align : 'center',
+										toolbar : '#barDemo2',
+										unresize : true
+									} ] ]
+								});
+								
+
+							} else if (data.length > 1) {
+								layer.msg('最多只能选择一条月计划');
+							} else {
+								layer.msg('请选择一条月计划');
+							}
 							break;
 						case 'getCheckLength':
 							var data = checkStatus.data;
@@ -376,27 +538,20 @@
 										,
 										btn2 : function(index, layero) {
 											layer.close(index2);
+											
 										}
-									}, function(layero) {
-										layer.close(index2);
-										var index88 = layer.open({
-											type : 1,
-											shade : 0.25,
-											area : [ '400px', '350px' ],
-											content : $('#nameAndTimeDiv'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-											success : function(layero, index) {
-												form.render();
-											},
-											btn : [ '确认', '取消' ],
-											yes : function(layero) {
-												layer.close(index);
-												layer.close(index88);
-												layer.msg('计划制定成功');
-											},
-											btn2 : function(index, layero) {
-												layer.close(index88);
-											}
-										});
+									}, function() {
+										$.ajax({
+											  url:'../../insertDailyplan.do',
+											  data:{'monthPlanId':data[0].monthPlanId,'monthPlanNum':data[0].monthPlanNum},
+											  type:'post',
+											  dataType:'json',
+											  success:function(data){
+													  layer.msg('日计划制定成功,可到日生产计划查看详情');
+													  table2.reload(); 
+											  }
+						                  //return false;
+						                }); 
 
 									});
 								} else {
@@ -441,7 +596,7 @@
 													  success:function(data){
 														  if(data == '1'){
 															  layer.msg('计划审核成功');
-															  table.reload("test",{});
+															  table2.reload();
 														  }else{
 															  layer.msg('计划审核失败');
 														  }
@@ -497,7 +652,6 @@
 							table.render({
 								elem : '#test2',
 								url : '../../getPlanDetails.do?monthPlanId='+data.monthPlanId,
-								totalRow : true,
 								cols : [ [ {
 									type : 'numbers'
 								}, {
@@ -516,7 +670,6 @@
 								}, {
 									field : 'produceNum',
 									title : '生产数量',
-									totalRow : true,
 									unresize : true
 								} ] ]
 							});
@@ -528,7 +681,7 @@
 									  success:function(data){
 										if(data == '1'){
 											layer.msg('删除成功');
-											table.reload("test",{});
+											table2.reload();
 										}else{
 											layer.msg('删除失败');
 										}
@@ -573,7 +726,6 @@
 									elem : '#test2',
 									url : '../../selectThisMonthPlan.do?monthPlanId='+data.monthPlanId,
 									//toolbar : '#toolbarDemo2',
-									totalRow : true,
 									cols : [ [ {
 										type : 'numbers'
 									}, {
@@ -641,7 +793,6 @@
 							  success:function(data){
 								if(data == '1'){
 									layer.msg('修改成功');
-									table.reload("test",{});
 								}else{
 									layer.msg('修改失败');
 								}
@@ -685,11 +836,13 @@
 							      obj.del(); //删除对应行（tr）的DOM结构，并更新缓存
 							      $.ajax({
 									  url:'../../deleteThisMonthPlanDetailId.do?monthPlanDetailId='+data.monthPlanDetailId,
+									  date: obj.data,
 									  type:'post',
 									  success:function(data){
 										if(data == '1'){
 											layer.msg('删除成功');
 											table.reload("test2",{});
+											table.reload("test",{});
 										}else{
 											layer.msg('删除失败');
 										}
@@ -727,12 +880,7 @@
 			<div style="padding-left: 0px; margin-top: 15px;">
 				<label width="120px" style="margin: 0 5px 0 20px; font-size: 13px;">制定人员</label>
 				<div class="layui-input-inline">
-					<select name="city" lay-verify="" lay-search="">
-						<option value="">制定人</option>
-						<option value="010">张三</option>
-						<option value="021">李四</option>
-						<option value="0571">王五</option>
-					</select>
+					<input type="text" name="employeeId" lay-verify="number" value="${employee.employeeId }"  class="layui-input" readonly>
 				</div>
 				<div class="layui-input-inline" style="margin-top: 10px;">
 					<label style="margin: 0 10px 0 20px; font-size: 13px;">计划描述</label>
@@ -758,12 +906,7 @@
 			<div style="padding-left: 0px; margin-top: 15px;">
 				<label width="120px" style="margin: 0 5px 0 20px; font-size: 13px;">审核人员</label>
 				<div class="layui-input-inline">
-					<select name="city" lay-verify="" lay-search="">
-						<option value="">制定人</option>
-						<option value="010">张三</option>
-						<option value="021">李四</option>
-						<option value="0571">王五</option>
-					</select>
+					<input type="text" name="empId" lay-verify="number" value="1"  class="layui-input" readonly>
 				</div>
 				<div class="layui-input-inline" style="margin-top: 10px;">
 					<label style="margin: 0 10px 0 20px; font-size: 13px;">备注信息</label>
