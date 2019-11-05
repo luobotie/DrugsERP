@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.drug.luobo.mapper.LoginLogMapper">
+	<insert id="insertLoginLog" parameterType="LoginLogVo">
+	    INSERT INTO loginlog(loginname,loginip,logintime) VALUES(#{loginname},#{loginip},#{logintime})
+	</insert>
+	<delete id="deleteLoginLogById" parameterType="Integer">
+	     DELETE FROM loginlog where id=#{id}
+	</delete>
+	<select id="queryAllLogInfo" parameterType="LoginLogVo" resultType="LoginLog">
+	       select * from loginlog
+	       <where>
+	           <if test="loginname!=null and loginname!=''">
+				and loginname like concat("%",#{loginname},"%")
+			</if>
+			<if test="loginip!=null and loginip!=''">
+				and loginip like concat("%",#{loginip},"%")
+			</if>
+			<if test="startTime!=null and startTime!=''">
+				and logintime &gt;=#{startTime}
+			</if>
+			<if test="endTime!=null and endTime!=''">
+				and logintime &lt;=#{endTime}
+			</if>
+	       </where>
+	       ORDER BY id DESC LIMIT #{page},#{limit}
+	</select>
+	
+	<select id="getCount" parameterType="LoginLogVo" resultType="Long">
+	         select count(id) from loginlog
+	       <where>
+	           <if test="loginname!=null and loginname!=''">
+				and loginname like concat("%",#{loginname},"%")
+			</if>
+			<if test="loginip!=null and loginip!=''">
+				and loginip like concat("%",#{loginip},"%")
+			</if>
+			<if test="startTime!=null and startTime!=''">
+				and logintime &gt;=#{startTime}
+			</if>
+			<if test="endTime!=null and endTime!=''">
+				and logintime &lt;=#{endTime}
+			</if>
+	       </where>
+	</select>
+</mapper>

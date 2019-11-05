@@ -120,7 +120,7 @@
 					<label class="layui-form-label">是否可用:</label>
 					<div class="layui-input-inline">
 						 <input type="radio" name="available" value="1" checked="checked" title="可用">
-						 <input type="radio" name="available" value="0" title="不可">
+						 <input type="radio" name="available" value="0" title="不可用">
 					</div>
 				</div>
 			</div>

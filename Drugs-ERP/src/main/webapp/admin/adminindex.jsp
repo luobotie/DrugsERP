@@ -34,13 +34,13 @@
 						<a href="javascript:;"><i class="seraph icon-lock"></i><cite>锁屏</cite></a>
 					</li>
 					<li class="layui-nav-item" id="userInfo">
-						<a href="javascript:;"><img src="../resources/images/face.jpg" class="layui-nav-img userAvatar" width="35" height="35"><cite class="adminName">${employee.employeeName}</cite></a>
+						<a href="javascript:;"><img src="${employee.headUrl}" class="layui-nav-img userAvatar" width="35" height="35"><cite class="adminName">${employee.realName}</cite></a>
 						<dl class="layui-nav-child">
-							<dd><a href="javascript:;" data-url="../resources/page/user/userInfo.html"><i class="seraph icon-ziliao" data-icon="icon-ziliao"></i><cite>个人资料</cite></a></dd>
-							<dd><a href="javascript:;" data-url="../resources/page/user/changePwd.html"><i class="seraph icon-xiugai" data-icon="icon-xiugai"></i><cite>修改密码</cite></a></dd>
+							<dd><a href="javascript:;" data-url="userInfo.jsp"><i class="seraph icon-ziliao" data-icon="icon-ziliao"></i><cite>个人资料</cite></a></dd>
+							<dd><a href="javascript:;" data-url="changePwd.jsp"><i class="seraph icon-xiugai" data-icon="icon-xiugai"></i><cite>修改密码</cite></a></dd>
 							<dd pc><a href="javascript:;" class="functionSetting"><i class="layui-icon">&#xe620;</i><cite>功能设定</cite></a></dd>
 							<dd pc><a href="javascript:;" class="changeSkin"><i class="layui-icon">&#xe61b;</i><cite>更换皮肤</cite></a></dd>
-							<dd><a href="../resources/page/login/login.html" class="signOut"><i class="seraph icon-tuichu"></i><cite>退出</cite></a></dd>
+							<dd><a href="login.jsp" class="signOut"><i class="seraph icon-tuichu"></i><cite>退出</cite></a></dd>
 						</dl>
 					</li>
 				</ul>
@@ -49,8 +49,8 @@
 		<!-- 左侧导航 -->
 		<div class="layui-side layui-bg-black">
 			<div class="user-photo">
-				<a class="img" title="我的头像" ><img src="../resources/images/face.jpg" class="userAvatar"></a>
-				<p>你好！<span class="userName">${employee.employeeName}</span>, 欢迎登录</p>
+				<a class="img" title="我的头像" ><img src="${employee.headUrl}" class="userAvatar"></a>
+				<p>你好！<span class="userName">${employee.realName}</span>, 欢迎登录</p>
 			</div>
 			<!--  搜索 
 			<div class="layui-form component">
@@ -182,7 +182,7 @@
 	            title : false,
 	            type : 1,
 	            content : '<div class="admin-header-lock" id="lock-box">'+
-	                            '<div class="admin-header-lock-img"><img src="../resources/images/face.jpg" class="userAvatar"/></div>'+
+	                            '<div class="admin-header-lock-img"><img src="${employee.headUrl}" class="userAvatar"/></div>'+
 	                            '<div class="admin-header-lock-name" id="lockUserName">${employee.employeeName}</div>'+
 	                            '<div class="input_btn">'+
 	                                '<input type="password" class="admin-header-lock-input layui-input" autocomplete="off" placeholder="请输入密码解锁.." name="lockPwd" id="lockPwd" />'+

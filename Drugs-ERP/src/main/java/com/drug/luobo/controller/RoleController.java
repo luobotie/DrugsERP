@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.drug.luobo.biz.RoleBiz;
-import com.drug.luobo.entity.Menus;
 import com.drug.luobo.entity.Role;
-import com.drug.luobo.untils.LayuiPage;
 import com.drug.luobo.untils.LayuiTableData;
 import com.drug.luobo.untils.ResultObj;
 import com.drug.luobo.untils.RoleVo;
@@ -30,6 +28,12 @@ public class RoleController {
 	@RequestMapping("/loadAllRole.do")
 	@ResponseBody
 	public LayuiTableData loadAllRole(RoleVo roleVo) {
+		if(roleVo.getRolename()!=null && roleVo.getRolename()!=""){
+			roleVo.setRolename(roleVo.getRolename().trim());
+    	}
+		if(roleVo.getRoledesc()!=null && roleVo.getRoledesc()!=""){
+			roleVo.setRoledesc(roleVo.getRoledesc().trim());
+    	}
 		roleVo.setPage((roleVo.getPage()-1)*roleVo.getLimit());
 		Long count=dao.getCount(roleVo);
 		List<Role> list = dao.queryAllRole(roleVo);
@@ -154,4 +158,16 @@ public class RoleController {
     		return false;
     	}
     }
+    
+	@RequestMapping("/saveDepByRoleId.do")
+	@ResponseBody
+	public ResultObj saveDepByRoleId(Role role){
+		try {
+			this.dao.saveDepByRoleId(role);
+			return ResultObj.UPDATE_SUCCESS;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResultObj.UPDATE_ERROR;
+		}
+	}
 }

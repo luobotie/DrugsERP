@@ -3,7 +3,8 @@ package com.drug.luobo.entity;
 
 public class Employee {
 	private Integer employeeId;  //员工主键id
-	private String	employeeName;//	员工姓名
+	private String	employeeName;//	员工登录名
+	private String realName;	//员工真实姓名
 	private String	employeePwd;//员工密码
 	private Integer	employeeAge;//员工年龄
 	private String	employeeSex;//员工性别
@@ -12,8 +13,8 @@ public class Employee {
 	private String	headUrl;//头像url路径
 	private String	addr;//地址
 	private String	studyUndergo;//	学历
-	private String	visibles;	//是否显示
-	private String	describe;//	员工描述
+	private Integer	visibles;	//是否显示
+	private String	describes;//	员工描述
 	private Integer	roleId;//角色表Id
 	private Integer	depId;//部门表外键
 	private String joinTime; //入职时间
@@ -78,17 +79,17 @@ public class Employee {
 	public void setStudyUndergo(String studyUndergo) {
 		this.studyUndergo = studyUndergo;
 	}
-	public String getVisibles() {
+	public Integer getVisibles() {
 		return visibles;
 	}
-	public void setVisibles(String visibles) {
+	public void setVisibles(Integer visibles) {
 		this.visibles = visibles;
 	}
-	public String getDescribe() {
-		return describe;
+	public String getdescribes() {
+		return describes;
 	}
-	public void setDescribe(String describe) {
-		this.describe = describe;
+	public void setdescribes(String describes) {
+		this.describes = describes;
 	}
 	public Integer getRoleId() {
 		return roleId;
@@ -115,6 +116,12 @@ public class Employee {
 		super();
 		this.employeeName = employeeName;
 		this.employeePwd = employeePwd;
+	}
+	public String getRealName() {
+		return realName;
+	}
+	public void setRealName(String realName) {
+		this.realName = realName;
 	}
 	
 	

@@ -17,4 +17,6 @@ public interface RoleMapper {
 	Integer deleteRole(Integer roleid);
 	Role checkRoleName(Role role);
 	Role checkUpdateRoleName(Role role);
+	Integer updateEmpByRoleId(Integer rid);
+	 void  saveDepByRoleId(Role role);
 }
