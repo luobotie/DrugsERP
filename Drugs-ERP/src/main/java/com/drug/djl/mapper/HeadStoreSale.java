@@ -9,4 +9,5 @@ package com.drug.djl.mapper;
  */
 public interface HeadStoreSale {
 
+	
 }
