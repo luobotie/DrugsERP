@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<!--命名空间 实体类路径 包名点类名 mapper开发模式 接口的路径 -->
+<mapper namespace="com.drug.djl.mapper.ContractMapper">
+	<!-- 获取表格总行数 -->
+	<select id="countContract" resultType="Int" parameterType="Map">
+		select count(*) from
+		contract
+		<where>
+			<if test="type != null and type !=''">
+				and conType like  '%${type}%'
+			</if>
+			<if test="state != null and state !=''">
+				and conState like  '%${state}%'
+			</if>
+		</where>
+		
+	</select>
+	<select id="getAllContract" resultType="Contract" parameterType="Map">
+		SELECT * FROM contract
+		<where>
+			<if test="type != null and type !=''">
+			  and	conType like  '%${type}%'
+			</if>
+			<if test="state != null and state !=''">
+			  and	conState like   '%${state}%'
+			</if>
+		</where>
+		 limit #{page},#{limit}
+	</select>
+
+	<!-- 新增合同表 -->
+	<insert id="addContract" parameterType="Contract">
+		INSERT INTO contract
+		(conName,conType,conNum,partyA,partyB,totalPrice,conState,conChange,
+		conUndertakerId,conContact,partyBId,conEffectTime,conLostEffectTime,conEndTime,conAuditTime,note,standByField1,standByField2)
+		VALUES(#{conName},#{conType},#{conNum},#{partyA},#{partyB}
+		,#{totalPrice},#{conState},#{conChange},#{conUndertakerId},#{conContact},#{partyBId}
+		,#{conEffectTime},#{conLostEffectTime},#{conEndTime},#{conAuditTime},#{note},NULL,NULL)
+	</insert>
+	
+	<!-- 更改某个合同的状态 -->
+	<update id="lostContract" parameterType="Map">
+		UPDATE contract SET conState=#{lost},conLostEffectTime=#{lostTime} WHERE conID=#{id}
+	</update>
+	
+	<!-- 永久删除某条合同 -->
+	<delete id="delContract" parameterType="Integer" >
+		delete from contract where conID=#{id}
+	</delete>
+	
+	<!-- 修改合同 -->
+	<update id="updateContract" parameterType="Contract">
+		UPDATE contract SET 
+		conName=#{conName},conType=#{conType},conNum=#{conNum},partyA=#{partyA},partyB=#{partyB},totalPrice=#{totalPrice},conState=#{conState},conChange=#{conChange},
+		conUndertakerId=#{conUndertakerId},conContact=#{conContact},partyBId=#{partyBId},conEffectTime=#{conEffectTime},conLostEffectTime=#{conLostEffectTime},
+		conEndTime=#{conEndTime},conAuditTime=#{conAuditTime},note=#{note},standByField1=NULL,standByField2=NULL
+		WHERE conID=#{conID}
+	</update>
+	
+	<!-- 判断店名是否被占用 -->
+	<select id="checkBSName" resultType="Contract" parameterType="String" >
+		SELECT * FROM contract where partyB=#{bsName}
+	</select>
+</mapper>

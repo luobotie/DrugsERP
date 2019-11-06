@@ -13,6 +13,18 @@
   <script type="text/javascript" src="../../js/jquery-3.4.1.min.js"></script>
   <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
+<style>
+/*table外边距*/
+.layui-table, .layui-table-view {
+	margin: 0px 0;
+}
+/*弹出层table外边距*/
+.layui-table, .layui-table-view {
+	margin: 0px;
+	padding: 0px;
+	margin-bottom: 0px;
+}
+</style>
 <body>
 
 <table class="layui-hide" id="test" lay-filter="test"></table>
@@ -26,6 +38,7 @@
   <div class="layui-btn-container" style="margin-top:10px;padding-left:20px;">
     <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckData"><i class="layui-icon layui-icon-friends"></i>审核领料单 </button>
     <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckLength"><i class="layui-icon layui-icon-upload-circle"></i>申请领料</button>
+	<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckDataAgain"><i class="layui-icon layui-icon-friends"></i>刷新出库状态 </button>
   </div>
 </div>
 </script>
@@ -44,31 +57,34 @@ layui.use(['table','laydate','form','layer'], function(){
   //常规用法
   laydate.render({
     elem: '#test5'
+    ,type: 'datetime'
   });
   //年月选择器
   laydate.render({
     elem: '#test3'
-    ,type: 'month'
+    ,type: 'datetime'
   });
   
   table.render({
     elem: '#test'
-    ,url:'../json/demo1.json'
+    ,url:'../../getAllMaterialOrder.do'
     ,toolbar: '#toolbarDemo'
     ,title: '领料单'
     ,cols: [[
-      {type: 'checkbox', fixed: 'left'}
-      ,{field:'id', title:'领料单号', unresize:true}
-      ,{field:'username', title:'生产订单号',unresize:true}
-      ,{field:'experience', title:'负责人', unresize:true}
-      ,{field:'experience', title:'申请时间', unresize:true}
-      ,{field:'sex', title:'领料类型', unresize:true}
-      ,{field:'sex', title:'审核状态', unresize:true}
-      ,{
-		fixed: 'right', width:178, align:'center', toolbar: '#barDemo',unresize:true
-      }
+      {type: 'checkbox'}
+      ,{field:'moId', title:'领料单编号', unresize:true,align:'center'}
+      ,{field:'orderId', title:'生产订单编号',unresize:true,align:'center'}
+      ,{field:'applydate', title:'领料单申请时间', unresize:true,align:'center'}
+      ,{field:'proposerId', title:'领料单申请人', unresize:true,align:'center'}
+      ,{field:'moStatus', title:'审核状态', unresize:true,align:'center'}
+      ,{field:'auditingdate', title:'领料单审核时间', unresize:true,align:'center'}
+      ,{field:'auditorId', title:'审核人编号', unresize:true,align:'center'}
+      ,{field:'warehouseStatus', title:'出库状态', unresize:true,align:'center'}
+      ,{fixed: 'right', width:178, align:'center', toolbar: '#barDemo',unresize:true}
     ]]
     ,page: true
+    ,limit:10
+	,limits:[10,20,30,50]  
   });
   
   //工具栏事件
@@ -79,7 +95,7 @@ layui.use(['table','laydate','form','layer'], function(){
       case 'getCheckData':
     	  if(data.length == 1){
 				//判断订单审核状态
-				if(data[0].sex == '男'){
+				if(data[0].moStatus == '未审核'){
 					var index2 = layer.confirm('你确认审核该领料单？', {
 						  btn: ['确认', '取消'] //可以无限个按钮
 						  ,btn2: function(index, layero){
@@ -97,8 +113,22 @@ layui.use(['table','laydate','form','layer'], function(){
 									  },
 								  btn: ['确认', '取消'],
 								  yes: function(layero){
+									  $.ajax({
+										  url:'../../updateThisMaterialOrderStatus.do?moId='+data[0].moId,
+										  data:$("#formIdOne2").serialize(),
+										  type:'post',
+										  dataType:'json',
+										  success:function(data){
+											if(data == '1'){
+												layer.msg('审核成功');
+												table.reload("test",{});
+											}else{
+												layer.msg('审核失败');
+											}
+										  }
+					                  //return false;
+					                });
 									  layer.close(index88);
-									  layer.msg('领料单审核成功');
 									}
 								  ,btn2: function(index, layero){
 										  layer.close(index88);
@@ -109,7 +139,6 @@ layui.use(['table','laydate','form','layer'], function(){
 				}else{
 					layer.msg('该订单已审核');
 				}
-				
 			}else if(data.length >1){
 				layer.msg('最多只能审核一个订单');
 			}else {
@@ -120,17 +149,55 @@ layui.use(['table','laydate','form','layer'], function(){
       case 'getCheckLength':
     	  if(data.length == 1){
 				//判断领料订单状态
-				if(data[0].sex == '男'){
+				if(data[0].moStatus == '已审核'){
 					 var index2 = layer.confirm('确定为该订单申请领料？', {
 						  btn: ['确认', '取消'] //可以无限个按钮
 						  ,btn2: function(index, layero){
 						    layer.close(index2);
 						  }
 						}, function(layero){
+							$.ajax({
+								url:'../../insertRawMaterialOutbound.do?moId='+data[0].moId,
+								  type:'post',
+								  dataType:'json',
+								  success:function(data){
+									if(data == '1'){
+										layer.msg('发起领料成功');
+										table.reload("test",{});
+									}else{
+										layer.msg('发起领料失败');
+									}
+								  }
+							});
 							layer.close(index2);
-							layer.msg('已发起领料');
-							
 						});
+				}else{
+					layer.msg('该领料订单未审核');
+				}
+				
+			}else if(data.length >1){
+				layer.msg('一次只能为一个订单领料');
+			}else {
+				layer.msg('请选择要领料的领料订单');
+			}
+      break;
+      case 'getCheckDataAgain':
+    	  if(data.length == 1){
+				//判断领料订单状态
+				if(data[0].moStatus == '已审核'){
+					$.ajax({
+						url:'../../selectRawMaterialOutbound.do?moId='+data[0].moId,
+						  type:'post',
+						  dataType:'json',
+						  success:function(data){
+							if(data == '1'){
+								layer.msg('刷新成功');
+								table.reload("test",{});
+							}else{
+								layer.msg('请先申请领料');
+							}
+						  }
+					});
 				}else{
 					layer.msg('该领料订单未审核');
 				}
@@ -161,13 +228,11 @@ layui.use(['table','laydate','form','layer'], function(){
   	  
   	  table.render({
 		    elem: '#test2'
-		    ,url:'../json/demo1.json'
+		    ,url:'../../getMaterialInfo.do?orderId='+data.orderId+"&moId="+data.moId
 		    ,cols: [[
-		      {type: 'checkbox', fixed: 'left', totalRowText: '合计'}
-		      ,{type: 'numbers'}
-		      ,{field:'id', title:'原料编号', unresize:true}
-		      ,{field:'username', title:'原料名称',unresize:true}
-		      ,{field:'experience', title:'所需数量（g/kg）', unresize:true}
+		      {field:'materialId', title:'原料编号', unresize:true,align:'center'}
+		      ,{field:'materialName', title:'原料名称',unresize:true,align:'center'}
+		      ,{field:'productionQuantity', title:'所需数量', unresize:true,align:'center'}
 		    ]]
 		});
   	} else if(obj.event === 'del'){
@@ -195,22 +260,16 @@ layui.use(['table','laydate','form','layer'], function(){
 <div style="display:none;" id="nameAndTimeDiv2" >
 
 <form class="layui-form" lay-filter="formAuthority2" id="formIdOne2">	  
-
 <div class="layui-inline" style="padding-left:0px;margin-top:20px;">
 	<label width="120px" style="margin:0 5px 0 20px;font-size:13px;">审核日期</label>
 	<div class="layui-input-inline">
-		<input type="text" class="layui-input" id="test5" placeholder="yyyy-MM-dd">
+		<input type="text" class="layui-input" id="test5" placeholder="yyyy-MM-dd" name="auditingdate">
 	</div>
 </div>
 <div style="padding-left:0px;margin-top:15px;">
 <label width="120px" style="margin:0 5px 0 20px;font-size:13px;">审核人员</label>
 	<div class="layui-input-inline">
-		<select name="city" lay-verify="" lay-search="">
-  			<option value="">制定人</option>
-  			<option value="010">张三</option>
-  			<option value="021">李四</option>
- 			<option value="0571">王五</option>
-		</select>  
+		<input type="text" name="auditorId" lay-verify="number" value="1"  class="layui-input" readonly>
 	</div>
 <div class="layui-input-inline" style="margin-top:10px;">
 				<label style="margin:0 10px 0 20px;font-size:13px;">备注信息</label>

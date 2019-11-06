@@ -19,4 +19,5 @@ public interface RoleBiz {
 	void deleteBatchRole(Integer[] ids);
 	Role checkRoleName(Role role);
 	Role checkUpdateRoleName(Role role);
+	void  saveDepByRoleId(Role role);
 }

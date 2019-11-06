@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="com.drug.luobo.mapper.RoleMapper">
-   	<!-- 查询角色 -->
+	<!-- 查询角色 -->
 	<select id="queryAllRole" parameterType="RoleVo" resultType="Role">
 		select * from role
 		<where>
@@ -18,7 +18,7 @@
 		ORDER BY roleid DESC LIMIT #{page},#{limit}
 	</select>
 	<select id="getCount" parameterType="RoleVo" resultType="Long">
-	   select count(*) from role
+		select count(*) from role
 		<where>
 			<if test="rolename!=null and rolename!=''">
 				and rolename like concat("%",#{rolename},"%")
@@ -30,11 +30,12 @@
 				and available =#{available}
 			</if>
 		</where>
-	
+
 	</select>
 	<insert id="insert" parameterType="Role">
 		insert into role (
-		rolename, roledesc,
+		rolename,
+		roledesc,
 		available)
 		values (
 		#{rolename,jdbcType=VARCHAR},
@@ -57,23 +58,27 @@
 		where roleid = #{roleid,jdbcType=INTEGER}
 	</update>
 	<delete id="deleteRoleMenuByRid">
-	       DELETE FROM menusrole WHERE roleid=#{rid}
+		DELETE FROM menusrole WHERE roleid=#{rid}
 	</delete>
 	<insert id="insertRoleMenu">
 		INSERT INTO menusrole VALUES(#{mid},#{rid})
 	</insert>
-	
+
 	<update id="deleteRole" parameterType="Integer">
-	   UPDATE role SET available=0 WHERE roleid=#{roleid}
+		UPDATE role SET available=0,depid=null WHERE roleid=#{roleid}
 	</update>
 	<select id="checkRoleName" parameterType="Role" resultType="Role">
-	    select * from role where rolename=#{rolename}
+		select * from role where rolename=#{rolename}
 	</select>
-	<select id="checkUpdateRoleName" parameterType="Role" resultType="Role">
-	select * from role where rolename=#{rolename} and roleid not in (#{roleid})
-	
+	<select id="checkUpdateRoleName" parameterType="Role"
+		resultType="Role">
+		select * from role where rolename=#{rolename} and roleid not in (#{roleid})
 	</select>
-	
-	
-	
+     <update id="updateEmpByRoleId" parameterType="Integer">
+        UPDATE employee SET roleId=NULL WHERE roleId=#{roleId}
+     </update>  
+     <update id="saveDepByRoleId" parameterType="Role">
+         UPDATE role SET depid=#{depid} WHERE roleid=#{roleid}
+     </update>
+
 </mapper>

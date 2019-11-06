@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.drug.luobo.mapper.DepartmentMapper">
+   	<!-- 查询部门 -->
+	<select id="queryAllDepartment" parameterType="DepartmentVo" resultType="Department">
+		select * from department
+		<where>
+			<if test="depName!=null and depName!=''">
+				and depName like concat("%",#{depName},"%")
+			</if>
+			<if test="visibles!=null">
+				and visibles=#{visibles}
+			</if>
+		</where>
+		ORDER BY depId DESC LIMIT #{page},#{limit}
+	</select>
+	<select id="getCount" parameterType="DepartmentVo" resultType="Long">
+	  select count(*) from department
+		<where>
+			<if test="depName!=null and depName!=''">
+				and depName like concat("%",#{depName},"%")
+			</if>
+			<if test="visibles!=null">
+				and visibles=#{visibles}
+			</if>
+		</where>
+	</select>
+	
+	<select id="queryDepNum" parameterType="Department" resultType="Integer">
+	    SELECT COUNT(*) FROM employee e INNER JOIN department p ON
+        e.`depId`=p.`depId` where p.`depId`=#{depId}
+	</select>
+	 
+	 <insert id="addDepartment" parameterType="Department" >
+	     INSERT	INTO department(depName,describes,visibles) VALUES (#{depName},#{describes},#{visibles})
+	 </insert>
+	 <update id="updateDepartment" parameterType="Department">
+	        UPDATE department  SET depName=#{depName},describes=#{describes},visibles=#{visibles} where depId=#{depId}
+	 </update>
+	 <select id="checkDepName" parameterType="Department" resultType="Department">
+	      select * from department where depName=#{depName}
+	 </select>
+	 <select id="checkUpdateDepName" parameterType="Department" resultType="Department">
+	       select * from department where depName=#{depName} and depId not in(#{depId})
+	 </select>
+	 <update id="deleteDepartment" parameterType="Integer" >
+	      update department set visibles=0 where depId=#{depId}
+	 </update>
+	 <update id="updateEmployee" parameterType="Integer"  >
+	 		UPDATE employee SET roleId=NULL ,depId=NULL WHERE depId=#{depId}
+	 </update>
+	 <select id="getRoleByDepId" parameterType="Integer" resultType="Role">
+	        SELECT r.* FROM department d INNER JOIN 
+			role r ON d.`depId`=r.`depid` WHERE r.`depid`=#{depId}
+	 </select>
+	 <select id="getAllDepAndvisibles" resultType="Department">
+	      select * from department where visibles=1
+	 </select>
+	 <select id="queryDepNameBydepId" parameterType="Integer" resultType="Department">
+	     select * from department where depId=#{depId}
+	 </select>
+</mapper>

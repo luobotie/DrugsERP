@@ -65,7 +65,7 @@ public class MonthPlanBizImpl implements MonthPlanBiz{
 	 * 查询月计划ID为9999并且产品Id为1001的月计划详情
 	 */
 	@Override
-	public List<PlanDetails> selectMonthPlanDetailsByProId(int proId) {
+	public List<PlanDetails> selectMonthPlanDetailsByProId(Integer proId) {
 		return monthPlanMapper.selectMonthPlanDetailsByProId(proId);
 	}
 	
@@ -81,7 +81,7 @@ public class MonthPlanBizImpl implements MonthPlanBiz{
 	 * 更改月计划详情药品数量(药品id重复情况下)
 	 */
 	@Override
-	public Integer updateProduceNum(int produceNum,int monthPlanDetailId) {
+	public Integer updateProduceNum(Integer produceNum,Integer monthPlanDetailId) {
 		return monthPlanMapper.updateProduceNum(produceNum,monthPlanDetailId);
 	}
 	
@@ -105,7 +105,7 @@ public class MonthPlanBizImpl implements MonthPlanBiz{
 	 * 根据月计划ID修改月计划ID
 	 */
 	@Override
-	public Integer updateMonthPlanDetailsByMonthPlanId(int monthPlanId) {
+	public Integer updateMonthPlanDetailsByMonthPlanId(Integer monthPlanId) {
 		return monthPlanMapper.updateMonthPlanDetailsByMonthPlanId(monthPlanId);
 	}
 
@@ -113,7 +113,7 @@ public class MonthPlanBizImpl implements MonthPlanBiz{
 	 * 指定月计划查询编辑
 	 */
 	@Override
-	public List<DrugsMonthPlan> selectThisMonthPlan(int monthPlanId) {
+	public List<DrugsMonthPlan> selectThisMonthPlan(Integer monthPlanId) {
 		return monthPlanMapper.selectThisMonthPlan(monthPlanId);
 	}
 
@@ -137,7 +137,7 @@ public class MonthPlanBizImpl implements MonthPlanBiz{
 	 * 根据月计划ID修改月计划(开始时间、结束时间、实际生产数量)的生产状态
 	 */
 	@Override
-	public Integer updateThisMonthPlanProState(int monthPlanId) {
+	public Integer updateThisMonthPlanProState(Integer monthPlanId) {
 		return monthPlanMapper.updateThisMonthPlanProState(monthPlanId);
 	}
 	
@@ -145,7 +145,7 @@ public class MonthPlanBizImpl implements MonthPlanBiz{
 	 * 删除指定月计划
 	 */
 	@Override
-	public Integer deleteThisMonthPlan(int monthPlanId) {
+	public Integer deleteThisMonthPlan(Integer monthPlanId) {
 		return monthPlanMapper.deleteThisMonthPlan(monthPlanId);
 	}
 	
@@ -153,7 +153,7 @@ public class MonthPlanBizImpl implements MonthPlanBiz{
 	 * 根据月计划ID删除月计划详情
 	 */
 	@Override
-	public Integer deleteThisMonthPlanAndMonthPlanDetail(int monthPlanId) {
+	public Integer deleteThisMonthPlanAndMonthPlanDetail(Integer monthPlanId) {
 		return monthPlanMapper.deleteThisMonthPlanAndMonthPlanDetail(monthPlanId);
 	}
 
@@ -161,15 +161,23 @@ public class MonthPlanBizImpl implements MonthPlanBiz{
 	 * 删除指定月计划详情
 	 */
 	@Override
-	public Integer deleteThisMonthPlanDetailId(int monthPlanDetailId) {
+	public Integer deleteThisMonthPlanDetailId(Integer monthPlanDetailId) {
 		return monthPlanMapper.deleteThisMonthPlanDetailId(monthPlanDetailId);
 	}
 
 	/**
+	 * 根据月计划ID修改月计划(审核状态、审核时间、审核人ID)(修改月计划)
+	 */
+	@Override
+	public Integer updateThisMonthPlanStatus(Integer monthPlanId) {
+		return monthPlanMapper.updateThisMonthPlanStatus(monthPlanId);
+	}
+	
+	/**
 	 * 多表联合查询月计划详情表、月计划表(获得该月计划中月计划详情所有药品的数量)
 	 */
 	@Override
-	public Integer selectMonPlanAndPlanDetails(int monthPlanId) {
+	public Integer selectMonPlanAndPlanDetails(Integer monthPlanId) {
 		return monthPlanMapper.selectMonPlanAndPlanDetails(monthPlanId);
 	}
 
@@ -177,7 +185,7 @@ public class MonthPlanBizImpl implements MonthPlanBiz{
 	 * 更新月计划总数量
 	 */
 	@Override
-	public Integer updateMonthPlan(int monthPlanNum,int monthPlanId) {
+	public Integer updateMonthPlan(Integer monthPlanNum,Integer monthPlanId) {
 		return monthPlanMapper.updateMonthPlan(monthPlanNum,monthPlanId);
 	}
 
@@ -188,4 +196,24 @@ public class MonthPlanBizImpl implements MonthPlanBiz{
 	public Integer selectMonthPlanDetailIfNull() {
 		return monthPlanMapper.selectMonthPlanDetailIfNull();
 	}
+	
+	/**
+	 * 修改月计划用于验证商品是否为空
+	 */
+	@Override
+	public Integer selectMonthPlanDetailIfNullAgain(Integer monthPlanId) {
+		return monthPlanMapper.selectMonthPlanDetailIfNullAgain(monthPlanId);
+	}
+
+	@Override
+	public List<PlanDetails> selectDrugsMonthPlanDetailsAgain(Integer monthPlanId) {
+		return monthPlanMapper.selectDrugsMonthPlanDetailsAgain(monthPlanId);
+	}
+
+	@Override
+	public Integer insertMonthPlanDetailsAgain(Integer monthPlanId,Integer proId,Integer produceNum) {
+		return monthPlanMapper.insertMonthPlanDetailsAgain(monthPlanId,proId,produceNum);
+	}
+
+	
 }

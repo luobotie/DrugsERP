@@ -1,5 +1,6 @@
 package com.drug.djl.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.drug.djl.biz.BranchStoreBiz;
 import com.drug.djl.entity.BranchStoreInfo;
+import com.drug.djl.entity.Contract;
+import com.drug.djl.entity.LikeSelectBS;
 
 /**
  * 
@@ -20,7 +23,7 @@ import com.drug.djl.entity.BranchStoreInfo;
  * version:1.0
  */
 @RestController
-public class Controllers {
+public class BSController {
 	@Autowired
 	private BranchStoreBiz branchStoreBiz;
 	
@@ -33,14 +36,18 @@ public class Controllers {
 	 * 2019年10月23日上午11:10:11
 	 */
 	@RequestMapping("selectAllBranchStore.do")
-	public Map<String, Object> selectAllBranchStore(int page,int limit) {
+	public Map<String, Object> selectAllBranchStore(LikeSelectBS likeSelectBS) {
+		System.out.println("模糊查询:"+likeSelectBS.getBsopendate());
+		System.out.println("模糊查询:"+likeSelectBS.getBslocationPro());
+		System.out.println("模糊查询:"+likeSelectBS.getBslocationCity());
 		//总行数
-		int counts=branchStoreBiz.selectAllBranchStores();
+		likeSelectBS.setPage((likeSelectBS.getPage()-1)*likeSelectBS.getLimit());//当前页数-1*每页显示数量
+		int counts=branchStoreBiz.selectAllBranchStores(likeSelectBS);
 		//为分页查询创建map
-		Map<String, Object> branchPage=new HashMap<>();
-		branchPage.put("page", (page-1)*limit);//当前页数-1*每页显示数量
-		branchPage.put("limit", limit);//每页显示数
-		List<BranchStoreInfo> branchStores=branchStoreBiz.selectAllBranchStore(branchPage);
+		//Map<String, Object> branchPage=new HashMap<>();
+		//branchPage.put("page", (likeSelectBS.getPage()-1)*likeSelectBS.getLimit());//当前页数-1*每页显示数量
+		//branchPage.put("limit", likeSelectBS.getLimit());//每页显示数
+		List<BranchStoreInfo> branchStores=branchStoreBiz.selectAllBranchStore(likeSelectBS);
 		//分页查询的Map
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("code", 0);
@@ -71,9 +78,15 @@ public class Controllers {
 	}
 	
 	@RequestMapping("updateBranchStore.do")
-	public int updateBranchStore(int id){
-		int row=branchStoreBiz.updateBranchStore(id);
+	public int updateBranchStore(BranchStoreInfo bStoreInfo){
+		int row=branchStoreBiz.updateBranchStore(bStoreInfo);
 		return row;
+	}
+	
+	@RequestMapping("getAllBSContract.do")
+	public List<Contract> getAllBSContract() {
+		List<Contract> bsContracts=branchStoreBiz.getAllBSContract();
+		return bsContracts;
 	}
 	
 }

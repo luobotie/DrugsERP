@@ -3,12 +3,42 @@
 <!--命名空间  实体类路径 包名点类名    mapper开发模式  接口的路径-->
 <mapper namespace="com.drug.djl.mapper.BranchStoreInfoMapper">
 	<!-- 获得分店信息表总行数 -->
-	<select id="selectALLBranchStores" resultType="Integer">
+	<select id="selectALLBranchStores" resultType="Integer" parameterType="LikeSelectBS">
 		select count(*) from branchStoreInfo
+		<where>
+			<if test="bsName != null and bsName != ''">
+				and bsName like  '%${bsName}%'
+			</if>
+			<if test="bslocationPro != null and bslocationPro != '' ">
+				and bslocationPro like  '%${bslocationPro}%'
+			</if>
+			<if test="bslocationCity != null and bslocationCity != '' ">
+				and bslocationCity like  '%${bslocationCity}%'
+			</if>
+			<if test="bsopendate != null and bsopendate != '' ">
+				and bsopendate like  '%${bsopendate}%'
+			</if>
+		</where>
+
 	</select>
 	<!-- 从页面获得页数与每页显示数 -->
-	<select id="selectAllBranchStore" resultType="BranchStoreInfo" parameterType="Map">
-		select * from branchStoreInfo limit #{page},#{limit}
+	<select id="selectAllBranchStore" resultType="BranchStoreInfo" parameterType="LikeSelectBS">
+		select * from branchStoreInfo 
+		<where>
+			<if test="bsName != null and bsName != '' ">
+				and bsName like  '%${bsName}%'
+			</if>
+			<if test="bslocationPro != null and bslocationPro != '' ">
+				and bslocationPro like  '%${bslocationPro}%'
+			</if>
+			<if test="bslocationCity != null and bslocationCity != '' ">
+				and bslocationCity like  '%${bslocationCity}%'
+			</if>
+			<if test="bsopendate != null and bsopendate != '' ">
+				and bsopendate like  '%${bsopendate}%'
+			</if>
+		</where>
+		limit #{page},#{limit}
 	</select>
 	<!-- 添加分店信息 -->
 	<insert id="addBranchStore" parameterType="BranchStoreInfo">
@@ -27,7 +57,12 @@
 		UPDATE branchStoreInfo SET 
 		bsName=#{bsName},bslocationPro=#{bslocationPro},bslocationCity=#{bslocationCity},bslocation=#{bslocation},
 		bsopendate=#{bsopendate},empTable=#{empTable},crewSize=#{crewSize},contact=#{contact},
-		email=#{email},regisiteredamount=#{regisiteredamount},standByField1=#{standByField1},standByField2=#{standByField2})
+		email=#{email},regisiteredamount=#{regisiteredamount},standByField1=#{standByField1},standByField2=#{standByField2}
 		WHERE bsiId=#{bsiId}
 	</update>
+	
+	<!-- 查看所有已签合同的分店 -->
+	<select id="getAllBSContract" resultType="Contract">
+		SELECT * FROM contract WHERE  conType ='分店合同' AND conState='生效'
+	</select>
 </mapper>

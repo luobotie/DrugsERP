@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.drug.djl.entity.BranchStoreInfo;
+import com.drug.djl.entity.Contract;
+import com.drug.djl.entity.LikeSelectBS;
 
 /**
  * 
@@ -20,7 +22,7 @@ public interface BranchStoreBiz {
 	 * @return 分店信息的集合
 	 * 2019年10月23日
 	 */
-	List<BranchStoreInfo> selectAllBranchStore(Map<String , Object> page);
+	List<BranchStoreInfo> selectAllBranchStore(LikeSelectBS likeSelectBS);
 	
 	/**
 	 * 
@@ -28,7 +30,7 @@ public interface BranchStoreBiz {
 	 * @return
 	 * 2019年10月23日上午11:06:08
 	 */
-	Integer selectAllBranchStores();
+	Integer selectAllBranchStores(LikeSelectBS likeSelectBS);
 	
 	/**
 	 * 描述:添加分店信息表
@@ -53,5 +55,13 @@ public interface BranchStoreBiz {
 	 * @return 受影响行数
 	 * 2019年10月25日下午5:01:58
 	 */
-	int updateBranchStore(int id);
+	int updateBranchStore(BranchStoreInfo bStoreInfo);
+	
+	/**
+	 * 
+	 * 描述:得到所有已签合同的分店
+	 * @return 已签合同的分店
+	 * 2019年11月1日上午9:15:45
+	 */
+	List<Contract> getAllBSContract();
 }

@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 
 <%-- <%
 String path = request.getContextPath();
@@ -8,15 +8,16 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>分店信息管理</title>
-  <meta name="renderer" content="webkit">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
- <link rel="stylesheet" href="../layui/css/layui.css" media="all">
-  <script src="../layui/layui.js"></script>
-  <script type="text/javascript" src="../../js/jquery-3.4.1.min.js"></script>
-<script type="text/javascript" >
+<meta charset="utf-8">
+<title>分店信息管理</title>
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="stylesheet" href="../layui/css/layui.css" media="all">
+<script src="../layui/layui.js"></script>
+<script type="text/javascript" src="../../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
 var cityList = new Array();
 cityList['北京市'] = ['朝阳区', '东城区', '西城区', '海淀区', '宣武区', '丰台区', '怀柔', '延庆', '房山'];
 cityList['上海市'] = ['宝山区', '长宁区', '丰贤区', '虹口区', '黄浦区', '青浦区', '南汇区', '徐汇区', '卢湾区'];
@@ -45,40 +46,54 @@ function allProvince(){
 
 	var pro = document.getElementById("province123");
 	var proUpdate= document.getElementById("province123Update");
+	var province123Like= document.getElementById("province123Like");
 	for (var i in cityList){
 		pro.add(new Option(i,i,null));
 	}
 	for (var i in cityList){
 		proUpdate.add(new Option(i,i,null));
 	}
+	for (var i in cityList){
+		province123Like.add(new Option(i,i,null));
+	}
+
+	
 	
 }
 
 window.onload = allProvince;
 //注册table，form
-layui.use(['table','form','laydate'], function(){
+var tableBS;
+layui.use(['table','form','laydate','jquery'], function(){
   var table = layui.table;
   var form = layui.form;
   var laydate = layui.laydate;
+  var $=layui.jquery;
   
   //常规用法,时间选择器
   laydate.render({
     elem: '#openDate',
   });
-  table.render({
+  laydate.render({
+	    elem: '#openDateUpdate',
+   });
+  laydate.render({
+	    elem: '#openDateSearch',
+});
+  tableBS=table.render({
     elem: '#test',//table Id
     url:'../../selectAllBranchStore.do',//路径
     toolbar: '#toolbarDemo',
     title: '采购订单',//标题
     page: true ,//启动分页
-    limit:5, //每页显示数默认
+    limit:10, //每页显示数默认
     limits: [5, 10, 15], //设置每页显示数
     cols: [[
     	{type: 'checkbox', fixed: 'left'},
-        {field:'bsiId', title:'分店编号', fixed: 'left', unresize: true},
+        {field:'bsiId', title:'分店编号', },
         {field:'bsName', title:'分店名称', },
-        {field:'bslocationPro', title:'所在省',edit: 'text', },
-        {field:'bslocationCity', title:'所在城市',edit: 'text', },
+        {field:'bslocationPro', title:'所在省', },
+        {field:'bslocationCity', title:'所在城市', },
         {field:'bsopendate', title:'签订时间'},
         {field:'contact', title:'联系方式'},
         {field:'email', title:'邮箱'},
@@ -135,20 +150,56 @@ layui.use(['table','form','laydate'], function(){
 			}	
 			form.render();
   }); 
+	
+  form.on('select(csSearch)', function(data){
+		// 获得省份框中的值 
+		var pros = document.getElementById("province123Like").value;
+		var city = document.getElementById("city123Like");	
+		// 将city 列表中的值清空,放置再选择省份后,出现城市乱增加的情况
+		city.options.length=0;
+		// 遍历
+		for (var i in cityList){
+			if (i==pros){
+				//<option disabled selected value="" > 请选择市/区</option>
+				for (var j in cityList[i]){								
+					// 将 Option标签添加到Select中
+					city.add(new Option(cityList[i][j],cityList[i][j]),null);									
+				}
+			}
+		}	
+		form.render();
+   }); 
         
+ 
   var addBS;
   //头工具栏事件
   table.on('toolbar(test)', function(obj){
     var checkStatus = table.checkStatus(obj.config.id);
     switch(obj.event){
       case 'audit':
+    	  var bsNameSelect=$("#bsName");
+    	  //给下拉框赋值
+    	  bsNameSelect.empty();//清空下拉列表数据
+    	  $.ajax({
+				url:'../../getAllBSContract.do',
+				success:function(back){
+					if(back != null){
+		                for (var i = 0; i < back.length; i++) {
+		                	//alert(back[i].conName)
+		                	//bsNameSelect.add(new Option(back[i].partyB,back[i].partyB));
+		                	bsNameSelect.append("<option value="+back[i].partyB+">"+back[i].partyB+"</option>");
+						} 
+		                form.render();
+		            }
+				}
+			})    
     	  addBS=layer.open({
                    title:'新增分店',//标题
                    type:1,//样式
-                   area:['600px','600px'],//大小
+                   area:['780px','500px'],//大小
                    content:$("#form2"),
                });
-               form.render();
+              
       break;
     };
   });
@@ -182,7 +233,7 @@ layui.use(['table','form','laydate'], function(){
     	updateBS=layer.open({
             title:'更新分店信息',//标题
             type:1,//样式
-            area:['600px','600px'],//大小
+            area:['780px','500px'],//大小
             content:$("#form3"),
             success: function(layero, index){
             	//直接将行数据填到表单中
@@ -200,9 +251,14 @@ layui.use(['table','form','laydate'], function(){
           if(value.length < 2 ){  
             return '店名至少得2个字';  
           }  
-        }
-        ,contact: [/^1[3|4|5|7|8]\d{9}$/, '手机必须11位，只能是数字！']  
-        ,email: [/^[a-z0-9._%-]+@([a-z0-9-]+\.)+[a-z]{2,4}$|^1[3|4|5|7|8]\d{9}$/, '邮箱格式不对']  
+        },
+       bsLocation: function(value){  
+           if(value.length > 5 ){  
+               return '必选地区';  
+             }  
+        },
+       contact: [/^1[3|4|5|7|8]\d{9}$/, '手机必须11位，只能是数字！'],
+       email: [/^[a-z0-9._%-]+@([a-z0-9-]+\.)+[a-z]{2,4}$|^1[3|4|5|7|8]\d{9}$/, '邮箱格式不对']  
   });  
   
 //监听提交 增加窗口
@@ -227,8 +283,9 @@ layui.use(['table','form','laydate'], function(){
 	     return false;
   }); 
   
-//监听提交 增加窗口
+//监听提交修改窗口
   form.on('submit(demo2)', function(data){
+     //alert(data.bsName);
 	     $.ajax({
           url: "../../updateBranchStore.do",
           type: "POST",
@@ -248,7 +305,26 @@ layui.use(['table','form','laydate'], function(){
       });  
 	     return false;
   }); 
-
+  
+//提交模糊查询窗口
+/*  form.on('submit(doSearch)', function(data){
+         tableBS.reload({
+ 			url:"../../selectAllBranchStore.do?bsName="+data.field.bsName+"&openDate="+data.field.bsopendate+"&bslocationPro="
+ 					+data.field.bslocationPro+"&bslocationCity="+data.field.bslocationCity
+ 		}) 
+	     return false;
+  });   */
+  
+//模糊查询
+	 $("#doSearch").click(function(){
+		var params=$("#searchForm").serialize();
+		//alert(params);
+		//alert(params);
+		tableBS.reload({
+			url:"../../selectAllBranchStore.do?"+params
+		})
+	});
+ 
   
   
   
@@ -257,220 +333,277 @@ layui.use(['table','form','laydate'], function(){
 </script>
 </head>
 <body>
-      <table class="layui-hide" id="test1" lay-filter="test"></table>
-	  <table class="layui-hide" id="test" lay-filter="test"></table>
+	<!--模糊查询 -->
+	<div class="layui-input-inline" style="margin-top:20px;">
+	<form class="layui-form" action="" id="searchForm">
+		<div class="layui-inline" style="margin-left:20px;">
+     		<label class="layui-form-label">分店名称</label>
+		      <div class="layui-input-inline">
+		        <input type="text" name="bsName"  autocomplete="off" class="layui-input">
+		      </div>
+			
+    	</div>
+    	<div class="layui-inline" style="margin-left:20px;">
+    		<label class="layui-form-label">签订时间</label>
+		      <div class="layui-input-inline">
+		        <input type="text" id="openDateSearch" name="bsopendate"   class="layui-input">
+		      </div>
+    	</div>
+    	
+
+ 	<div class="layui-inline" style="margin-left:20px;">
+      	<label class="layui-form-label">选择地区</label>
+    			<div class="layui-input-inline">
+     				<select  id="province123Like" name="bslocationPro"  onchange="changeCity()" lay-filter="csSearch" >
+       		 			<option disabled selected value="">请选择省/自治区/直辖市</option>
+      				</select> 
+    			</div>
+    			
+    </div>
+   <!--  <div class="layui-inline" style="margin-left:20px;">
+    	<div class="layui-input-inline">
+      				<select  id="city123Like" name="bslocationCity">
+        				
+     			 	</select>
+    			</div>
+    </div> -->
+
+		<div class="layui-inline" >
+			<button type="button" class="layui-btn layui-btn-radius " id="doSearch" lay-event="search" lay-filter="doSearch" lay-submit=""><i class="layui-icon layui-icon-search"></i> </button>
+		    <button type="reset" class="layui-btn layui-btn-radius layui-btn-primary">重置</button> 	
+		</div>    
+ </form>
+</div>
+	<table class="layui-hide" id="test1" lay-filter="test"></table>
+	<table class="layui-hide" id="test" lay-filter="test"></table>
 
 
 
 	<script type="text/html" id="toolbarDemo">
 		<div class="layui-input-inline">
- 		<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="audit">新增</button>
+			<button type="button" class="layui-btn layui-btn-sm" lay-event="audit"><i class="layui-icon">新增</i></button>
       	</div>
-	</script>	
- 
+		
+	</script>
+
 	<!-- 每一行的工具toolbar -->
 	<script type="text/html" id="barDemo">
   		<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
  		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 	</script>
-     
-     <!-- 添加分店的表单 -->
-<form class="layui-form" lay-filter="example" id="form2" style="display:none;align-content:center;" >
-          
-   <div class="layui-form-item">
-    <label class="layui-form-label">分店名称</label>
-    <div class="layui-input-inline">
-      <input type="text" name="bsName" lay-verify="bsName" placeholder="请输入名称" autocomplete="off" class="layui-input" required="required">
-    </div>
-  </div>
-  
-  <div class="layui-form-item">
-    <label class="layui-form-label">请选择地区</label>
-    <div class="layui-input-inline">
-     <select  id="province123" name="bslocationPro"  onchange="changeCity()" lay-filter="cs">
-        <option>请选择省/城市</option>
-      </select> 
-    </div>
-    <div class="layui-input-inline">
-      <select  id="city123" name="bslocationCity">
-        <option>请选择城市/地区</option>
-      </select>
-    </div>
-  </div>
-  
-  <div class="layui-form-item">
-		<label class="layui-form-label">详细地址</label>
-		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="bslocation" placeholder="详细地址" required="required">
-		</div>
-	</div>
-	
- 	<div class="layui-form-item">
-		<label class="layui-form-label">开业时间</label>
-		<div class="layui-input-inline">
-			<input type="text" class="layui-input" id="openDate" name="bsopendate" placeholder="yyyy-MM-dd">
-		</div>
-	</div>
-	
-	<div class="layui-form-item">
-		<label class="layui-form-label">店长</label>
-		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="empTable" placeholder="店长id" required="required">
-		</div>
-	</div>
-  
-  <div class="layui-form-item">
-		<label class="layui-form-label">员工人数</label>
-		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="crewSize" placeholder="员工人数" lay-verify="people">
-		</div>
-	</div>
-	
-	<div class="layui-form-item">
-		<label class="layui-form-label">联系方式</label>
-		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="contact" placeholder="联系方式" lay-verify="contact">
-		</div>
-	</div>
-	
-	<div class="layui-form-item">
-		<label class="layui-form-label">电子邮箱</label>
-		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="email" placeholder="电子邮箱" lay-verify="email">
-		</div>
-	</div>
-	
-	<div class="layui-form-item">
-		<label class="layui-form-label">注册金额</label>
-		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="regisiteredamount" placeholder="注册金额" lay-verify="regisiteredamount">
-		</div>
-	</div>
-	
-	<div class="layui-form-item">
-    <label class="layui-form-label">签订合同</label>
-    <div class="layui-input-inline">
-      <select name="standByField1" placeholder="是否签订">
-        <option value="签订">签订</option>
-        <option value="未签订" >未签订</option>
-      </select>
-    </div>
-   </div>
-   
-	<div class="layui-form-item" hidden>
-		<label class="layui-form-label">备用字段2</label>
-		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="standByField2" placeholder="备用字段2">
-		</div>
-	</div>
-  
-   <div class="layui-form-item">
-   		<br>
-    	<div class="layui-input-block">
-     		 <button class="layui-btn" lay-filter="demo1" lay-submit="">立即提交</button>  
-    	</div>
-  	</div>
-   
-</form>  
 
-  <!-- 修改分店的表单 -->
-<form class="layui-form" lay-filter="exampleUpdate" id="form3" style="display:none;align-content:center;" >
-          
-   <div class="layui-form-item">
-    <label class="layui-form-label">分店名称</label>
-    <div class="layui-input-inline">
-      <input type="text" name="bsName" lay-verify="bsName" placeholder="请输入名称" autocomplete="off" class="layui-input" required="required">
-    </div>
-  </div>
-  
-  <div class="layui-form-item">
-    <label class="layui-form-label">请选择地区</label>
-    <div class="layui-input-inline">
-     <select  id="province123Update" name="bslocationPro"  onchange="changeCity()" lay-filter="csUpdate">
-        <option>请选择省/城市</option>
-      </select> 
-    </div>
-    <div class="layui-input-inline">
-      <select  id="city123Update" name="bslocationCity">
-        <option>请选择城市/地区</option>
-      </select>
-    </div>
-  </div>
-  
-  <div class="layui-form-item">
-		<label class="layui-form-label">详细地址</label>
-		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="bslocation" placeholder="详细地址" required="required">
+	<!-- 添加分店的表单 -->
+	<form class="layui-form" lay-filter="example" id="form2"
+		style="display: none; align-content: center;">
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">分店名称</label>
+			<div class="layui-input-inline">
+				<select id="bsName" name="bsName" onchange="changeCity()"
+					lay-verify="bsName" placeholder="请选择分店" required="required">
+				</select>
+			</div>
 		</div>
-	</div>
-	
- 	<div class="layui-form-item">
-		<label class="layui-form-label">开业时间</label>
-		<div class="layui-input-inline">
-			<input type="text" class="layui-input" id="openDate" name="bsopendate" placeholder="yyyy-MM-dd">
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">请选择地区</label>
+			<div class="layui-input-inline">
+				<select id="province123" name="bslocationPro"
+					onchange="changeCity()" lay-filter="cs" lay-verify="bsLocation">
+					<option>请选择省/城市</option>
+				</select>
+			</div>
+			<label class="layui-form-label">请选择城市</label>
+			<div class="layui-input-inline">
+				<select id="city123" name="bslocationCity">
+					<option>请选择城市/地区</option>
+				</select>
+			</div>
 		</div>
-	</div>
-	
-	<div class="layui-form-item">
-		<label class="layui-form-label">店长</label>
-		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="empTable" placeholder="店长id" required="required">
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">详细地址</label>
+			<div class="layui-input-inline">
+				<input type="text" class="layui-input" name="bslocation"
+					placeholder="详细地址" required="required">
+			</div>
+			<label class="layui-form-label">开业时间</label>
+			<div class="layui-input-inline">
+				<input type="text" class="layui-input" id="openDate"
+					name="bsopendate" placeholder="yyyy-MM-dd">
+			</div>
 		</div>
-	</div>
-  
-  <div class="layui-form-item">
-		<label class="layui-form-label">员工人数</label>
-		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="crewSize" placeholder="员工人数" lay-verify="people">
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">店长</label>
+			<div class="layui-input-inline">
+				<input type="text" class="layui-input" name="empTable"
+					placeholder="店长id" required="required">
+			</div>
+			<label class="layui-form-label">员工人数</label>
+			<div class="layui-input-inline">
+				<input type="text" class="layui-input" name="crewSize"
+					placeholder="员工人数" lay-verify="people">
+			</div>
 		</div>
-	</div>
-	
-	<div class="layui-form-item">
-		<label class="layui-form-label">联系方式</label>
-		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="contact" placeholder="联系方式" lay-verify="contact">
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">联系方式</label>
+			<div class="layui-input-inline">
+				<input type="text" class="layui-input" name="contact"
+					placeholder="联系方式" lay-verify="contact">
+			</div>
+			<label class="layui-form-label">电子邮箱</label>
+			<div class="layui-input-inline">
+				<input type="text" class="layui-input" name="email"
+					placeholder="电子邮箱" lay-verify="email">
+			</div>
 		</div>
-	</div>
-	
-	<div class="layui-form-item">
-		<label class="layui-form-label">电子邮箱</label>
-		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="email" placeholder="电子邮箱" lay-verify="email">
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">注册金额</label>
+			<div class="layui-input-inline">
+				<input type="text" class="layui-input" name="regisiteredamount"
+					placeholder="注册金额" lay-verify="regisiteredamount">
+			</div>
 		</div>
-	</div>
-	
-	<div class="layui-form-item">
-		<label class="layui-form-label">注册金额</label>
-		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="regisiteredamount" placeholder="注册金额" lay-verify="regisiteredamount">
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">签订合同</label>
+			<div class="layui-input-inline">
+				<select name="standByField1" placeholder="是否签订" readOnly>
+					<option value="签订" selected="selected">签订</option>
+					<option value="未签订" >未签订</option>
+				</select>
+			</div>
 		</div>
-	</div>
-	
-	<div class="layui-form-item">
-    <label class="layui-form-label">签订合同</label>
-    <div class="layui-input-inline">
-      <select name="standByField1" placeholder="是否签订">
-        <option value="签订">签订</option>
-        <option value="未签订" >未签订</option>
-      </select>
-    </div>
-   </div>
-   
-	<div class="layui-form-item" hidden>
-		<label class="layui-form-label">备用字段2</label>
-		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="standByField2" placeholder="备用字段2">
+
+		<div class="layui-form-item" hidden>
+			<label class="layui-form-label">备用字段2</label>
+			<div class="layui-input-inline">
+				<input type="text" class="layui-input" name="standByField2"
+					placeholder="备用字段2">
+			</div>
 		</div>
-	</div>
-  
-   <div class="layui-form-item">
-   		<br>
-    	<div class="layui-input-block">
-     		 <button class="layui-btn" lay-filter="demo2" lay-submit="">立即提交</button>  
-    	</div>
-  	</div>
-   
-</form>  
- 
+
+		<div class="layui-form-item">
+			<br>
+			<div class="layui-input-block">
+				<button class="layui-btn" id="doSearch" lay-filter="demo1" lay-submit="">立即提交</button>
+				<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+			</div>
+		</div>
+
+	</form>
+
+	<!-- 修改分店的表单 -->
+	<form class="layui-form" lay-filter="exampleUpdate" id="form3"
+		style="display: none; align-content: center;">
+		<div class="layui-form-item">
+			<label class="layui-form-label">分店ID</label>
+			<div class="layui-input-inline">
+				<input type="text" name="bsiId" lay-verify="bsiId"
+					autocomplete="off" class="layui-input" readOnly>
+			</div>
+			<label class="layui-form-label">分店名称</label>
+			<div class="layui-input-inline">
+				<input type="text" name="bsName" lay-verify="bsName"
+					autocomplete="off" class="layui-input" readOnly>
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">请选择地区</label>
+			<div class="layui-input-inline">
+				<select id="province123Update" name="bslocationPro"
+					onchange="changeCity()" lay-filter="csUpdate"
+					lay-verify="bsLocation">
+					<option>请选择省/城市</option>
+				</select>
+			</div>
+			<label class="layui-form-label">请选择城市</label>
+			<div class="layui-input-inline">
+				<select id="city123Update" name="bslocationCity">
+					<option>请选择城市/地区</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">详细地址</label>
+			<div class="layui-input-inline">
+				<input type="text" class="layui-input" name="bslocation"
+					placeholder="详细地址" required="required">
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">开业时间</label>
+			<div class="layui-input-inline">
+				<input type="text" class="layui-input" id="openDateUpdate"
+					name="bsopendate" placeholder="yyyy-MM-dd">
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">店长</label>
+			<div class="layui-input-inline">
+				<input type="text" class="layui-input" name="empTable"
+					placeholder="店长id" required="required">
+			</div>
+			<label class="layui-form-label">员工人数</label>
+			<div class="layui-input-inline">
+				<input type="text" class="layui-input" name="crewSize"
+					placeholder="员工人数" lay-verify="people">
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">联系方式</label>
+			<div class="layui-input-inline">
+				<input type="text" class="layui-input" name="contact"
+					placeholder="联系方式" lay-verify="contact">
+			</div>
+			<label class="layui-form-label">电子邮箱</label>
+			<div class="layui-input-inline">
+				<input type="text" class="layui-input" name="email"
+					placeholder="电子邮箱" lay-verify="email">
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<label class="layui-form-label">注册金额</label>
+			<div class="layui-input-inline">
+				<input type="text" class="layui-input" name="regisiteredamount"
+					placeholder="注册金额" lay-verify="regisiteredamount">
+			</div>
+			<label class="layui-form-label">签订合同</label>
+			<div class="layui-input-inline">
+				<select name="standByField1" placeholder="是否签订">
+					<option value="签订">签订</option>
+					<option value="未签订">未签订</option>
+				</select>
+			</div>
+		</div>
+
+
+		<div class="layui-form-item" hidden>
+			<label class="layui-form-label">备用字段2</label>
+			<div class="layui-input-inline">
+				<input type="text" class="layui-input" name="standByField2"
+					placeholder="备用字段2">
+			</div>
+		</div>
+
+		<div class="layui-form-item">
+			<br>
+			<div class="layui-input-block">
+				<button class="layui-btn" lay-filter="demo2" lay-submit="">立即提交</button>
+				<button type="reset" class="layui-btn layui-btn-primary">重置</button>
+			</div>
+		</div>
+
+	</form>
+
 </body>
 </html>

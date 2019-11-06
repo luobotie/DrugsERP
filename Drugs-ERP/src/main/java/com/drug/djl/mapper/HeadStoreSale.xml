@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<!--命名空间 实体类路径 包名点类名 mapper开发模式 接口的路径 -->
+<mapper namespace="com.drug.djl.mapper.HeadStoreSale">
+	<!-- 获取成品药品的名称及数量 -->
+	<select id="getDrugs" resultType="DrugsNum" parameterType="Map">
+		SELECT chineseName,fginumber FROM FinalGoods_Inventory fi
+		INNER JOIN product_Info pro
+		ON fi.proid=pro.proid
+	</select>
+	
+	
+</mapper>

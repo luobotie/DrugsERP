@@ -8,22 +8,28 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class PlanDetails {
-	private int monthPlanDetailId;	//药品详情Id
-	private int proId;				//药品Id
+	private Integer monthPlanId;		//月计划Id
+	private Integer monthPlanDetailId;	//月计划 详情Id
+	private Integer proId;				//药品Id
 	private String chineseName;		//药品名称
 	private String proImage;		//药品图片路径
-	private int produceNum;			//药品生产数量
-	
-	public int getMonthPlanDetailId() {
+	private Integer produceNum;			//药品生产数量
+	public Integer getMonthPlanId() {
+		return monthPlanId;
+	}
+	public void setMonthPlanId(Integer monthPlanId) {
+		this.monthPlanId = monthPlanId;
+	}
+	public Integer getMonthPlanDetailId() {
 		return monthPlanDetailId;
 	}
-	public void setMonthPlanDetailId(int monthPlanDetailId) {
+	public void setMonthPlanDetailId(Integer monthPlanDetailId) {
 		this.monthPlanDetailId = monthPlanDetailId;
 	}
-	public int getProId() {
+	public Integer getProId() {
 		return proId;
 	}
-	public void setProId(int proId) {
+	public void setProId(Integer proId) {
 		this.proId = proId;
 	}
 	public String getChineseName() {
@@ -38,23 +44,10 @@ public class PlanDetails {
 	public void setProImage(String proImage) {
 		this.proImage = proImage;
 	}
-	public int getProduceNum() {
+	public Integer getProduceNum() {
 		return produceNum;
 	}
-	public void setProduceNum(int produceNum) {
-		this.produceNum = produceNum;
-	}
-	public PlanDetails(int monthPlanDetailId, int proId, String chineseName, String proImage, int produceNum) {
-		this.monthPlanDetailId = monthPlanDetailId;
-		this.proId = proId;
-		this.chineseName = chineseName;
-		this.proImage = proImage;
-		this.produceNum = produceNum;
-	}
-	public PlanDetails(int monthPlanDetailId, int proId, String chineseName, int produceNum) {
-		this.monthPlanDetailId = monthPlanDetailId;
-		this.proId = proId;
-		this.chineseName = chineseName;
+	public void setProduceNum(Integer produceNum) {
 		this.produceNum = produceNum;
 	}
 	public PlanDetails() {

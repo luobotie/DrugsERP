@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import com.drug.djl.biz.BranchStoreBiz;
 import com.drug.djl.entity.BranchStoreInfo;
+import com.drug.djl.entity.Contract;
+import com.drug.djl.entity.LikeSelectBS;
 import com.drug.djl.mapper.BranchStoreInfoMapper;
 
 /**
@@ -24,13 +26,13 @@ public class BranchStoreBizImpl implements BranchStoreBiz {
 	private BranchStoreInfoMapper branchInfoMapper;
 	
 	@Override
-	public List<BranchStoreInfo> selectAllBranchStore(Map<String , Object> branchPage) {
-		return branchInfoMapper.selectAllBranchStore(branchPage);
+	public List<BranchStoreInfo> selectAllBranchStore(LikeSelectBS likeSelectBS) {
+		return branchInfoMapper.selectAllBranchStore(likeSelectBS);
 	}
 
 	@Override
-	public Integer selectAllBranchStores() {
-		return branchInfoMapper.selectALLBranchStores();
+	public Integer selectAllBranchStores(LikeSelectBS likeSelectBS) {
+		return branchInfoMapper.selectALLBranchStores(likeSelectBS);
 	}
 
 	@Override
@@ -58,14 +60,19 @@ public class BranchStoreBizImpl implements BranchStoreBiz {
 	}
 
 	@Override
-	public int updateBranchStore(int id) {
-		int row=branchInfoMapper.updateBranchStore(id);
+	public int updateBranchStore(BranchStoreInfo bStoreInfo) {
+		int row=branchInfoMapper.updateBranchStore(bStoreInfo);
 		if (row ==1 ) {
 			System.out.println("修改成功！");
 		} else {
 			System.out.println("修改失败");
 		}
 		return row;
+	}
+
+	@Override
+	public List<Contract> getAllBSContract() {
+		return branchInfoMapper.getAllBSContract();
 	}
 
 }

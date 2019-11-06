@@ -1,8 +1,139 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="com.drug.luobo.mapper.EmployeeMapper">
-	<select id="login" parameterType="Employee" resultType="Employee">
-	      select * from employee where employeeName=#{employeeName} and employeePwd=#{employeePwd}
+	<select id="login" parameterType="Employee" resultType="EmployeeVo">
+	     SELECT e.*,d.`depName`,r.`rolename` FROM employee e  LEFT  JOIN department d
+          ON e.`depId`=d.`depId` LEFT JOIN role r
+          ON e.`roleId`=r.`roleid` 
+	      where e.employeeName=#{employeeName} and e.employeePwd=#{employeePwd} and e.visibles=1
 	</select>
-
+    <select id="loadAllEmp" parameterType="EmployeeVo" resultType="EmployeeVo" >
+        SELECT e.*,d.`depName`,r.`rolename` FROM employee e  LEFT  JOIN department d
+          ON e.`depId`=d.`depId` LEFT JOIN role r
+          ON e.`roleId`=r.`roleid` 
+		<where>
+		    <if test="employeeId!=null">
+				and employeeId=#{employeeId}
+			</if>
+			<if test="employeeName!=null and employeeName!=''">
+				and employeeName like concat("%",#{employeeName},"%")
+			</if>
+			<if test="realName!=null and realName!=''">
+				and realName like concat("%",#{realName},"%")
+			</if>
+			<if test="employeeAge!=null">
+				and employeeAge=#{employeeAge}
+			</if>
+			<if test="employeeSex!=null and employeeSex!=''">
+				and employeeSex like concat("%",#{employeeSex},"%")
+			</if>
+			<if test="employeeTel!=null and employeeTel!=''">
+				and employeeTel like concat("%",#{employeeTel},"%")
+			</if>
+			<if test="idCard!=null and idCard!=''">
+				and idCard like concat("%",#{idCard},"%")
+			</if>
+			<if test="addr!=null and addr!=''">
+				and addr like concat("%",#{addr},"%")
+			</if>
+			<if test="depName!=null and depName!=''">
+				and depName like concat("%",#{depName},"%")
+			</if>
+			<if test="rolename!=null and rolename!=''">
+				and rolename like concat("%",#{rolename},"%")
+			</if>
+			<if test="startTime!=null and startTime!=''">
+				and joinTime &gt;=#{startTime}
+			</if>
+			<if test="endTime!=null and endTime!=''">
+				and joinTime &lt;=#{endTime}
+			</if>
+			<if test="visibles!=null">
+				and e.visibles=#{visibles}
+			</if>
+		</where>
+		ORDER BY employeeId DESC LIMIT #{page},#{limit}
+    </select>
+    <select id="getCount" parameterType="EmployeeVo" resultType="Long">
+          SELECT COUNT(*) FROM employee e  LEFT  JOIN department d
+          ON e.`depId`=d.`depId` LEFT JOIN role r
+          ON e.`roleId`=r.`roleid` 
+		<where>
+		    <if test="employeeId!=null">
+				and employeeId=#{employeeId}
+			</if>
+			<if test="employeeName!=null and employeeName!=''">
+				and employeeName like concat("%",#{employeeName},"%")
+			</if>
+			<if test="realName!=null and realName!=''">
+				and realName like concat("%",#{realName},"%")
+			</if>
+			<if test="employeeAge!=null">
+				and employeeAge=#{employeeAge}
+			</if>
+			<if test="employeeSex!=null and employeeSex!=''">
+				and employeeSex like concat("%",#{employeeSex},"%")
+			</if>
+			<if test="employeeTel!=null and employeeTel!=''">
+				and employeeTel like concat("%",#{employeeTel},"%")
+			</if>
+			<if test="idCard!=null and idCard!=''">
+				and idCard like concat("%",#{idCard},"%")
+			</if>
+			<if test="addr!=null and addr!=''">
+				and addr like concat("%",#{addr},"%")
+			</if>
+			<if test="depName!=null and depName!=''">
+				and depName like concat("%",#{depName},"%")
+			</if>
+			<if test="rolename!=null and rolename!=''">
+				and rolename like concat("%",#{rolename},"%")
+			</if>
+			<if test="startTime!=null and startTime!=''">
+				and joinTime &gt;=#{startTime}
+			</if>
+			<if test="endTime!=null and endTime!=''">
+				and joinTime &lt;=#{endTime}
+			</if>
+			<if test="visibles!=null">
+				and e.visibles = #{visibles}
+			</if>
+		</where>
+    
+    </select>
+    <update id="updateHeadImage" parameterType="Employee">
+        UPDATE employee SET headUrl=#{headUrl} WHERE employeeId=#{employeeId}
+    </update>
+    <insert id="insertEmp" parameterType="Employee">
+     		INSERT INTO employee(employeeName,realName,employeePwd,employeeAge,employeeSex,employeeTel,idCard,headUrl,addr,studyUndergo,visibles,describes,roleId,depId,joinTime)VALUES(
+     		#{employeeName},#{realName},#{employeePwd},#{employeeAge},#{employeeSex},#{employeeTel},#{idCard},#{headUrl},#{addr},#{studyUndergo},#{visibles},#{describes},#{roleId},#{depId},#{joinTime}
+     		)
+    </insert>
+    <select id="checkAddEmpName" parameterType="String" resultType="Employee">
+         SELECT * FROM employee WHERE employeeName=#{employeeName}
+    </select>
+    <select id="checkUpdateEmpName" parameterType="Employee" resultType="Employee">
+        SELECT * FROM employee WHERE employeeName=#{employeeName}  AND  employeeId NOT IN (#{employeeId});
+    </select>
+    <select id="getAllRoleByDepId" parameterType="Integer" resultType="Role">
+         SELECT * FROM role WHERE depid=#{depId} AND available=1
+    </select>
+    <update id="updateEmpByEmp" parameterType="Employee">
+    	 UPDATE employee SET employeeName=#{employeeName},realName=#{realName},employeeAge=#{employeeAge},employeeSex=#{employeeSex},employeeTel=#{employeeTel},idCard=#{idCard},addr=#{addr},studyUndergo=#{studyUndergo},visibles=#{visibles},describes=#{describes},roleId=#{roleId},depId=#{depId},joinTime=#{joinTime} where employeeId=#{employeeId}
+    </update>
+    <update id="deleteEmpEmpId" parameterType="Integer">
+         UPDATE employee SET visibles=0,roleId=null,depId=null where employeeId=#{employeeId}
+    </update>
+    <update id="updateEmpPwdByEmpId" parameterType="EmployeeVo">
+         UPDATE employee SET employeePwd=#{restPwd} where employeeId=#{employeeId}
+    </update>
+    <update id="updatePersonalInfo">
+    		  UPDATE employee e SET realName=#{realName},employeeSex=#{employeeSex},addr=#{addr},employeeTel=#{employeeTel},idCard=#{idCard} where employeeId=#{employeeId}
+    </update>
+    <select id="checkOldPwdByEmpId" parameterType="EmployeeVo" resultType="Employee">
+         select * from employee WHERE employeePwd=#{oldPwd} AND employeeId=#{employeeId} 
+    </select>
+    <update id="updateNewPwdByEmpId" parameterType="EmployeeVo">
+          UPDATE employee SET employeePwd=#{newPwd} WHERE employeeId=#{employeeId}
+    </update>
 </mapper>

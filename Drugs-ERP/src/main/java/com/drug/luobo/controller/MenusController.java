@@ -121,6 +121,9 @@ public class MenusController {
     @RequestMapping("/moHuMenu.do")
     @ResponseBody
     public LayuiTableData moHuMenu(LayuiPage layuiPage){
+    	if(layuiPage.getTitle()!=null && layuiPage.getTitle()!=""){
+    		layuiPage.setTitle(layuiPage.getTitle().trim());
+    	}
     	layuiPage.setPage((layuiPage.getPage()-1)*layuiPage.getLimit());
     	List<Menus> list = dao.loadAllMenu(layuiPage);
     	Long count = dao.getCount(layuiPage);
