@@ -381,7 +381,8 @@
 										$.ajax({
 											  url:'../../insertDailyplan.do',
 											  data:{'monthPlanId':data[0].monthPlanId,'monthPlanNum':data[0].monthPlanNum},
-											  type:'post',
+											  type:'post'
+											  ,
 											  dataType:'json',
 											  success:function(data){
 													  layer.msg('日计划制定成功,可到日生产计划查看详情');
