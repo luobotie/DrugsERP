@@ -89,9 +89,10 @@ public class ContractController {
 		//编号用时间格式化代替
 		Date date = new Date();
 		SimpleDateFormat format=new SimpleDateFormat("yyyyMMddHHmmssSS");
-		SimpleDateFormat format2=new SimpleDateFormat("yyyyMMdd");
+		int radom = (int)(Math.random()*10000+10000);
 		String conNum=format.format(date);
 		contract.setConNum(conNum);
+		contract.setPartyBId(radom);
 		int row=contractBiz.addContract(contract);
 		return row;
 	}
@@ -140,14 +141,24 @@ public class ContractController {
 		int row=contractBiz.updateContract(contract);
 		return row;
 	}
-
+	
+	/**
+	 * 
+	 * 描述:从前台接收一个分店名称判断是否已存在在合同表中
+	 * @param bsname
+	 * @return
+	 * 2019年11月5日上午11:29:00
+	 */
+	@RequestMapping("checkBSName.do")
+	public List<Contract> checkBSName(String bsname) {
+		List<Contract> contracts=contractBiz.checkBSName(bsname);
+		return contracts;
+	}
+	
 
 	public static void main(String[] args) {
 		Random ro = new Random();
-		
 		System.out.println(ro.nextInt(100));
-		
-		
 
 	}
 }

@@ -65,4 +65,13 @@ public interface ContractMapper {
 	 * 2019年10月31日下午3:26:58
 	 */
 	int updateContract(Contract contrac);
+	
+	/**
+	 * 
+	 * 描述:输入分店名称 检查是否已存在
+	 * @param bsname
+	 * @return
+	 * 2019年11月5日上午11:24:06
+	 */
+	List<Contract> checkBSName(String bsname);
 }

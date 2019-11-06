@@ -38,15 +38,15 @@ public class BSController {
 	@RequestMapping("selectAllBranchStore.do")
 	public Map<String, Object> selectAllBranchStore(LikeSelectBS likeSelectBS) {
 		System.out.println("模糊查询:"+likeSelectBS.getBsopendate());
-		System.out.println("模糊查询:"+likeSelectBS.getBslocationCity());
 		System.out.println("模糊查询:"+likeSelectBS.getBslocationPro());
-		System.out.println("模糊查询:"+likeSelectBS.getLimit());
+		System.out.println("模糊查询:"+likeSelectBS.getBslocationCity());
 		//总行数
+		likeSelectBS.setPage((likeSelectBS.getPage()-1)*likeSelectBS.getLimit());//当前页数-1*每页显示数量
 		int counts=branchStoreBiz.selectAllBranchStores(likeSelectBS);
 		//为分页查询创建map
-		Map<String, Object> branchPage=new HashMap<>();
-		branchPage.put("page", (likeSelectBS.getPage()-1)*likeSelectBS.getLimit());//当前页数-1*每页显示数量
-		branchPage.put("limit", likeSelectBS.getLimit());//每页显示数
+		//Map<String, Object> branchPage=new HashMap<>();
+		//branchPage.put("page", (likeSelectBS.getPage()-1)*likeSelectBS.getLimit());//当前页数-1*每页显示数量
+		//branchPage.put("limit", likeSelectBS.getLimit());//每页显示数
 		List<BranchStoreInfo> branchStores=branchStoreBiz.selectAllBranchStore(likeSelectBS);
 		//分页查询的Map
 		Map<String, Object> map = new HashMap<String, Object>();

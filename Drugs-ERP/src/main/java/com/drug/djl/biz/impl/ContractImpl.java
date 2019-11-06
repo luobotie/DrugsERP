@@ -77,5 +77,11 @@ public class ContractImpl implements ContractBiz{
 		}
 		return row;
 	}
+
+	@Override
+	public List<Contract> checkBSName(String bsname) {
+		List<Contract> contracts=contractMapper.checkBSName(bsname);
+		return contracts;
+	}
 	
 }

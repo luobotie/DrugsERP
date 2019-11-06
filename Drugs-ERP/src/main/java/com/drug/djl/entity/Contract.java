@@ -1,5 +1,7 @@
 package com.drug.djl.entity;
 
+import org.springframework.stereotype.Component;
+
 /**
  * 
  * 描述:合同表的实体类
@@ -7,6 +9,7 @@ package com.drug.djl.entity;
  * 2019年10月28日下午3:26:03
  * version:1.0
  */
+@Component
 public class Contract {
 	private Integer conID;	// 合同表主键
 	private String conName; // 合同名称

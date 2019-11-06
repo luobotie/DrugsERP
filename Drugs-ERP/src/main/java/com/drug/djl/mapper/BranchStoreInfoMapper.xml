@@ -6,7 +6,7 @@
 	<select id="selectALLBranchStores" resultType="Integer" parameterType="LikeSelectBS">
 		select count(*) from branchStoreInfo
 		<where>
-			<if test="bsName != null and bsName != '' ">
+			<if test="bsName != null and bsName != ''">
 				and bsName like  '%${bsName}%'
 			</if>
 			<if test="bslocationPro != null and bslocationPro != '' ">

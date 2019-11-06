@@ -25,26 +25,53 @@ label{
 	font-size: 13px;
 }
 </style>
-</head>
-<body>
-<script>
-	layui.use('laydate', function(){
-	  var laydate = layui.laydate;
-		//日期时间选择器
-		  laydate.render({
-		    elem: '#test5'
-		    ,type: 'date'
-		  });
-	});
-</script>
 
 
-<table id="demo" lay-filter="test"></table>
 <script>
-		var table2 = null ;
-		layui.use('table', function(){
-			var table = layui.table, form = layui.form;
+	//头工具栏时间器渲染
+	layui.use(['table','form','laydate','jquery'], function(){
+		  var table = layui.table;
+		  var form = layui.form;
+		  var laydate = layui.laydate;
+		  var $=layui.jquery;
 		  
+		  //给分店下拉框动态赋值
+		  $(function () {
+       		 GetBScontract();
+    		})
+    	//获取类别
+    	function GetBScontract() {
+			  var bsNameSelect=$("#bsName");
+			//给下拉框赋值
+	    	  bsNameSelect.empty();//清空下拉列表数据
+	    	  $.ajax({
+					url:'../../getAllBSContract.do',
+					success:function(back){
+						if(back != null){
+			                for (var i = 0; i < back.length; i++) {
+			                	//alert(back[i].conName)
+			                	//bsNameSelect.add(new Option(back[i].partyB,back[i].partyB));
+			                	bsNameSelect.append("<option value="+back[i].partyB+">"+back[i].partyB+"</option>");
+							} 
+			                form.render();
+			            }
+					}
+				})    
+			  
+    	}
+		  //日期时间选择器
+			  laydate.render({
+			    elem: '#test5'
+			    ,type: 'date'
+			  });
+		});
+	
+		var table2 = null ;
+		layui.use(['table','form','laydate','jquery'], function(){
+			 var table = layui.table;
+		     var form = layui.form;
+		    var laydate = layui.laydate;
+		    var $=layui.jquery;
 		  //执行一个 table 实例
 		 	table2 =  table.render({
 		    elem: '#demo'
@@ -139,17 +166,15 @@ label{
 	});
 </script>
 
-<script type="text/html" id="barDemo">
-  <a class="layui-btn layui-btn-xs" lay-event="edit" style="width:60px;height:30px;line-height:30px">编辑</a>
-  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" style="width:60px;height:30px;line-height:30px">删除</a>
-</script>
-
- <script type="text/html" id="toolbarDemo">
-<form class="layui-form" action="" >
+</head>
+<body>
+<!-- 头工具栏模糊搜索 -->
+<script type="text/html" id="toolbarDemo">
+	<form class="layui-form" action="" >
 			<div class="layui-inline" style="margin-left:20px;">
 					<label >下单日期：</label>
 				<div class="layui-input-inline" style="margin-left:5px;">
-					<input type="text"  class="layui-input" id="test5"
+					<input type="text"  class="layui-input" name="orderTime" id="orderTimeLike"
 						placeholder="年--月--日 ">
 				</div>
 			</div>
@@ -157,7 +182,7 @@ label{
 	<div class="layui-inline" style="margin-left:20px;">
       <label >审核状态：</label>
       <div class="layui-input-inline" style="margin-left:5px;">
-        <select name="audit"  lay-search="required">
+        <select name="orderCheckStatus" id="orderCheckStatusLike"  lay-search="required">
           <option value="1">请选择</option>
           <option value="2">未审核</option>
 		<option value="2">已审核</option>
@@ -168,10 +193,8 @@ label{
  <div class="layui-inline" style="margin-left:20px;">
       <label >分店：</label>
       <div class="layui-input-inline" style="margin-left:5px;">
-        <select name="audit"  lay-search="required">
-          <option value="1">请选择</option>
-          <option value="2">王五</option>
-        </select>
+        <select id="bsName" name="bsName" onchange="changeCity()"
+		lay-verify="bsName" placeholder="请选择分店" required="required">
       </div>
     </div>
 
@@ -179,27 +202,14 @@ label{
 			<button class="layui-btn layui-btn-normal" data-type="reload">搜索</button>		
 		</div>    
 </form>
-
-	 <div class="layui-inline" style="margin-top:20px;">
-      <label class="layui-form-label">审核</label>
-      <div class="layui-input-inline">
-        <select name="audit" lay-verify="required" lay-search="required">
-          <option value="1">请选择</option>
-		<option value="1">审核通过</option>
-          <option value="2">审核不通过</option>
-        </select>
-      </div>
-    </div>
-
-<div class="layui-inline" style="margin-top:20px;">
-      <label class="layui-form-label">收货</label>
-      <div class="layui-input-inline">
-        <select name="audit" lay-verify="required" lay-search="required">
-          <option value="1">请选择</option>
-	<option value="1">已收货</option>
-        </select>
-      </div>
-    </div>
 </script>
+<!-- 数据表格 -->
+<table id="demo" lay-filter="test"></table>
+
+<script type="text/html" id="barDemo">
+  <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="check" style="width:60px;height:30px;line-height:30px">审核</a>
+</script>
+
+ 
 </body>
 </html>

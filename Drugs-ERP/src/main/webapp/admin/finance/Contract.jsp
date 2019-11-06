@@ -65,8 +65,8 @@ layui.use(['table','form','laydate','jquery'], function(){
     	{type: 'checkbox', fixed: 'left'},
         {field:'conID', title:'合同ID', hide:true },
         {field:'conName', title:'合同名称', },
-        {field:'conType', title:'合同类型',},
-        {field:'conNum', title:'合同编号',},
+        {field:'conType', title:'合同类型',sort: true},
+        {field:'conNum', title:'合同编号',sort: true},
         {field:'partyA', title:'甲方'},
         {field:'partyB', title:'乙方'},
         {field:'totalPrice', title:'合同总金额',},
@@ -329,7 +329,32 @@ layui.use(['table','form','laydate','jquery'], function(){
 	     return false;
   }); 
 
- 
+	//判断是否已经申请过
+  $("#partyBOnly").blur(function(){
+	  var bsName=$("#partyBOnly").val();
+	  $.ajax({
+          url: "../../checkBSName.do",
+          type: "POST",
+          dataType: "json",
+          data:"bsname="+bsName,//前台名字
+          success: function(back){
+              if(back.length>0){
+            	  layer.open({
+            		  skin: 'demo-class'
+            		  ,title: '警告!!'
+            		  ,content: '警告!该乙方已同我方签订合同!'
+            		}); 
+              }else{
+            	  layer.open({
+            		  skin: 'demo-class'
+            		  ,title: '提示'
+            		  ,content: '该乙方未同我方签订合同'
+            		});
+              }
+              
+          }
+      });  
+	  });
 
 
   
@@ -414,7 +439,7 @@ layui.use(['table','form','laydate','jquery'], function(){
 		
 		<label class="layui-form-label">乙方名称</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="partyB" placeholder="乙方名称" required="required">
+			<input type="text" class="layui-input" id="partyBOnly" name="partyB" placeholder="乙方名称" required="required">
 		</div>
 	</div>
 	
@@ -460,21 +485,21 @@ layui.use(['table','form','laydate','jquery'], function(){
 	<div class="layui-form-item" id="gys" hidden >
 		<label class="layui-form-label">供应商id</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="partyBId" placeholder="供应商id" lay-verify="partyBId" required="required" >
+			<input type="text" class="layui-input" name="partyBId" placeholder="供应商id/非手动填写" lay-verify="partyBId" required="required" readonly>
 		</div>
 	</div>
 	
 	<div class="layui-form-item" id="fd" hidden>
 		<label class="layui-form-label" >分店id</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="partyBId" placeholder="分店id" lay-verify="partyBId" required="required" >
+			<input type="text" class="layui-input" name="partyBId" placeholder="分店id/非手动填写" lay-verify="partyBId" required="required" readonly >
 		</div>
 	</div>
 	
 	<div class="layui-form-item" id="cgdd" hidden >
 		<label class="layui-form-label">采购订单id</label>
 		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="partyBId" placeholder="采购订单id" lay-verify="partyBId" required="required">
+			<input type="text" class="layui-input" name="partyBId" placeholder="采购订单id/非手动填写" lay-verify="partyBId" required="required" readonly>
 		</div>
 	</div>
 	
@@ -538,11 +563,16 @@ layui.use(['table','form','laydate','jquery'], function(){
   <!-- 修改合同的表单 -->
 <form class="layui-form" lay-filter="exampleUpdate" id="form3" style="display:none;align-content:center;" >
 	 <div class="layui-form-item">
-    <label class="layui-form-label">合同ID</label>
-    <div class="layui-input-inline">
-      <input type="text" name="conID" lay-verify="conID" placeholder="请输入名称" autocomplete="off" class="layui-input" readonly>
-    </div>
-
+    	<label class="layui-form-label">合同ID</label>
+    	<div class="layui-input-inline">
+      	<input type="text" name="conID" lay-verify="conID" placeholder="请输入名称" autocomplete="off" class="layui-input" readonly>
+    	</div>
+    	<label class="layui-form-label">乙方ID</label>
+		<div class="layui-input-inline">
+			<input type="text" class="layui-input" name="partyBId" placeholder="乙方id" lay-verify="partyBId" required="required" readonly >
+		</div>
+	</div>
+	
     <div class="layui-form-item">
     <label class="layui-form-label">合同名称</label>
     <div class="layui-input-inline">
@@ -559,7 +589,7 @@ layui.use(['table','form','laydate','jquery'], function(){
     </div>
   </div>
   
-  <div class="layui-form-item" hidden>
+  <div class="layui-form-item" >
 		<label class="layui-form-label">合同编号</label>
 		<div class="layui-input-inline">
 			<input type="text" class="layui-input" name="conNum" placeholder="详细地址" required="required">
@@ -614,27 +644,6 @@ layui.use(['table','form','laydate','jquery'], function(){
 		<label class="layui-form-label">联系电话</label>
 		<div class="layui-input-inline">
 			<input type="text" class="layui-input" name="conContact" placeholder="联系电话" lay-verify="conContact" required="required">
-		</div>
-	</div>
-	
-	<div class="layui-form-item" id="gys" hidden >
-		<label class="layui-form-label">供应商id</label>
-		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="partyBId" placeholder="供应商id" lay-verify="partyBId" required="required" >
-		</div>
-	</div>
-	
-	<div class="layui-form-item" id="fd" hidden>
-		<label class="layui-form-label" >分店id</label>
-		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="partyBId" placeholder="分店id" lay-verify="partyBId" required="required" >
-		</div>
-	</div>
-	
-	<div class="layui-form-item" id="cgdd" hidden >
-		<label class="layui-form-label">采购订单id</label>
-		<div class="layui-input-inline">
-			<input type="text" class="layui-input" name="partyBId" placeholder="采购订单id" lay-verify="partyBId" required="required">
 		</div>
 	</div>
 	

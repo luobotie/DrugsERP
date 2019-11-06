@@ -74,7 +74,6 @@ layui.use(['table','form','laydate','jquery'], function(){
   laydate.render({
     elem: '#openDate',
   });
-  
   laydate.render({
 	    elem: '#openDateUpdate',
    });
@@ -161,6 +160,7 @@ layui.use(['table','form','laydate','jquery'], function(){
 		// 遍历
 		for (var i in cityList){
 			if (i==pros){
+				//<option disabled selected value="" > 请选择市/区</option>
 				for (var j in cityList[i]){								
 					// 将 Option标签添加到Select中
 					city.add(new Option(cityList[i][j],cityList[i][j]),null);									
@@ -196,7 +196,7 @@ layui.use(['table','form','laydate','jquery'], function(){
     	  addBS=layer.open({
                    title:'新增分店',//标题
                    type:1,//样式
-                   area:['600px','600px'],//大小
+                   area:['780px','500px'],//大小
                    content:$("#form2"),
                });
               
@@ -233,7 +233,7 @@ layui.use(['table','form','laydate','jquery'], function(){
     	updateBS=layer.open({
             title:'更新分店信息',//标题
             type:1,//样式
-            area:['600px','600px'],//大小
+            area:['780px','500px'],//大小
             content:$("#form3"),
             success: function(layero, index){
             	//直接将行数据填到表单中
@@ -307,23 +307,24 @@ layui.use(['table','form','laydate','jquery'], function(){
   }); 
   
 //提交模糊查询窗口
-/*   form.on('submit(doSearch)', function(data){
+/*  form.on('submit(doSearch)', function(data){
          tableBS.reload({
- 			url:"../../selectAllBranchStore.do?bsName="+data.field.bsName+"&openDate="+data.field.openDate+"&bslocationPro="
+ 			url:"../../selectAllBranchStore.do?bsName="+data.field.bsName+"&openDate="+data.field.bsopendate+"&bslocationPro="
  					+data.field.bslocationPro+"&bslocationCity="+data.field.bslocationCity
  		}) 
 	     return false;
-  });  */
+  });   */
   
 //模糊查询
-	$("#doSearch").click(function(){
+	 $("#doSearch").click(function(){
 		var params=$("#searchForm").serialize();
-		alert(params);
+		//alert(params);
+		//alert(params);
 		tableBS.reload({
 			url:"../../selectAllBranchStore.do?"+params
 		})
 	});
-
+ 
   
   
   
@@ -332,7 +333,7 @@ layui.use(['table','form','laydate','jquery'], function(){
 </script>
 </head>
 <body>
-	<!-- 头工具栏 -->
+	<!--模糊查询 -->
 	<div class="layui-input-inline" style="margin-top:20px;">
 	<form class="layui-form" action="" id="searchForm">
 		<div class="layui-inline" style="margin-left:20px;">
@@ -345,7 +346,7 @@ layui.use(['table','form','laydate','jquery'], function(){
     	<div class="layui-inline" style="margin-left:20px;">
     		<label class="layui-form-label">签订时间</label>
 		      <div class="layui-input-inline">
-		        <input type="text" id="openDate" name="bsopendate"   class="layui-input">
+		        <input type="text" id="openDateSearch" name="bsopendate"   class="layui-input">
 		      </div>
     	</div>
     	
@@ -353,19 +354,19 @@ layui.use(['table','form','laydate','jquery'], function(){
  	<div class="layui-inline" style="margin-left:20px;">
       	<label class="layui-form-label">选择地区</label>
     			<div class="layui-input-inline">
-     				<select  id="province123Like" name="bslocationPro"  onchange="changeCity()" lay-filter="csSearch" lay-verify="bsLocation">
-       		 			<option disabled selected >请选择省/自治区/直辖市</option>
+     				<select  id="province123Like" name="bslocationPro"  onchange="changeCity()" lay-filter="csSearch" >
+       		 			<option disabled selected value="">请选择省/自治区/直辖市</option>
       				</select> 
     			</div>
     			
     </div>
-    <div class="layui-inline" style="margin-left:20px;">
+   <!--  <div class="layui-inline" style="margin-left:20px;">
     	<div class="layui-input-inline">
       				<select  id="city123Like" name="bslocationCity">
-        				<option disabled selected > 请选择市/区</option>
+        				
      			 	</select>
     			</div>
-    </div>
+    </div> -->
 
 		<div class="layui-inline" >
 			<button type="button" class="layui-btn layui-btn-radius " id="doSearch" lay-event="search" lay-filter="doSearch" lay-submit=""><i class="layui-icon layui-icon-search"></i> </button>
@@ -412,6 +413,7 @@ layui.use(['table','form','laydate','jquery'], function(){
 					<option>请选择省/城市</option>
 				</select>
 			</div>
+			<label class="layui-form-label">请选择城市</label>
 			<div class="layui-input-inline">
 				<select id="city123" name="bslocationCity">
 					<option>请选择城市/地区</option>
@@ -425,9 +427,6 @@ layui.use(['table','form','laydate','jquery'], function(){
 				<input type="text" class="layui-input" name="bslocation"
 					placeholder="详细地址" required="required">
 			</div>
-		</div>
-
-		<div class="layui-form-item">
 			<label class="layui-form-label">开业时间</label>
 			<div class="layui-input-inline">
 				<input type="text" class="layui-input" id="openDate"
@@ -441,9 +440,6 @@ layui.use(['table','form','laydate','jquery'], function(){
 				<input type="text" class="layui-input" name="empTable"
 					placeholder="店长id" required="required">
 			</div>
-		</div>
-
-		<div class="layui-form-item">
 			<label class="layui-form-label">员工人数</label>
 			<div class="layui-input-inline">
 				<input type="text" class="layui-input" name="crewSize"
@@ -457,9 +453,6 @@ layui.use(['table','form','laydate','jquery'], function(){
 				<input type="text" class="layui-input" name="contact"
 					placeholder="联系方式" lay-verify="contact">
 			</div>
-		</div>
-
-		<div class="layui-form-item">
 			<label class="layui-form-label">电子邮箱</label>
 			<div class="layui-input-inline">
 				<input type="text" class="layui-input" name="email"
@@ -478,9 +471,9 @@ layui.use(['table','form','laydate','jquery'], function(){
 		<div class="layui-form-item">
 			<label class="layui-form-label">签订合同</label>
 			<div class="layui-input-inline">
-				<select name="standByField1" placeholder="是否签订">
-					<option value="签订">签订</option>
-					<option value="未签订" selected="selected">未签订</option>
+				<select name="standByField1" placeholder="是否签订" readOnly>
+					<option value="签订" selected="selected">签订</option>
+					<option value="未签订" >未签订</option>
 				</select>
 			</div>
 		</div>
@@ -512,9 +505,6 @@ layui.use(['table','form','laydate','jquery'], function(){
 				<input type="text" name="bsiId" lay-verify="bsiId"
 					autocomplete="off" class="layui-input" readOnly>
 			</div>
-		</div>
-
-		<div class="layui-form-item">
 			<label class="layui-form-label">分店名称</label>
 			<div class="layui-input-inline">
 				<input type="text" name="bsName" lay-verify="bsName"
@@ -531,6 +521,7 @@ layui.use(['table','form','laydate','jquery'], function(){
 					<option>请选择省/城市</option>
 				</select>
 			</div>
+			<label class="layui-form-label">请选择城市</label>
 			<div class="layui-input-inline">
 				<select id="city123Update" name="bslocationCity">
 					<option>请选择城市/地区</option>
@@ -560,9 +551,6 @@ layui.use(['table','form','laydate','jquery'], function(){
 				<input type="text" class="layui-input" name="empTable"
 					placeholder="店长id" required="required">
 			</div>
-		</div>
-
-		<div class="layui-form-item">
 			<label class="layui-form-label">员工人数</label>
 			<div class="layui-input-inline">
 				<input type="text" class="layui-input" name="crewSize"
@@ -576,9 +564,6 @@ layui.use(['table','form','laydate','jquery'], function(){
 				<input type="text" class="layui-input" name="contact"
 					placeholder="联系方式" lay-verify="contact">
 			</div>
-		</div>
-
-		<div class="layui-form-item">
 			<label class="layui-form-label">电子邮箱</label>
 			<div class="layui-input-inline">
 				<input type="text" class="layui-input" name="email"
@@ -592,9 +577,6 @@ layui.use(['table','form','laydate','jquery'], function(){
 				<input type="text" class="layui-input" name="regisiteredamount"
 					placeholder="注册金额" lay-verify="regisiteredamount">
 			</div>
-		</div>
-
-		<div class="layui-form-item">
 			<label class="layui-form-label">签订合同</label>
 			<div class="layui-input-inline">
 				<select name="standByField1" placeholder="是否签订">
@@ -603,6 +585,7 @@ layui.use(['table','form','laydate','jquery'], function(){
 				</select>
 			</div>
 		</div>
+
 
 		<div class="layui-form-item" hidden>
 			<label class="layui-form-label">备用字段2</label>
