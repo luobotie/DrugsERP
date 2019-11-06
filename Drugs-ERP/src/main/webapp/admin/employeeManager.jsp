@@ -437,16 +437,16 @@
 			    ,page: true  //是否启用分页
 			    ,cols: [[   //列表数据
 			     {type: 'checkbox', fixed: 'left'}
-			      ,{field:'employeeId', title:'员工编号',align:'center',width:90}
-			      ,{field:'headUrl', title:'员工头像',align:'center',width:90,templet:function(d){
+			      ,{field:'employeeId', title:'员工编号',align:'center',unresize:true}
+			      ,{field:'headUrl', title:'员工头像',align:'center',unresize:true,templet:function(d){
 			    	  return "<img class='layui-upload-img' width='100px' height='100px' src="+d.headUrl+">";
 			      }}
-			      ,{field:'employeeName', title:'员工登录账户',align:'center',width:120}
-			      ,{field:'realName', title:'真实姓名',align:'center',width:90}
+			      ,{field:'employeeName', title:'员工登录账户',align:'center',unresize:true}
+			      ,{field:'realName', title:'真实姓名',align:'center',unresize:true}
 			      ,{field:'employeeSex', title:'性别',align:'center'}
 			      ,{field:'employeeAge', title:'年龄',align:'center'}
-			      ,{field:'joinTime', title:'入职时间',align:'center',width:120}
-			      ,{field:'employeeTel', title:'联系电话',align:'center',width:90}
+			      ,{field:'joinTime', title:'入职时间',align:'center',unresize:true}
+			      ,{field:'employeeTel', title:'联系电话',align:'center',unresize:true}
 			      ,{field:'idCard', title:'身份证号码',align:'center',hide:true}
 			      ,{field:'addr', title:'员工地址',align:'center',hide:true}
 			      ,{field:'studyUndergo', title:'员工学历',align:'center',hide:true}
@@ -456,10 +456,10 @@
 			      ,{field:'depId', title:'所属部门id',align:'center',hide:true}
 			      ,{field:'depName', title:'部门名称',align:'center',hide:true}
 			      ,{field:'employeePwd', title:'密码加密后',align:'center',hide:true}
-			      ,{field:'visibles ', title:'是否可用',align:'center',width:'100',templet:function(d){
+			      ,{field:'visibles ', title:'是否可用',align:'center',unresize:true,templet:function(d){
 			    	  return d.visibles=='1'?'<font color=blue>可用</font>':'<font color=red>不可用</font>';
 			      }}
-			      ,{fixed: 'right', title:'操作', toolbar: '#menuBar', width:330,align:'center'}
+			      ,{fixed: 'right', title:'操作', toolbar: '#menuBar', width:350,align:'center'}
 			    ]]
 			})
 			form.verify({
