@@ -8,27 +8,30 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ProductInfo {
-	private int proId;				// 药品id
+	private Integer proId;				// 药品id
 	private String chineseName;		// 药品名称
-	private int expirationdate;		// 保质期
-	private int hqtId;				// 外键	生产厂家id(总店外键)
+	private String imgName; 		//图片名
+	private Integer expirationdate;		// 保质期
+	private Integer hqtId;				// 外键	生产厂家id(总店外键)
 	private String specification;	// 规格（g）
 	private String proImage;		// 成品外观图片
 	private String proRecipe;		// 药品有无配方
-	private double retailPrice;		// 销售价
+	private Double retailPrice;		// 销售价
 	private String statues;  		// 药品审核状态
-	private int visibles;			// 显示状态
-	private int proTypeId;			// 外键	成品类型表Id
-	private int recipeId;			// 外键	配方表id
+	private String proStaData;  		// 药品审核时间
+	private Integer visibles;			// 显示状态
+	private Integer proTypeId;			// 外键	成品类型表Id
+	private Integer recipeId;			// 外键	配方表id
 	private String proDate;			// 药品制定时间
-	private int proMan;				// 药品制定人
+	private Integer proMan;				// 药品制定人
 	private String recipeStatues;   // 配方审核状态
 	private String createDate;		// 配方制定时间
-	private int createEmpId;		// 配方制定人
-	public int getProId() {
+	private Integer createEmpId;		// 配方审核人
+	private Integer prdId;			//配方详情ID
+	public Integer getProId() {
 		return proId;
 	}
-	public void setProId(int proId) {
+	public void setProId(Integer proId) {
 		this.proId = proId;
 	}
 	public String getChineseName() {
@@ -37,17 +40,22 @@ public class ProductInfo {
 	public void setChineseName(String chineseName) {
 		this.chineseName = chineseName;
 	}
-	
-	public int getExpirationdate() {
+	public String getImgName() {
+		return imgName;
+	}
+	public void setImgName(String imgName) {
+		this.imgName = imgName;
+	}
+	public Integer getExpirationdate() {
 		return expirationdate;
 	}
-	public void setExpirationdate(int expirationdate) {
+	public void setExpirationdate(Integer expirationdate) {
 		this.expirationdate = expirationdate;
 	}
-	public int getHqtId() {
+	public Integer getHqtId() {
 		return hqtId;
 	}
-	public void setHqtId(int hqtId) {
+	public void setHqtId(Integer hqtId) {
 		this.hqtId = hqtId;
 	}
 	public String getSpecification() {
@@ -68,10 +76,10 @@ public class ProductInfo {
 	public void setProRecipe(String proRecipe) {
 		this.proRecipe = proRecipe;
 	}
-	public double getRetailPrice() {
+	public Double getRetailPrice() {
 		return retailPrice;
 	}
-	public void setRetailPrice(double retailPrice) {
+	public void setRetailPrice(Double retailPrice) {
 		this.retailPrice = retailPrice;
 	}
 	public String getStatues() {
@@ -80,22 +88,28 @@ public class ProductInfo {
 	public void setStatues(String statues) {
 		this.statues = statues;
 	}
-	public int getVisibles() {
+	public String getProStaData() {
+		return proStaData;
+	}
+	public void setProStaData(String proStaData) {
+		this.proStaData = proStaData;
+	}
+	public Integer getVisibles() {
 		return visibles;
 	}
-	public void setVisibles(int visibles) {
+	public void setVisibles(Integer visibles) {
 		this.visibles = visibles;
 	}
-	public int getProTypeId() {
+	public Integer getProTypeId() {
 		return proTypeId;
 	}
-	public void setProTypeId(int proTypeId) {
+	public void setProTypeId(Integer proTypeId) {
 		this.proTypeId = proTypeId;
 	}
-	public int getRecipeId() {
+	public Integer getRecipeId() {
 		return recipeId;
 	}
-	public void setRecipeId(int recipeId) {
+	public void setRecipeId(Integer recipeId) {
 		this.recipeId = recipeId;
 	}
 	public String getProDate() {
@@ -104,10 +118,10 @@ public class ProductInfo {
 	public void setProDate(String proDate) {
 		this.proDate = proDate;
 	}
-	public int getProMan() {
+	public Integer getProMan() {
 		return proMan;
 	}
-	public void setProMan(int proMan) {
+	public void setProMan(Integer proMan) {
 		this.proMan = proMan;
 	}
 	public String getRecipeStatues() {
@@ -122,41 +136,17 @@ public class ProductInfo {
 	public void setCreateDate(String createDate) {
 		this.createDate = createDate;
 	}
-	public int getCreateEmpId() {
+	public Integer getCreateEmpId() {
 		return createEmpId;
 	}
-	public void setCreateEmpId(int createEmpId) {
+	public void setCreateEmpId(Integer createEmpId) {
 		this.createEmpId = createEmpId;
 	}
-	public ProductInfo(int proId, String chineseName, int expirationdate, int hqtId, String specification,
-			String proImage, String proRecipe, double retailPrice, String statues, int visibles, int proTypeId,
-			int recipeId, String proDate, int proMan, String recipeStatues, String createDate, int createEmpId) {
-		super();
-		this.proId = proId;
-		this.chineseName = chineseName;
-		this.expirationdate = expirationdate;
-		this.hqtId = hqtId;
-		this.specification = specification;
-		this.proImage = proImage;
-		this.proRecipe = proRecipe;
-		this.retailPrice = retailPrice;
-		this.statues = statues;
-		this.visibles = visibles;
-		this.proTypeId = proTypeId;
-		this.recipeId = recipeId;
-		this.proDate = proDate;
-		this.proMan = proMan;
-		this.recipeStatues = recipeStatues;
-		this.createDate = createDate;
-		this.createEmpId = createEmpId;
+	public Integer getPrdId() {
+		return prdId;
 	}
-	public ProductInfo(int proId, String chineseName) {
-		super();
-		this.proId = proId;
-		this.chineseName = chineseName;
+	public void setPrdId(Integer prdId) {
+		this.prdId = prdId;
 	}
-	public ProductInfo() {
-		super();
-	}
-	 
+	
 }

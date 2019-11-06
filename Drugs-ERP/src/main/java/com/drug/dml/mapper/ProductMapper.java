@@ -21,7 +21,12 @@ public interface ProductMapper {
 	 * 联合查询药品表、配方表
 	 * @return List<ProductInfo>
 	 */
-	@Select("SELECT * FROM product_Info AS p_i JOIN product_Recipe AS p_r ON p_i.recipeId = p_r.recipeId limit #{pageno},#{pageSize}")
+	@Select("SELECT * FROM product_Info AS p_i "
+			+"JOIN product_Recipe AS p_r "
+			+"ON p_i.`recipeId` = p_r.`recipeId` "
+			/*+"JOIN  product_Recipe_Details AS p_r_d "
+			+"ON p_r_d.`recipeId` = p_r.`recipeId` "*/
+			+ "limit #{pageno},#{pageSize}")
 	List<ProductInfo> selectProuctInfo(@Param("pageno")Integer pageno,@Param("pageSize")Integer pageSize);
 	
 	/**
@@ -68,7 +73,7 @@ public interface ProductMapper {
 	 * @return Integer
 	 */
 	@Select("SELECT p_r.recipeId FROM product_Info AS p_i "
-			+"JOIN product_Recipe AS p_r "
+			+"LEFT JOIN product_Recipe AS p_r "
 			+"ON p_i.`recipeId` = p_r.`recipeId` WHERE p_i.`proId` = #{proId}")
 	Integer selectRecipeId(Integer proId);
 	
@@ -97,8 +102,14 @@ public interface ProductMapper {
 	@Update("UPDATE product_Info SET chineseName = #{chineseName},retailPrice = #{retailPrice},proMan = #{proMan},proDate = #{proDate} where proId = #{proId}")
 	Integer updateProductInfo(ProductInfo productInfo);
 	
-	@Insert("")
-	Integer insertProduct();
+	/**
+	 * 新增产品
+	 * @param productInfo
+	 * @return
+	 */
+	@Insert("INSERT INTO product_Info(chineseName,expirationdate,hqtId,specification,proImage,retailPrice,proTypeId,recipeId,proDate,proMan) VALUES "
+			+"(#{chineseName},#{expirationdate},#{hqtId},#{specification},#{proImage},#{retailPrice},#{proTypeId},#{recipeId},#{proDate},#{proMan})")
+	Integer insertProduct(ProductInfo productInfo);
 	
 	/**
 	 * 下拉框赋值(药品图片)
@@ -108,10 +119,86 @@ public interface ProductMapper {
 	List<ProductImage> selectProImage();
 	
 	/**
-	 * 下拉框赋值(药品图片)
-	 * @return List<ProductImage>
+	 * 下拉框赋值(药品类型)
+	 * @return List<ProductType>
 	 */
 	@Select("SELECT proTypeId,proTypeName FROM product_Type")
 	List<ProductType> selectProType();
+	
+	/**
+	 * 新增配方表
+	 * @return Integer
+	 */
+	@Insert("INSERT INTO product_Recipe(recipeName,createDate,recipeDes) VALUES(#{recipeName},NOW(),'配方')")
+	Integer insertProductRecipe(String recipeName);
+	
+	/**
+	 * 倒序查询配方表第一位并返回
+	 * @return Integer
+	 */
+	@Select("SELECT recipeId FROM product_Recipe ORDER BY recipeId DESC LIMIT 1")
+	Integer seletctProductRecipeTop();
+	
+	/**
+	 * 根据倒序查询出来的配方表ID 修改产品表的ID
+	 * @param proId产品表的ID
+	 * @return Integer
+	 */
+	@Update("UPDATE product_Info SET recipeId = #{recipeId} where  proId = #{proId}")
+	Integer updateProductByProId(@Param("recipeId")Integer recipeId,@Param("proId")Integer proId);
+	
+	/**
+	 * 倒序查询产品表第一位并返回
+	 * @return Integer
+	 */
+	@Select("SELECT proId FROM product_Info ORDER BY proId DESC LIMIT 1")
+	Integer seletctProductInfoTop();
+	
+	/**
+	 * 修改药品审核状态
+	 * @param proStaData 药品审核时间
+	 * @param proId	药品ID
+	 * @return Integer
+	 */
+	@Update("UPDATE product_Info SET statues = '已审核',proStaData=#{proStaData} where proId = #{proId}")
+	Integer updateProduct(@Param("proStaData")String proStaData,@Param("proId")Integer proId);
+	
+	/**
+	 * 修改配方审核状态
+	 * @param recipeId 配方ID
+	 * @return Integer
+	 */
+	@Update("UPDATE product_Recipe SET recipeStatues = '已审核',createEmpId = 1 where recipeId = #{recipeId}")
+	Integer updateProductRecipeStatues(Integer recipeId);
+	
+	/**
+	 * 修改配方审核状态(删除某一个配方详情后)
+	 * @param recipeId 配方ID
+	 * @return Integer
+	 */
+	@Update("UPDATE product_Recipe SET recipeStatues = '未审核',createEmpId = 0 where recipeId = #{recipeId}")
+	Integer updateProductRecipeStatuesAgain(Integer recipeId);
+	
+	/**
+	 * 联合查询根据产品ID找到配方ID
+	 * @param proId 产品ID
+	 * @return Integer
+	 */
+	@Select("SELECT p_r.`recipeId` FROM product_Info AS p_i "
+			+"JOIN product_Recipe AS p_r "
+			+"ON p_i.`recipeId` = p_r.`recipeId` "
+			+"WHERE p_i.`proId` = #{proId}")
+	Integer selectRecipeIdByProId(Integer proId);
+	
+	@Select("SELECT recipeId FROM product_Recipe_Details WHERE prdId=#{prdId}")
+	Integer selectRecipeIdByPrdId(Integer prdId);
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

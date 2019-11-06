@@ -84,7 +84,35 @@
 				var $ = layui.jquery;
 				var element = layui.element;
 				var layer = layui.layer;
-				
+				//按下回车键触发方法
+				$(function(){ 
+			    	$(document).keydown(function(event){ 
+			    		if(event.keyCode==13){ 
+			    			var username=$("#username").val();
+				            var pwd=$("#pwd").val();
+				            if(username=="" || pwd==""){
+				            	layer.msg('用户名或密码不能为空', {
+				            		  icon: 2,
+				            		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+				            		});
+				            }else{
+				            	 $.post("../login.do",$("#myform").serialize(),function(back){
+				            		if(back){
+				            			window.location.assign("../admin/adminindex.jsp");
+				            		}else{
+				            			layer.msg('用户名或密码输入错误请重新输入登录', {
+						            		  icon: 2,
+						            		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+						            		});
+				            		}
+				            		
+				            	}) 
+				            }
+				          
+			    		} 
+			    	}); 
+			    })
+			    
 				  $("#login").click(function(){
 			        	var username=$("#username").val();
 			            var pwd=$("#pwd").val();

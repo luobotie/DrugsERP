@@ -97,7 +97,7 @@ public class RoleBizImpl implements RoleBiz {
 		this.mapper.deleteRole(roleid);
 		// 根据角色id删除menusrole里面的数据
 		this.mapper.deleteRoleMenuByRid(roleid);
-		
+		this.mapper.updateEmpByRoleId(roleid);
 	}
 
 	@Override
@@ -116,6 +116,11 @@ public class RoleBizImpl implements RoleBiz {
 	@Override
 	public Role checkUpdateRoleName(Role role) {
 		return mapper.checkUpdateRoleName(role);
+	}
+
+	@Override
+	public void saveDepByRoleId(Role role) {
+		   mapper.saveDepByRoleId(role);
 	}
    
 	

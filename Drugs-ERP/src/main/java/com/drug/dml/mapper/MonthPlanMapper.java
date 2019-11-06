@@ -62,7 +62,7 @@ public interface MonthPlanMapper {
 	 * @return List<PlanDetails>
 	 */
 	@Select("SELECT * FROM drugs_monthPlan_details WHERE monthPlanId = 9999 AND proId = #{proId}")
-	List<PlanDetails> selectMonthPlanDetailsByProId(int proId);
+	List<PlanDetails> selectMonthPlanDetailsByProId(Integer proId);
 	
 	/**
 	 * 多表联合查询月计划详情表、药品表得到月计划详情单
@@ -76,7 +76,7 @@ public interface MonthPlanMapper {
 	 * @return Integer
 	 */
 	@Update("UPDATE drugs_monthPlan_details SET produceNum = produceNum+#{produceNum} where monthPlanDetailId = #{monthPlanDetailId}")
-	Integer updateProduceNum(@Param("produceNum")int produceNum,@Param("monthPlanDetailId")int monthPlanDetailId);
+	Integer updateProduceNum(@Param("produceNum")Integer produceNum,@Param("monthPlanDetailId")Integer monthPlanDetailId);
 	
 	/**
 	 * 新增月计划
@@ -99,7 +99,7 @@ public interface MonthPlanMapper {
 	 * @return Integer
 	 */
 	@Update("UPDATE drugs_monthPlan_details SET monthPlanId = #{monthPlanId} where monthPlanId = 9999")
-	Integer updateMonthPlanDetailsByMonthPlanId(int monthPlanId);
+	Integer updateMonthPlanDetailsByMonthPlanId(Integer monthPlanId);
 	
 	/**
 	 * 指定月计划查询编辑
@@ -107,7 +107,7 @@ public interface MonthPlanMapper {
 	 * @return List<DrugsMonthPlan>
 	 */
 	@Select("select * from drugs_monthPlan where monthPlanId = #{monthPlanId}")
-	List<DrugsMonthPlan> selectThisMonthPlan(int monthPlanId);
+	List<DrugsMonthPlan> selectThisMonthPlan(Integer monthPlanId);
 	
 	/**
 	 * 根据月计划ID修改月计划(开始时间、结束时间、实际生产数量)
@@ -128,14 +128,14 @@ public interface MonthPlanMapper {
 	 * @return Integer
 	 */
 	@Update("UPDATE drugs_monthPlan SET proState = '已生产' where monthPlanId = #{monthPlanId}")
-	Integer updateThisMonthPlanProState(int monthPlanId);
+	Integer updateThisMonthPlanProState(Integer monthPlanId);
 	
 	/**
 	 * 删除指定月计划
 	 * @return Integer
 	 */
 	@Delete("delete from drugs_monthPlan where monthPlanId = #{monthPlanId}")
-	Integer deleteThisMonthPlan(int monthPlanId);
+	Integer deleteThisMonthPlan(Integer monthPlanId);
 	
 	/**
 	 * 根据月计划ID删除月计划详情
@@ -143,14 +143,21 @@ public interface MonthPlanMapper {
 	 * @return Integer
 	 */
 	@Delete("DELETE FROM drugs_monthPlan_details WHERE monthPlanId = #{monthPlanId}")
-	Integer deleteThisMonthPlanAndMonthPlanDetail(int monthPlanId);
+	Integer deleteThisMonthPlanAndMonthPlanDetail(Integer monthPlanId);
 	
 	/**
 	 * 删除指定月计划详情
 	 * @return Integer
 	 */
 	@Delete("delete from drugs_monthPlan_details where monthPlanDetailId = #{monthPlanDetailId}")
-	Integer deleteThisMonthPlanDetailId(int monthPlanDetailId);
+	Integer deleteThisMonthPlanDetailId(Integer monthPlanDetailId);
+	
+	/**
+	 * 根据月计划ID修改月计划(审核状态、审核时间、审核人ID)(修改月计划)
+	 * @return
+	 */
+	@Update("UPDATE drugs_monthPlan SET reviewDate = '',reviewStatus = '未审核',empId = 0 where monthPlanId = #{monthPlanId}")
+	Integer updateThisMonthPlanStatus(Integer monthPlanId);
 	
 	/**
 	 * 多表联合查询月计划详情表、月计划表(获得该月计划中月计划详情所有药品的数量)
@@ -158,14 +165,14 @@ public interface MonthPlanMapper {
 	 * @return Integer
 	 */
 	@Select("SELECT SUM(produceNum) FROM drugs_monthPlan_details AS d_m_d JOIN drugs_monthPlan AS d_m ON d_m_d.monthPlanId = d_m.monthPlanId WHERE d_m.monthPlanId=#{monthPlanId}")
-	Integer selectMonPlanAndPlanDetails(int monthPlanId);
+	Integer selectMonPlanAndPlanDetails(Integer monthPlanId);
 	
 	/**
 	 * 更新月计划总数量
 	 * @return Integer
 	 */
 	@Update("UPDATE drugs_monthPlan SET monthPlanNum = #{monthPlanNum} where monthPlanId = #{monthPlanId}")
-	Integer updateMonthPlan(@Param("monthPlanNum")int monthPlanNum,@Param("monthPlanId")int monthPlanId);
+	Integer updateMonthPlan(@Param("monthPlanNum")Integer monthPlanNum,@Param("monthPlanId")Integer monthPlanId);
 	
 	/**
 	 * 用于验证商品是否为空
@@ -174,4 +181,29 @@ public interface MonthPlanMapper {
 	@Select("SELECT COUNT(*) FROM drugs_monthPlan_details WHERE monthPlanId = 9999")
 	Integer selectMonthPlanDetailIfNull();
 	
+	/**
+	 * 修改月计划用于验证商品是否为空
+	 * @return Integer
+	 */
+	@Select("SELECT COUNT(*) FROM drugs_monthPlan_details WHERE monthPlanId = #{monthPlanId}")
+	Integer selectMonthPlanDetailIfNullAgain(Integer monthPlanId);
+	
+	/**
+	 * 多表联合查询月计划详情表、药品表得到月计划详情单(修改月计划)
+	 * @return List<PlanDetails>
+	 */
+	@Select("SELECT d_m.`monthPlanId`,d_m_d.monthPlanDetailId,p_i.`proId`,p_i.`chineseName`,d_m_d.`produceNum` FROM drugs_monthPlan_details AS d_m_d "
+			+"JOIN drugs_monthPlan AS d_m "
+			+"ON d_m_d.`monthPlanId` = d_m.`monthPlanId` "
+			+"JOIN product_Info AS p_i "
+			+"ON p_i.`proId` = d_m_d.`proId` " 
+			+"WHERE d_m.`monthPlanId` = #{monthPlanId}")
+	List<PlanDetails> selectDrugsMonthPlanDetailsAgain(Integer monthPlanId);
+	
+	/**
+	 * 新增月计划详情(修改月计划)
+	 * @return Integer
+	 */ 
+	@Insert("INSERT INTO drugs_monthPlan_details(monthPlanId,proId,produceNum,remarks,spare1,spare2,spare3) VALUES(#{monthPlanId},#{proId},#{produceNum},'无','','','')")
+	Integer insertMonthPlanDetailsAgain(@Param("monthPlanId")Integer monthPlanId,@Param("proId")Integer proId,@Param("produceNum")Integer produceNum);
 }

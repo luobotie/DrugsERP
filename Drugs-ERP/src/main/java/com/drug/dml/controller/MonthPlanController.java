@@ -85,7 +85,7 @@ public class MonthPlanController {
 		if(list.size()>0){
 			boolean flag = true;
 			for (PlanDetails p : list) {
-				if(p.getProId() == planDetails.getProId()){
+				if(p.getProId().equals(planDetails.getProId())){
 					//更新月计划详情相同药药品的数量
 					count = monthPlanBiz.updateProduceNum(produceNum,p.getMonthPlanDetailId());
 					flag = false;
@@ -128,10 +128,12 @@ public class MonthPlanController {
 		int count = monthPlanBiz.insertMonthPlan(drugsMonthPlan);
 		//倒序获得最新的月计划ID
 		int monthPlanId = monthPlanBiz.selectMonthPlanTop(); 
+		System.out.println("月计划Id:"+monthPlanId);
 		//将ID为9999的月计划改为倒序获得的最新月计划ID
 		monthPlanBiz.updateMonthPlanDetailsByMonthPlanId(monthPlanId);
 		//查询当月的所有月计划详情商品数量的总和并返回
 		int monthPlanNum = monthPlanBiz.selectMonPlanAndPlanDetails(monthPlanId);
+		System.out.println("月计划Id:"+monthPlanNum);
 		//根据月计划ID以及获得的月计划详情商品数量的总和,更新月计划生产总数
 		monthPlanBiz.updateMonthPlan(monthPlanNum,monthPlanId);
 		return count;
@@ -143,7 +145,7 @@ public class MonthPlanController {
 	 * @return map
 	 */
 	@RequestMapping("/selectThisMonthPlan.do")
-	public Map<String, Object> selectThisMonthPlan(int monthPlanId){
+	public Map<String, Object> selectThisMonthPlan(Integer monthPlanId){
 		//根据月计划ID查询月计划(编辑操作)
 		List<DrugsMonthPlan> list = monthPlanBiz.selectThisMonthPlan(monthPlanId);
 		Map<String, Object> map=new HashMap<String, Object>();
@@ -197,7 +199,7 @@ public class MonthPlanController {
 	 * @return count
 	 */
 	@RequestMapping("/deleteThisMonthPlan.do")
-	public int deleteThisMonthPlan(int monthPlanId){
+	public int deleteThisMonthPlan(Integer monthPlanId){
 		//根据月计划ID删除指定月计划
 		int count = monthPlanBiz.deleteThisMonthPlan(monthPlanId);
 		//根据月计划ID删除指定月计划的月计划详情
@@ -212,9 +214,11 @@ public class MonthPlanController {
 	 * @return count
 	 */
 	@RequestMapping("/deleteThisMonthPlanDetailId.do")
-	public int deleteThisMonthPlanDetailId(int monthPlanDetailId){
+	public Integer deleteThisMonthPlanDetailId(Integer monthPlanDetailId,Integer monthPlanId){
 		//删除月计划ID为9999的月计划详情(根据月计划详情ID进行删除)
 		int count = monthPlanBiz.deleteThisMonthPlanDetailId(monthPlanDetailId);
+		int x = monthPlanBiz.updateThisMonthPlanStatus(monthPlanId);
+		System.out.println("删除后..修改成功:"+x);
 		return count;
 	}
 	
@@ -229,7 +233,88 @@ public class MonthPlanController {
 		return count;
 	}
 	
+	/**
+	 * 用于验证商品是否为空
+	 * @return count
+	 */
+	@RequestMapping("/selectMonthPlanDetailIfNullAgain.do")
+	public int selectMonthPlanDetailIfNullAgain(Integer monthPlanId){
+		//查询月计划ID为9999月计划详情总数(用于验证商品是否为空)
+		int count = monthPlanBiz.selectMonthPlanDetailIfNullAgain(monthPlanId);
+		return count;
+	}
 	
+	/**
+	 * 新增月计划详情(修改月计划详情)
+	 * @param planDetails 多表查询获得该月计划的月计划详情实体类
+	 * @return count
+	 */
+	@RequestMapping("/insertMonthPlanDetailsAgain.do")
+	public int insertMonthPlanDetailsAgain(Integer monthPlanId,Integer proId,Integer produceNum){
+		int count = 0;
+		//查询指定月计划的所有月计划详情(多表联合查询月计划详情表、药品表得到月计划详情单)
+		List<PlanDetails> list = monthPlanBiz.selectDrugsMonthPlanDetailsAgain(monthPlanId);
+		if(list.size()>0){
+			boolean flag = true;
+			for (PlanDetails p : list) {
+				if(p.getProId().equals(proId)){
+					//更新月计划详情相同药药品的数量
+					count = monthPlanBiz.updateProduceNum(produceNum,p.getMonthPlanDetailId());
+					int z = monthPlanBiz.updateThisMonthPlanStatus(monthPlanId);
+					System.out.println("修改成功4:"+z);
+					flag = false;
+				}
+			}
+			//这里如果执行的话代表 详情表里没有这个药
+			if(flag){
+				//给指定月计划ID新增月计划详情
+				count = monthPlanBiz.insertMonthPlanDetailsAgain(monthPlanId,proId,produceNum);
+				int x = monthPlanBiz.updateThisMonthPlanStatus(monthPlanId);
+				System.out.println("修改成功2:"+x);
+			}
+		}else {
+			//给指定月计划ID新增月计划详情
+			count = monthPlanBiz.insertMonthPlanDetailsAgain(monthPlanId,proId,produceNum);
+			int c = monthPlanBiz.updateThisMonthPlanStatus(monthPlanId);
+			System.out.println("修改成功3:"+c);
+		}
+		return count;
+	}
 	
+	/**
+	 * 查询月计划详情(修改月计划详情操作)
+	 * @return map
+	 */
+	@RequestMapping("/selectMonthPlanDetailsAgain.do")
+	public Map<String, Object> selectMonthPlanDetailsAgain(Integer monthPlanId){
+		//查询月计划ID为9999的所有月计划详情(多表联合查询月计划详情表、药品表得到月计划详情单)
+		List<PlanDetails> list = monthPlanBiz.selectDrugsMonthPlanDetailsAgain(monthPlanId);
+		Map<String, Object> map=new HashMap<String, Object>();
+		map.put("code", 0);
+		map.put("data", list);
+		return map;
+	}
 	
+	/**
+	 * 新增然后修改月计划(修改月计划)
+	 * @param drugsMonthPlan 月计划对象
+	 * @return count
+	 */
+	@RequestMapping("/insertAndUpdateAgain.do")
+	public int insertAndUpdateAgain(DrugsMonthPlan drugsMonthPlan,Integer monthPlanId){
+		/*//新增一条月计划
+		int count = monthPlanBiz.insertMonthPlan(drugsMonthPlan);
+		//倒序获得最新的月计划ID
+		int monthPlanId = monthPlanBiz.selectMonthPlanTop(); */
+		//将ID为9999的月计划改为倒序获得的最新月计划ID
+		//monthPlanBiz.updateMonthPlanDetailsByMonthPlanId(drugsMonthPlan.getMonthPlanId());
+		//查询当月的所有月计划详情商品数量的总和并返回
+		Integer monthPlanNum = monthPlanBiz.selectMonPlanAndPlanDetails(monthPlanId);
+		System.out.println("生产总数:"+monthPlanNum);
+		int x = monthPlanBiz.updateThisMonthPlanStatus(monthPlanId);
+		System.out.println("修改成功:"+x);
+		//根据月计划ID以及获得的月计划详情商品数量的总和,更新月计划生产总数
+		int count =monthPlanBiz.updateMonthPlan(monthPlanNum,monthPlanId);
+		return count;
+	}
 }

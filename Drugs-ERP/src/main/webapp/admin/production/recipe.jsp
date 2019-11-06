@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,21 +22,20 @@
 }
 </style>
 <body>    
-		<table class="layui-hide" id="demo" lay-filter="test"></table>
+		<table class="layui-hide" id="test" lay-filter="test"></table>
 		<div style="display: none" id="divTable">
 			<table class="layui-hide" style="display: none;" id="test2"
 			lay-data="{id: 'idTest'}" lay-filter="test2"></table>
 		</div>
 
-				<script type="text/html" id="toolbarDemo">
-  					<div class="layui-btn-container" style="margin-top:10px;padding-left:20px;">
-    					<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addWarehouse"><i class="layui-icon layui-icon-add-1"></i>新增药品</button>
-    					<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="updateDetails"><i class="layui-icon layui-icon-add-1"></i>新增配方</button>
-   					 	<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="removeWarehouse"><i class="layui-icon layui-icon-friends"></i>审核药品</button>
-						<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="capacityWarning"><i class="layui-icon layui-icon-friends"></i>审核配方</button>
-  					</div>
-	
-				</script>
+<script type="text/html" id="toolbarDemo">
+  	<div class="layui-btn-container" style="margin-top:10px;padding-left:20px;">
+    	<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addWarehouse"><i class="layui-icon layui-icon-add-1"></i>新增药品</button>
+    	<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="updateDetails"><i class="layui-icon layui-icon-add-1"></i>新增配方详情</button>
+   		<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="removeWarehouse"><i class="layui-icon layui-icon-friends"></i>审核药品</button>
+		<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="capacityWarning"><i class="layui-icon layui-icon-friends"></i>审核配方</button>
+  	</div>
+</script>
 
 <div id="toolbarDemo2" style="display:none">
 <form class="layui-form" action="javaScript:void(0)" id="we" method="post" lay-filter="formTest">
@@ -48,7 +48,7 @@
         </select>
       </div>
 	 
-	<label width="120px" style="margin:0 5px 0 20px;font-size:13px;">供应商</label>
+	<!-- <label width="120px" style="margin:0 5px 0 20px;font-size:13px;">供应商</label>
       <div class="layui-input-inline">
         <select name="supplierInfoId" lay-verify="required" id="typeselectBox">
         </select>
@@ -57,7 +57,7 @@
 	<label width="120px" style="margin:0 5px 0 20px;font-size:13px;">单价</label>
 	<div class="layui-input-inline">
 		 <input type="text" name="materialPrice" lay-verify="number" placeholder="请输入" autocomplete="off" class="layui-input">
-	</div>
+	</div> -->
 	<button class="layui-btn layui-btn-normal" lay-event="update" lay-filter="tianjia">添加</button>
  </form>	
 </div>
@@ -77,7 +77,10 @@
 				var laydate = layui.laydate;
 				var form = layui.form;
 				
-				//下拉框赋值(产品供应商)
+				//table3主页面
+				//table2弹出层
+				
+				/* //下拉框赋值(产品供应商)
 				var option = "<option value='-1'>请选择供应商</option>";//初始化option的选项
 		        $.ajax({
 		            url: "../../getSuppliere.do",
@@ -92,7 +95,7 @@
 		        })
 		        .fail(function() {
 		            console.log("error");
-		        });
+		        }); */
 				
 		      	//下拉框赋值(产品原料)
 		        var options = "<option value='-1'>请选择原料</option>";//初始化option的选项
@@ -157,18 +160,18 @@
 					type: 'datetime'
 				});
 				//执行一个 table 实例
-				table.render({
-					elem: '#demo',
+				var table3 = table.render({
+					elem: '#test',
 					url: '../../getAllProduct.do', //数据接口
 					title: '药品表',
 					toolbar: '#toolbarDemo', //开启工具栏
 					cols: [[ //表头
 								{
-								type: 'checkbox',
-								unresize : true
+								type: 'checkbox'
 							}, {
 								field: 'proId',
 								title: '药品编号',
+								sort: true,
 								unresize : true
 							}, {
 								field: 'chineseName',
@@ -184,12 +187,22 @@
 								title: '药品审核状态',
 								unresize : true
 							}, {
+								field: 'proStaData',
+								title: '药品审核时间',
+								unresize : true
+							}, {
 								field: 'proRecipe',
 								title: '有无配方',
 								unresize : true
 							}, {
+								field: 'recipeStatues',
+								title: '配方审核状态',
+								hide: true,
+								unresize : true
+							}, {
 								field: 'proMan',
 								title: '药品制定人',
+								hide: true,
 								unresize : true
 							}, {
 								field: 'proDate',
@@ -223,31 +236,40 @@
 								closeBtn: 0,
 								btn: ['确定', '关闭'], //可以无限个按钮
 								yes: function(index, layero) {
-									$.ajax({
-										  url:'../../insertProduct.do?proId='+data[0].proId,
-										  data:$("#we").serialize(),
-										  type:'post',
-										  dataType:'json',
-										  success:function(data){
-											if(data == '1'){
-												layer.msg('新增成功');
-												table.reload("test2",{});
-											}else{
-												layer.msg('新增失败');
-											}
-										  }
-					                  //return false;
-					                }); 
+									var chineseName = $("#chineseName").val();
+									var typeselectBox3 = $("#typeselectBox3").val();
+									var typeselectBox4 = $("#typeselectBox4").val();
+									var retailPrice = $("#retailPrice").val();
+									var expirationdate = $("#expirationdate").val();
+									var test1 = $("#test1").val();
+									if(typeselectBox3 == '-1'||typeselectBox4=='-1'||chineseName==''||retailPrice==''||expirationdate==''||test1==''){
+										layer.msg('信息不能为空', {
+						            		  icon: 2,
+						            		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+						            		});
+									}else{
+										$.ajax({
+											  url:'../../insertProduct.do',
+											  data:$("#formIdOne").serialize(),
+											  type:'post',
+											  dataType:'json',
+											  success:function(data){
+												if(data == '1'){
+													layer.msg('新增成功');
+													table3.reload();
+												}else{
+													layer.msg('新增失败');
+												}
+											  }
+						                  //return false;
+						                });
+										layer.close(index);
+										//执行清空
+										//$("#formIdOne").empty();
+										//$("#storageWarehouse").empty();
+										//form.render("select");
+									}
 									
-									layer.close(index);
-									//执行清空
-									$("#warehouseOperator").empty();
-									$("#storageWarehouse").empty();
-									form.render("select");
-									/* if(index > 0){
-										//添加
-										layer.msg('添加成功'); 
-									} */
 								},
 								content: $("#addDetails"),
 								success: function(layero, index){
@@ -257,7 +279,7 @@
 							break;
 						case 'updateDetails':	//新增配方
 						if(data.length == 1){
-							table.render({
+							var table2 = table.render({
 								elem: '#test2',
 								url: '../../selectThisProductMaterial.do?proId='+data[0].proId,
 								title: '用户表', 
@@ -326,21 +348,27 @@
 					            	//获取表单区域所有值
 					            	//alert(data.field.titletype);
 					            	//console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
-					            	$.ajax({
-										  url:'../../insertProductMaterial.do?proId='+data[0].proId,
-										  data:$("#formIdOne").serialize(),
-										  type:'post',
-										  dataType:'json',
-										  success:function(data){
-											if(data == '1'){
-												layer.msg('添加成功');
-												table.reload("test",{});
-											}else{
-												layer.msg('添加失败');
-											}
-										  }
-					                  //return false;
-					                }); 
+					            	var typeselectBox2 = $("#typeselectBox2").val();
+					            	if(typeselectBox2 == '-1'){
+					            		layer.msg('不能为空');
+					            	}else{
+					            		$.ajax({
+											  url:'../../insertProductMaterial.do?proId='+data[0].proId,
+											  data:$("#we").serialize(),
+											  type:'post',
+											  dataType:'json',
+											  success:function(data){
+												if(data == '1'){
+													layer.msg('添加成功');
+													table2.reload();
+												}else{
+													layer.msg('添加失败');
+												}
+											  }
+						                  //return false;
+						                }); 
+					            	}
+					            	
 						    break;
 						  };
 						});
@@ -366,9 +394,22 @@
 													  },
 												  btn: ['确认', '取消'],
 												  yes: function(layero){
+													  $.ajax({
+														  url:'../../updateProductStatues.do?proId='+data[0].proId,
+														  data:$("#formIdOne3").serialize(),
+														  type:'post',
+														  dataType:'json',
+														  success:function(data){
+															if(data == '1'){
+																layer.msg('审核成功');
+																table3.reload();
+															}else{
+																layer.msg('审核失败');
+															}
+														  }
+									                });
 													  layer.close(index);
 													  layer.close(index88);
-													  layer.msg('审核成功');
 													}
 												  ,btn2: function(index, layero){
 														  layer.close(index88);
@@ -407,9 +448,22 @@
 													  },
 												  btn: ['确认', '取消'],
 												  yes: function(layero){
+													  $.ajax({
+														  url:'../../updateProductRecipeStatues.do?proId='+data[0].proId,
+														  data:$("#formIdOne3").serialize(),
+														  type:'post',
+														  dataType:'json',
+														  success:function(data){
+															if(data == '1'){
+																layer.msg('审核成功');
+																table3.reload();
+															}else{
+																layer.msg('审核失败');
+															}
+														  }
+									                });
 													  layer.close(index);
 													  layer.close(index88);
-													  layer.msg('审核成功');
 													}
 												  ,btn2: function(index, layero){
 														  layer.close(index88);
@@ -464,7 +518,7 @@
 										if(data == '1'){
 											layer.msg('修改成功');
 											layer.close(index);
-											table.reload("demo",{});
+											table3.reload();
 										}else{
 											layer.msg('修改失败');
 										}
@@ -507,6 +561,10 @@
 										title: '配方审核状态',
 										sort: true
 									}, {
+										field: 'createEmpId',
+										title: '配方审核人ID',
+										sort: true
+									}, {
 										field: 'miNumber',
 										title: '仓库剩余量',
 										sort: true
@@ -541,7 +599,7 @@
 							  type:'post',
 							  success:function(data){
 								if(data == '1'){
-									layer.msg('删除成功');
+									layer.msg('删除成功,审核状态已变更!');
 									table.reload("test2",{});
 								}else{
 									layer.msg('删除失败');
@@ -568,7 +626,7 @@
 			<div class="layui-input-inline" style="margin-top:10px;">
 				<label style="margin:0 10px 0 20px;font-size:13px;">药品名称</label>
 				<div class="layui-input-inline">
-      				<input type="text" name="chineseName" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+      				<input type="text" name="chineseName" lay-verify="required" id="chineseName" placeholder="请输入" autocomplete="off" class="layui-input" onKeypress="javascript:if(event.keyCode == 32)event.returnValue = false;">
     			</div>
 			</div>
 			<div class="layui-input-inline" style="margin-top:10px;">
@@ -593,7 +651,7 @@
 			<div class="layui-input-inline" style="margin-top:10px;">
 				<label style="margin:0 10px 0 20px;font-size:13px;">药品价格</label>
 				<div class="layui-input-inline">
-      				<input type="text" name="retailPrice" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+      				<input type="text" name="retailPrice" id="retailPrice" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
     			</div>
 			</div>
 			<div class="layui-input-inline" style="margin-top:10px;">
@@ -609,17 +667,13 @@
 			<div class="layui-input-inline" style="margin-top:10px;">
 				<label style="margin:0 10px 0 20px;font-size:13px;">保质日期</label>
 				<div class="layui-input-inline">
-      				<input type="text" name="expirationdate" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+      				<input type="text" name="expirationdate" id="expirationdate" lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
     			</div>
 			</div>
 			<div class="layui-input-inline" style="margin-top:10px;">
 				<label style="margin:0 10px 0 20px;font-size:13px;">制定员工</label>
 				<div class="layui-input-inline">
-					<select name="proMan" lay-verify="required" lay-search="">
-          				<option value="">请选择</option>
-         			 	<option value="1">张三</option>
-          				<option value="2">王五</option>
-        			</select>
+					<input type="text" name="proMan" lay-verify="number" value="${employee.employeeId }"  class="layui-input" readonly>
 				</div>
 			</div>
 			<div class="layui-input-inline" style="margin-top:10px;">
@@ -635,7 +689,6 @@
 	
 	<!-- 制定人和制定时间 -->
 <div style="display:none;" id="nameAndTimeDiv" >
-
 <form class="layui-form" lay-filter="formAuthority2" id="formIdOne2">	  
 <div class="layui-inline" style="padding-left:0px;margin-top:20px;">
 	<label width="120px" style="margin:0 5px 0 20px;font-size:13px;">制定日期</label>
@@ -666,24 +719,17 @@
  
  <!-- 审核人和审核时间 -->
 <div style="display:none;" id="nameAndTimeDiv2" >
-
 <form class="layui-form" lay-filter="formAuthority3" id="formIdOne3">	  
-
 <div class="layui-inline" style="padding-left:0px;margin-top:20px;">
 	<label width="120px" style="margin:0 5px 0 20px;font-size:13px;">审核日期</label>
 	<div class="layui-input-inline">
-		<input type="text" class="layui-input" id="test5" placeholder="yyyy-MM-dd">
+		<input type="text" class="layui-input" id="test5" name="proStaData" placeholder="yyyy-MM-dd">
 	</div>
 </div>
 <div style="padding-left:0px;margin-top:15px;">
 <label width="120px" style="margin:0 5px 0 20px;font-size:13px;">审核人员</label>
 	<div class="layui-input-inline">
-		<select name="city" lay-verify="" lay-search="">
-  			<option value="">制定人</option>
-  			<option value="010">张三</option>
-  			<option value="021">李四</option>
- 			<option value="0571">王五</option>
-		</select>  
+		<input type="text" name="createEmpId" lay-verify="number" value="1"  class="layui-input" readonly>
 	</div>
 <div class="layui-input-inline" style="margin-top:10px;">
 				<label style="margin:0 10px 0 20px;font-size:13px;">备注信息</label>
