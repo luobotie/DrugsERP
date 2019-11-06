@@ -102,14 +102,13 @@
 			        });
 		
 
-					table.render({
+					var table2=table.render({
 						elem : '#test',
 						url : '../../getAllMonthPlan.do',
 						toolbar : '#toolbarDemo',
 						title : '用户数据表',
 						cols : [ [ {
 							type : 'checkbox',
-							fixed : 'left'
 						}, {
 							field : 'monthPlanId',
 							title : '月计划编号',
@@ -165,7 +164,7 @@
 							title : '审核人编号',
 							unresize : true
 						}, {
-							fixed : 'right',
+							
 							width : 178,
 							align : 'center',
 							toolbar : '#barDemo',
@@ -237,7 +236,7 @@
 																  success:function(data){
 																	if(data == '1'){
 																		layer.msg('执行成功');
-																		table.reload("test2",{});
+																		table2.reload();
 																	}else{
 																		layer.msg('执行失败');
 																	}
@@ -376,27 +375,20 @@
 										,
 										btn2 : function(index, layero) {
 											layer.close(index2);
+											
 										}
-									}, function(layero) {
-										layer.close(index2);
-										var index88 = layer.open({
-											type : 1,
-											shade : 0.25,
-											area : [ '400px', '350px' ],
-											content : $('#nameAndTimeDiv'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-											success : function(layero, index) {
-												form.render();
-											},
-											btn : [ '确认', '取消' ],
-											yes : function(layero) {
-												layer.close(index);
-												layer.close(index88);
-												layer.msg('计划制定成功');
-											},
-											btn2 : function(index, layero) {
-												layer.close(index88);
-											}
-										});
+									}, function() {
+										$.ajax({
+											  url:'../../insertDailyplan.do',
+											  data:{'monthPlanId':data[0].monthPlanId,'monthPlanNum':data[0].monthPlanNum},
+											  type:'post',
+											  dataType:'json',
+											  success:function(data){
+													  layer.msg('日计划制定成功,可到日生产计划查看详情');
+													  table2.reload(); 
+											  }
+						                  //return false;
+						                }); 
 
 									});
 								} else {
@@ -441,7 +433,7 @@
 													  success:function(data){
 														  if(data == '1'){
 															  layer.msg('计划审核成功');
-															  table.reload("test",{});
+															  table2.reload();
 														  }else{
 															  layer.msg('计划审核失败');
 														  }
@@ -528,7 +520,7 @@
 									  success:function(data){
 										if(data == '1'){
 											layer.msg('删除成功');
-											table.reload("test",{});
+											table2.reload();
 										}else{
 											layer.msg('删除失败');
 										}
@@ -641,7 +633,7 @@
 							  success:function(data){
 								if(data == '1'){
 									layer.msg('修改成功');
-									table.reload("test",{});
+									table2.reload();
 								}else{
 									layer.msg('修改失败');
 								}
@@ -689,7 +681,7 @@
 									  success:function(data){
 										if(data == '1'){
 											layer.msg('删除成功');
-											table.reload("test2",{});
+											table2.reload();
 										}else{
 											layer.msg('删除失败');
 										}

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<!--命名空间  实体类路径 包名点类名    mapper开发模式  接口的路径-->
+<mapper namespace="com.drug.shw.mapper.DailyPlanDao">
+	<insert id="insertDailyplan" parameterType="Dailyplan" useGeneratedKeys="true" keyProperty="dailyPlanid">
+insert into Dailyplan values(Dailyplanid,#{planId},#{productionQuantity},#{daypracticalQuantity},#{auditingDate},#{auditingStatue},#{auditorName},#{productDate},#{dailyplanDes})
+	</insert>
+<select id="selectDailyplan" resultType="Dailyplan" parameterType="map">
+select * from Dailyplan limit #{begin},#{end}
+</select>
+<select id="selectrowfromDailyplan" resultType="integer">
+select count(*) from Dailyplan
+</select>
+<update id="updateDailyplanauditingStatue" parameterType="map">
+update Dailyplan set auditorName=#{name},auditingDate=#{date},auditingStatue=#{statue} where dailyPlanid=#{dailyPlanid}
+</update>
+<select id="selectdrugsmonthPlandetails" resultType="Drug" parameterType="integer">
+select * from drugs_monthPlan_details where monthPlanId=#{monthPlanId}
+</select>
+<select id="insertdailyPlanDetails"  parameterType="DailyPlanDetails">
+insert into dailyPlanDetails values(dpdId,#{dpId},#{proId},#{productionQuantity},#{daypracticalQuantity},#{planDetailDes})
+</select>
+<update id="updateDailyplan"  parameterType="map">
+update Dailyplan set productionQuantity=#{sum} where dailyPlanid=#{did}
+</update>
+<select id="selectdailyPlanDetails"  parameterType="integer" resultType="DailyPlanDetails">
+select d.*,j.chineseName from dailyPlanDetails d join product_Info j on j.proId=d.proId where dpId=#{dpid}
+</select>
+<update id="updateDailyPlanDetails" parameterType="DailyPlanDetails">
+update dailyPlanDetails set productionQuantity=#{productionQuantity} where dpdId=#{dpdId}
+</update>
+</mapper> 

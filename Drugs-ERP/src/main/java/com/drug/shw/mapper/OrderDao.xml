@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<!--命名空间  实体类路径 包名点类名    mapper开发模式  接口的路径-->
+<mapper namespace="com.drug.shw.mapper.OrderDao">
+<select id="selectorderproduct" parameterType="map"   resultType="orderproduct">
+select * from orderproduct limit #{begin},#{end}
+</select>
+<select id="selectrowfromorderproduct" resultType="integer">
+select count(*) from orderproduct
+</select>
+<update id="updateorderproduct" parameterType="orderproduct">
+update orderproduct set produceNumber=#{produceNumber},produceMoney=#{produceMoney},finishNumber=#{finishNumber},employName=#{employName},orderDate=#{orderDate},produceState=#{produceState},materialState=#{materialState},auditState=#{auditState},dayPlanId=#{dayPlanId} where orderId=#{orderId}
+</update>
+<delete id="deleteorderproduct" parameterType="integer">
+delete from orderproduct where orderId=#{orderId}
+</delete>
+<insert id="insertorderproduct" parameterType="orderproduct">
+insert into orderproduct values(orderId,#{produceNumber},#{produceMoney},#{finishNumber},#{employName},#{orderDate},#{produceState},#{materialState},#{auditState},#{dayPlanId})
+</insert>
+<insert id="insertorderproductdetail" parameterType="DailyPlanDetails">
+insert into orderproductdetail values(orderproductdetailid,#{dpId},#{proId},#{productionQuantity})
+</insert>
+<select id="selectorderproductdetail" resultType="DailyPlanDetails" parameterType="integer">
+select d.*,j.chineseName from orderproductdetail d join product_Info j on j.proId=d.proId where orderproductId=#{orderid}
+</select>
+</mapper>
+
