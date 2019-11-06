@@ -6,7 +6,14 @@
 <meta charset="utf-8">
 <title>月生产计划</title>
 <link rel="stylesheet" href="../layui/css/layui.css">
+<link rel="stylesheet" href="../layui/css/notice.css" />
+
 <script src="../layui/layui.js"></script>
+<script type="text/javascript" >
+		 layui.config({
+		        base: '../layui/'
+		    });
+  </script>
 <script type="text/javascript" src="../../js/jquery-3.4.1.min.js"></script>
 <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 <style>
@@ -42,9 +49,9 @@
 <script type="text/html" id="toolbarDemo">
   <div class="layui-btn-container" style="margin-top:20px;padding-left:20px;">
     <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckData"><i class="layui-icon layui-icon-add-1"></i>制定月计划 </button>
-	<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="details"><i class="layui-icon layui-icon-add-1"></i>修改月计划</button>
+	<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="details"><i class="layui-icon layui-icon-edit"></i>修改月计划</button>
     <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckLength"><i class="layui-icon layui-icon-add-1"></i>制定日计划</button>
-    <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="isAll"><i class="layui-icon layui-icon-friends"></i>审核月计划</button>
+    <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="isAll"><i class="layui-icon layui-icon-survey"></i>审核月计划</button>
   </div>
 </script>
 
@@ -99,13 +106,30 @@
 			<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="manageMe">删除</a>
 	</script>
 	<script>
-		layui.use([ 'table', 'laydate', 'element', 'form', 'layer' ],
+		layui.use([ 'table', 'laydate', 'element', 'form', 'layer' ,'notice'],
 				function() {
+					var $ = layui.jquery; 
 					var layer = layui.layer;
 					var element = layui.element;
 					var table = layui.table;
 					var laydate = layui.laydate;
 					var form = layui.form;
+					var notice = layui.notice;
+					
+					//初始化配置，同一样式只需要配置一次，非必须初始化，有默认配置
+					notice.options = {
+						closeButton: true, //显示关闭按钮
+						debug: false, //启用debug
+						positionClass: "toast-top-center", //弹出的位置,
+						showDuration: "500", //显示的时间
+						hideDuration: "1000", //消失的时间
+						timeOut: "2000", //停留的时间
+						extendedTimeOut: "1000", //控制时间
+						showEasing: "swing", //显示时的动画缓冲方式
+						hideEasing: "linear", //消失时的动画缓冲方式
+						iconClass: 'layui-icon-tips', // 自定义图标，有内置，如不需要则传空 支持layui内置图标/自定义iconfont类名
+						onclick: null, // 点击关闭回调
+					};
 					
 					var option = "<option value='-1'>请选择药品</option>";//初始化option的选项
 			        $.ajax({
@@ -274,10 +298,12 @@
 																  dataType:'json',
 																  success:function(data){
 																	if(data == '1'){
-																		layer.msg('执行成功');
+																		//layer.msg('执行成功');
+																		notice.success("执行成功");
 																		table2.reload();
 																	}else{
-																		layer.msg('执行失败');
+																		//layer.msg('执行失败');
+																		notice.error("执行失败");
 																	}
 																  }
 											                  //return false;
@@ -291,7 +317,8 @@
 													});
 												});
 											}else{
-												layer.msg('请添加商品');
+												//layer.msg('请添加商品');
+												notice.warning("请添加商品");
 											}
 										  }
 					                }); 
@@ -322,10 +349,11 @@
 							    	var typeselectBox = $("#typeselectBox").val();
 									var produceNum = $("#produceNum").val();
 									if(typeselectBox == '-1'||produceNum == ''||produceNum <= '0'){
-										layer.msg('信息有误', {
+										/* layer.msg('信息有误', {
 						            		  icon: 2,
 						            		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
-						            		});
+						            		}); */
+										notice.info("信息有误");
 									}else{
 										$.ajax({
 											  url:'../../insertMonthPlanDetails.do',
@@ -334,10 +362,12 @@
 											  dataType:'json',
 											  success:function(data){
 												if(data == '1'){
-													layer.msg('添加成功');
+													//layer.msg('添加成功');
+													notice.success("添加成功");
 													table3.reload();
 												}else{
-													layer.msg('添加失败');
+													//layer.msg('添加失败');
+													notice.error("添加失败");
 												}
 											  }
 						                  //return false;
@@ -417,10 +447,12 @@
 															  dataType:'json',
 															  success:function(data){
 																if(data == '1'){
-																	layer.msg('执行成功');
+																	//layer.msg('执行成功');
+																	notice.success("执行成功");
 																	table2.reload();
 																}else{
-																	layer.msg('执行失败');
+																	//layer.msg('执行失败');
+																	notice.error("执行失败");
 																}
 															  }
 										                  //return false;
@@ -459,10 +491,11 @@
 								    	var typeselectBox1 = $("#typeselectBox1").val();
 										var produceNum2 = $("#produceNum2").val();
 										if(typeselectBox1 == '-1'||produceNum2 == ''||produceNum2 <= '0'){
-											layer.msg('信息有误', {
+											/* layer.msg('信息有误', {
 							            		  icon: 2,
 							            		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
-							            		});
+							            		}); */
+											notice.info("信息有误");
 										}else{
 											$.ajax({
 												  url:'../../insertMonthPlanDetailsAgain.do?monthPlanId='+data[0].monthPlanId,
@@ -471,11 +504,13 @@
 												  dataType:'json',
 												  success:function(data){
 													if(data == '1'){
-														layer.msg('添加成功');
+														//layer.msg('添加成功');
+														notice.success("添加成功");
 														table.reload("test",{});
 														table4.reload();
 													}else{
-														layer.msg('添加失败');
+														//layer.msg('添加失败');
+														notice.error("添加失败");
 													}
 												  }
 							                  //return false;
@@ -521,11 +556,12 @@
 									} ] ]
 								});
 								
-
 							} else if (data.length > 1) {
-								layer.msg('最多只能选择一条月计划');
+								//layer.msg('最多只能选择一条月计划');
+								notice.warning("最多只能选择一条月计划");
 							} else {
-								layer.msg('请选择一条月计划');
+								//layer.msg('请选择一条月计划');
+								notice.warning("请选择一条月计划");
 							}
 							break;
 						case 'getCheckLength':
@@ -538,7 +574,6 @@
 										,
 										btn2 : function(index, layero) {
 											layer.close(index2);
-											
 										}
 									}, function() {
 										$.ajax({
@@ -547,7 +582,8 @@
 											  type:'post',
 											  dataType:'json',
 											  success:function(data){
-													  layer.msg('日计划制定成功,可到日生产计划查看详情');
+													  //layer.msg('日计划制定成功,可到日生产计划查看详情');
+													  notice.success("日计划制定成功,可到日生产计划查看详情");
 													  table2.reload(); 
 											  }
 						                  //return false;
@@ -555,15 +591,17 @@
 
 									});
 								} else {
-									layer.msg('该月计划未审核');
+									//layer.msg('该月计划未审核');
+									notice.warning("该月计划未审核");
 								}
 
 							} else if (data.length > 1) {
-								layer.msg('最多只能选择一条月计划');
+								//layer.msg('最多只能选择一条月计划');
+								notice.warning("最多只能选择一条月计划");
 							} else {
-								layer.msg('请选择一条月计划');
+								//layer.msg('请选择一条月计划');
+								notice.warning("请选择一条月计划");
 							}
-
 							break;
 						case 'isAll':
 							var data = checkStatus.data;
@@ -595,10 +633,12 @@
 													  dataType:'json',
 													  success:function(data){
 														  if(data == '1'){
-															  layer.msg('计划审核成功');
+															  //layer.msg('计划审核成功');
+															  notice.success("计划审核成功");
 															  table2.reload();
 														  }else{
-															  layer.msg('计划审核失败');
+															  //layer.msg('计划审核失败');
+															  notice.error("计划审核失败");
 														  }
 													  }
 								                  //return false;
@@ -613,13 +653,16 @@
 
 									});
 								} else {
-									layer.msg('该月计划已审核');
+									//layer.msg('该月计划已审核');
+									notice.warning("该月计划已审核");
 								}
 
 							} else if (data.length > 1) {
-								layer.msg('最多只能审核一条月计划');
+								//layer.msg('最多只能审核一条月计划');
+								notice.warning("最多只能审核一条月计划");
 							} else {
-								layer.msg('请选择一条要审核月计划');
+								//layer.msg('请选择一条要审核月计划');
+								notice.warning("请选择一条要审核月计划");
 							}
 							break;
 						}
@@ -680,10 +723,12 @@
 									  type:'post',
 									  success:function(data){
 										if(data == '1'){
-											layer.msg('删除成功');
+											//layer.msg('删除成功');
+											notice.success("删除成功");
 											table2.reload();
 										}else{
-											layer.msg('删除失败');
+											//layer.msg('删除失败');
+											notice.error("删除失败");
 										}
 									  }
 				                  //return false;
@@ -692,9 +737,10 @@
 							});
 						} else if (obj.event === 'edit') {
 							if (data.reviewStatus == '未审核') {
-								layer.alert('当前订单未审核,无法修改生产状态', {
+								/* layer.alert('当前订单未审核,无法修改生产状态', {
 									icon : 2
-								});
+								}); */
+								notice.warning("当前订单未审核,无法修改生产状态");
 							} else if (data.reviewStatus == '已审核') {
 
 								var index = layer.open({
@@ -792,9 +838,12 @@
 							  dataType:'json',
 							  success:function(data){
 								if(data == '1'){
-									layer.msg('修改成功');
+									//layer.msg('修改成功');
+									notice.success("修改成功");
+									table.reload('test',{});
 								}else{
-									layer.msg('修改失败');
+									//layer.msg('修改失败');
+									notice.error("修改失败");
 								}
 							  }
 						  });
@@ -840,11 +889,17 @@
 									  type:'post',
 									  success:function(data){
 										if(data == '1'){
-											layer.msg('删除成功');
+											//layer.msg('删除成功');
+											notice.success("删除成功");
 											table.reload("test2",{});
 											table.reload("test",{});
+											/* notice.warning("成功");
+											notice.info("提示信息：毛都没有...");
+											notice.error("大佬，我咋知道怎么肥四！");
+											notice.success("大佬，我咋知道怎么肥四！"); */
 										}else{
-											layer.msg('删除失败');
+											//layer.msg('删除失败');
+											notice.error("删除失败");
 										}
 									  }
 				                  //return false;

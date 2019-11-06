@@ -107,4 +107,31 @@ public class MaterialOrderController {
 		return count;
 	}
 	
+	/**
+	 * 根据领料单ID删除领料信息
+	 * @param moId 领料单ID
+	 * @return  Integer
+	 */
+	@RequestMapping("/deleteMaterialOrderByMoId.do")
+	public Integer deleteMaterialOrderByMoId(Integer moId){
+		int count = materialOrderBiz.deleteMaterialOrderByMoId(moId);
+		return count;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

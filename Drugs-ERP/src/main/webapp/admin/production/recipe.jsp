@@ -7,7 +7,14 @@
   <meta charset="utf-8">
   <title>成品及配方管理</title>
   <link rel="stylesheet" href="../layui/css/layui.css">
+  <link rel="stylesheet" href="../layui/css/notice.css" />
+  
   <script src="../layui/layui.js"></script>
+  <script type="text/javascript" >
+		 layui.config({
+		        base: '../layui/'
+		    });
+  </script>
   <script type="text/javascript" src="../../js/jquery-3.4.1.min.js"></script>          
   <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
@@ -32,8 +39,8 @@
   	<div class="layui-btn-container" style="margin-top:10px;padding-left:20px;">
     	<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="addWarehouse"><i class="layui-icon layui-icon-add-1"></i>新增药品</button>
     	<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="updateDetails"><i class="layui-icon layui-icon-add-1"></i>新增配方详情</button>
-   		<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="removeWarehouse"><i class="layui-icon layui-icon-friends"></i>审核药品</button>
-		<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="capacityWarning"><i class="layui-icon layui-icon-friends"></i>审核配方</button>
+   		<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="removeWarehouse"><i class="layui-icon layui-icon-survey"></i>审核药品</button>
+		<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="capacityWarning"><i class="layui-icon layui-icon-survey"></i>审核配方</button>
   	</div>
 </script>
 
@@ -72,10 +79,12 @@
 			<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 		</script>
 		<script>
-			layui.use(['table', 'laydate', 'form'], function() {
+			layui.use(['table', 'laydate', 'form','notice'], function() {
+				var $ = layui.jquery;
 				var table = layui.table; //表格
 				var laydate = layui.laydate;
 				var form = layui.form;
+				var notice = layui.notice;
 				
 				//table3主页面
 				//table2弹出层
@@ -97,6 +106,21 @@
 		            console.log("error");
 		        }); */
 				
+		      //初始化配置，同一样式只需要配置一次，非必须初始化，有默认配置
+				notice.options = {
+					closeButton: true, //显示关闭按钮
+					debug: false, //启用debug
+					positionClass: "toast-top-center", //弹出的位置,
+					showDuration: "500", //显示的时间
+					hideDuration: "1000", //消失的时间
+					timeOut: "2000", //停留的时间
+					extendedTimeOut: "1000", //控制时间
+					showEasing: "swing", //显示时的动画缓冲方式
+					hideEasing: "linear", //消失时的动画缓冲方式
+					iconClass: 'layui-icon-tips', // 自定义图标，有内置，如不需要则传空 支持layui内置图标/自定义iconfont类名
+					onclick: null, // 点击关闭回调
+				};
+		        
 		      	//下拉框赋值(产品原料)
 		        var options = "<option value='-1'>请选择原料</option>";//初始化option的选项
 		        $.ajax({
@@ -243,10 +267,11 @@
 									var expirationdate = $("#expirationdate").val();
 									var test1 = $("#test1").val();
 									if(typeselectBox3 == '-1'||typeselectBox4=='-1'||chineseName==''||retailPrice==''||expirationdate==''||test1==''){
-										layer.msg('信息不能为空', {
+										/* layer.msg('信息不能为空', {
 						            		  icon: 2,
 						            		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
-						            		});
+						            		}); */
+										notice.info("信息不能为空");
 									}else{
 										$.ajax({
 											  url:'../../insertProduct.do',
@@ -255,10 +280,12 @@
 											  dataType:'json',
 											  success:function(data){
 												if(data == '1'){
-													layer.msg('新增成功');
+													//layer.msg('新增成功');
+													notice.success("新增成功");
 													table3.reload();
 												}else{
-													layer.msg('新增失败');
+													//layer.msg('新增失败');
+													notice.error("新增失败");
 												}
 											  }
 						                  //return false;
@@ -335,9 +362,11 @@
 									}
 								});
 							}else if(data.length > 1){
-								layer.msg('最多只能选择一件药品');
+								//layer.msg('最多只能选择一件药品');
+								notice.warning("最多只能选择一件药品");
 							}else{
-								layer.msg('请选择要制定配方的药品');
+								//layer.msg('请选择要制定配方的药品');
+								notice.warning("请选择要制定配方的药品");
 							}
 						//监听事件
 						table.on('toolbar(test2)', function(obj){
@@ -350,7 +379,8 @@
 					            	//console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
 					            	var typeselectBox2 = $("#typeselectBox2").val();
 					            	if(typeselectBox2 == '-1'){
-					            		layer.msg('不能为空');
+					            		//layer.msg('不能为空');
+					            		notice.info("不能为空");
 					            	}else{
 					            		$.ajax({
 											  url:'../../insertProductMaterial.do?proId='+data[0].proId,
@@ -359,16 +389,17 @@
 											  dataType:'json',
 											  success:function(data){
 												if(data == '1'){
-													layer.msg('添加成功');
+													//layer.msg('添加成功');
+													notice.success("添加成功");
 													table2.reload();
 												}else{
-													layer.msg('添加失败');
+													//layer.msg('添加失败');
+													notice.error("添加失败");
 												}
 											  }
 						                  //return false;
 						                }); 
 					            	}
-					            	
 						    break;
 						  };
 						});
@@ -401,10 +432,12 @@
 														  dataType:'json',
 														  success:function(data){
 															if(data == '1'){
-																layer.msg('审核成功');
+																//layer.msg('审核成功');
+																notice.success("审核成功");
 																table3.reload();
 															}else{
-																layer.msg('审核失败');
+																//layer.msg('审核失败');
+																notice.error("审核失败");
 															}
 														  }
 									                });
@@ -418,13 +451,16 @@
 											
 										});
 								}else{
-									layer.msg('该药品已审核');
+									//layer.msg('该药品已审核');
+									notice.warning("该药品已审核");
 								}
 								
 							}else if(data.length >1){
-								layer.msg('最多只能审核一件商品');
+								//layer.msg('最多只能审核一件商品');
+								notice.warning("最多只能审核一件商品");
 							}else {
-								layer.msg('请选择一件商品');
+								//layer.msg('请选择一件商品');
+								notice.warning("请选择一件商品'");
 							}
 							break;
 						case "capacityWarning":	//审核配方
@@ -455,10 +491,12 @@
 														  dataType:'json',
 														  success:function(data){
 															if(data == '1'){
-																layer.msg('审核成功');
+																//layer.msg('审核成功');
+																notice.success("审核成功");
 																table3.reload();
 															}else{
-																layer.msg('审核失败');
+																//layer.msg('审核失败');
+																notice.error("审核失败");
 															}
 														  }
 									                });
@@ -469,19 +507,20 @@
 														  layer.close(index88);
 													}
 											});
-											
 										});
 								}else{
-									layer.msg('该配方已审核');
+									//layer.msg('该配方已审核');
+									notice.warning("该配方已审核");
 								}
 								
 							}else if(data.length >1){
-								layer.msg('一次只能为一件药品审核配方');
+								//layer.msg('一次只能为一件药品审核配方');
+								notice.warning("一次只能为一件药品审核配方");
 							}else {
-								layer.msg('请选择一件要审核配方的商品');
+								//layer.msg('请选择一件要审核配方的商品');
+								notice.warning("请选择一件要审核配方的商品");
 							}
 							break;
-						
 					};
 				});
 
@@ -516,11 +555,13 @@
 									  dataType:'json',
 									  success:function(data){
 										if(data == '1'){
-											layer.msg('修改成功');
+											//layer.msg('修改成功');
+											notice.success("修改成功");
 											layer.close(index);
 											table3.reload();
 										}else{
-											layer.msg('修改失败');
+											//layer.msg('修改失败');
+											notice.error("修改失败");
 										}
 									  }
 								  });
@@ -599,10 +640,12 @@
 							  type:'post',
 							  success:function(data){
 								if(data == '1'){
-									layer.msg('删除成功,审核状态已变更!');
+									//layer.msg('删除成功,审核状态已变更!');
 									table.reload("test2",{});
+									notice.success("删除成功,审核状态已变更!");
 								}else{
-									layer.msg('删除失败');
+									//layer.msg('删除失败');
+									notice.error("删除失败");
 								}
 							  }
 		                  //return false;
@@ -612,7 +655,6 @@
 					    });
 					  } 
 					});
-				
 			});
 		</script>
 		

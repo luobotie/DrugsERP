@@ -26,4 +26,6 @@ public interface MaterialOrderBiz {
 	List<MaterialOrder> selectMoId(Integer moId);
 	
 	Integer updateThisMaterialOrderStatus(MaterialOrder materialOrder);
+	
+	Integer deleteMaterialOrderByMoId(Integer moId);
 }

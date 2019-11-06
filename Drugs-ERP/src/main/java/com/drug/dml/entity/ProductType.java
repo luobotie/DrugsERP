@@ -1,5 +1,12 @@
 package com.drug.dml.entity;
 
+import org.springframework.stereotype.Component;
+
+/**
+ * 产品类型实体类
+ * @author dml
+ */
+@Component
 public class ProductType {
 	private Integer proTypeId;				// 主键
 	private String proTypeName;			// 类型名称
