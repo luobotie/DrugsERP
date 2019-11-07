@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.drug.zl.mapper.FinancesellcloseMapper"><!-- 命名空间,写实体类的路径 ,包名.entity-->
+	<select id="allFinancesellclose" resultType="Financesellclose">
+		select * from financesellclose
+	</select>
+	<delete id="deleteFinancesellclose" parameterType="Integer">
+		delete from financesellclose where financeSellCloseId =#{financeSellCloseId}
+	</delete>
+	<insert id="addFinancesellclose" parameterType="Financesellclose">
+		insert into financesellclose(paidMoney,unPaidMoney,sellOrderId,financeManId,fSCTime,fSCRemark) values(#{paidMoney},#{unPaidMoney},#{sellOrderId},#{financeManId},#{fSCTime},#{fSCRemark})
+	</insert>
+	<update id="upadteFinancesellclose" parameterType="Financesellclose">
+		update financesellclose set paidMoney=#{paidMoney},unPaidMoney=#{unPaidMoney},sellOrderId=#{sellOrderId},financeManId=#{financeManId},fSCTime=#{fSCTime},fSCRemark=#{fSCRemark} where financeSellCloseId=#{financeSellCloseId}
+	</update>
+</mapper>

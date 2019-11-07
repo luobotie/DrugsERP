@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.drug.zl.mapper.FinancepurchasecloseMapper"><!-- 命名空间,写实体类的路径 ,包名.entity-->
+	<select id="allFinancepurchaseclose" resultType="Financepurchaseclose">
+		select * from financepurchaseclose
+	</select>
+	<insert id="addFinancepurchaseclose" parameterType="Financepurchaseclose">
+		insert into financepurchaseclose(paidMoney,unPaidMoney,purchaseorderId,financeManId,closeTime,
+			firstMoney,lastMoney,practicalPaidMoney,shouldPaidMoney,fPCRemark)
+		values(#{paidMoney},#{unPaidMoney},#{purchaseorderId},#{financeManId},#{closeTime},#{firstMoney},#{lastMoney},
+		#{practicalPaidMoney},#{shouldPaidMoney},#{fPCRemark})
+	</insert>
+	<update id="upadteFinancepurchaseclose" parameterType="Financepurchaseclose">
+		update financepurchaseclose set paidMoney=#{paidMoney},unPaidMoney=#{unPaidMoney},purchaseorderId=#{purchaseorderId},financeManId=#{financeManId},closeTime=#{closeTime},firstMoney=#{firstMoney},lastMoney=#{lastMoney},practicalPaidMoney=#{practicalPaidMoney},shouldPaidMoney=#{shouldPaidMoney},fPCRemark=#{fPCRemark} where financePurchaseCloseId=#{financePurchaseCloseId}
+	</update>
+	<delete id="deleteFinancepurchaseclose" parameterType="Integer">
+		delete from financepurchaseclose where financePurchaseCloseId =#{financePurchaseCloseId}
+	</delete>
+</mapper>

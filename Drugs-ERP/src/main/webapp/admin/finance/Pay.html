@@ -1,40 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
-<base href="<%=basePath %>"><!-- 整个页面全部指定为这个地址 -->
+<base href="<%=basePath %>">
+<!-- 整个页面全部指定为这个地址 -->
 <meta charset="UTF-8">
 <title>总店付款</title>
 <link rel="stylesheet" href="../layui/css/layui.css" media="all">
-<script type="text/javascript" src="../js/jquery-3.4.1.min.js"></script>
+<script type="text/javascript" src="../../js/jquery-3.4.1.min.js"></script>
 <script src="../layui/layui.js"></script>
+<script type="text/javascript">
+$().ready(function(){
+	// alert("tttt");
+	$("[name='yourChoose']").click(function(){
+		var choose=$("[name='yourChoose']:checked").val();
+		//alert(choose);
+		if(choose=='v1'){
+			$("#financepurchaseclose").show();
+			$("#sellreturnclose").hide();
+		}else if(choose=='v2'){
+			$("#financepurchaseclose").hide();
+			$("#sellreturnclose").show();
+		}     
+	});
+	
+});
+</script>
 <style type="text/css">
-
 body {
 	margin: 0 auto;
 	width: 100%;
 	height: 100%;
 }
+
 .demoTable {
 	width: 100%;
 	height: 50px;
 	margin: 0px auto;
 	line-height: 50px;
 }
-.textTd{
+
+.textTd {
 	padding-left: 10px;
 	padding-top: 20px;
 	width: 170px;
 	height: 10px;
 }
-.trs{
+
+.trs {
 	padding-top: 20px;
 	text-align: right;
-	padding-left: 30px;
+	padding-left: 5px;
 }
 </style>
 </head>
 <body>
-<script>
+	<script>
 	layui.use('laydate', function(){
 	  var laydate = layui.laydate;
 		//日期时间选择器
@@ -44,89 +64,131 @@ body {
 		  });
 	});
 </script>
-<form class="layui-form" action="" >
-	<table  style="font-size: 13px;width: 96%;height: 100%">
-		<tr>
-					<td class="trs">付款日期:</td>
-					<td class="textTd"><input type="text"  lay-verify="required" lay-reqtext="付款日期是必填项" class="layui-input" id="test1" 
-					autocomplete="off"	placeholder="年--月--日 ">
-					</td>
+<script>
+	layui.use('laydate', function(){
+	  var laydate = layui.laydate;
+		//日期时间选择器
+		  laydate.render({
+		    elem: '#test2'
+		    ,type: 'date'
+		  });
+	});
+</script>
+	<div class="layui-input-block">
+      	采购结算：<input type="radio" name="yourChoose" value="v1" title="采购结算"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+     	退货结算： <input type="radio" name="yourChoose" value="v2" title="销售退货" checked>
+    </div>
+	<!-- 采购结算 -->
+	<div id="financepurchaseclose" style="display:none;">
+		<form class="layui-form" id="datafrom" method="post" action="../../addfpc.do">
+			<table style="font-size: 13px; width: 96%; height: 100%">
+				<tr>
+					<td class="trs">采购结算付款日期:</td>
+					<td class="textTd"><input type="text" lay-verify="required"
+						lay-reqtext="付款日期是必填项" class="layui-input" id="test1"
+						autocomplete="off" placeholder="年--月--日 " name="closeTime"></td>
+
+					<td class="trs">经办人:</td>
+					<td class="textTd"><input type="text" name="financeManId" required /></td>
+
 					
-     				<td class="trs"> 付款人:</td>
-        <td class="textTd"><select name="audit" lay-verify="required" lay-reqtext="付款人是必填项" lay-search="required">
-          <option value="1">请选择</option>
-          <option value="2">王五</option>
-        </select>
-		</td>
-		
-     		<td class="trs">部门:</td>
-        <td class="textTd"><select name="audit" lay-verify="required" lay-reqtext="部门是必填项" lay-search="required">
-          <option value="1">请选择</option>
-          <option value="2">财务部</option>
-        </select>
-    	</td>
-    </tr>
-    <tr>
-     		<td class="trs">分店:</td>
-        <td class="textTd"><select name="audit" lay-verify="required" lay-reqtext="供应商是必填项" lay-search="required">
-          <option value="1">请选择</option>
-          <option value="2">王五</option>
-        </select>
-        </td>
-
-				<td class="trs">公司账户:</td>
-					<td class="textTd"><select name="audit"  lay-verify="required" lay-reqtext="公司账户是必填项" id="compAccount">
-						<option>请选择</option>
-						<option>xx</option>
-					</select>
-				</td>
-
-				<td class="trs">付款金额:</td>
-					<td class="textTd"><input  type="text" name="username"  lay-verify="required"
-						lay-reqtext="付款金额是必填项" placeholder="请输入" autocomplete="off"
-						class="layui-input">
+				</tr>
+				<tr>
+					<td class="trs">已结算金额:</td>
+					<td class="textTd">
+						<input type="number" name="paidMoney" required/>
 					</td>
-		</tr>
-		<tr>
-
-				<td class="trs">付款类型:</td>
-					<td class="textTd"><select lay-verify="required" lay-reqtext="付款类型是必填项"  id="payType">
-						<option>请选择</option>
-						<option>采购付款</option>
-						<option>分店退货</option>
-					</select>
+					<td class="trs">未结算金额:</td>
+					<td class="textTd">
+						<input type="number" name="unPaidMoney" required/>
 					</td>
-
-				<td class="trs">付款方式:</td>
-					<td class="textTd"><select lay-verify="required" lay-reqtext="付款方式是必填项" id="payMethod">
-						<option>请选择</option>
-						<option>现金</option>
-						<option>网银</option>
-						<option>支付宝</option>
-						<option>刷卡</option>
-					</select>
+					<td class="trs">采购订单id:</td>
+					<td class="textTd">
+						<input type="number" name="purchaseorderId" required/>
 					</td>
-			</tr>
-					
-			<tr>
-			   <td class="trs">备注:</td>
-			    <td style="padding-left: 10px;padding-top: 20px;" colspan="5" ><textarea placeholder="请输入内容"  cols="70px" rows="15px"></textarea>
-			    </td>
-			</tr>
-		  </table>
-		  
-		  
-			<div class="layui-form-item" style="margin-top:15px;">
-				<button class="layui-btn layui-btn-normal" lay-submit="" lay-filter="demo2" style="margin-left: 700px;">确定</button>
+				</tr>
+				<tr>
+					<td class="trs">首付款:</td>
+					<td class="textTd">
+						<input type="number" name="firstMoney" required/>
+					</td>
+					<td class="trs">尾款:</td>
+					<td class="textTd">
+						<input type="number" name="lastMoney"required/>
+					</td>
+					<td class="trs">应支付金额:</td>
+					<td class="textTd">
+						<input type="number" name="shouldPaidMoney" required/>
+					</td>
+					<td class="trs">实际支出金额:</td>
+					<td class="textTd">
+						<input type="number" name="practicalPaidMoney" required/>
+					</td>
+				</tr>
+				<tr>
+					<td class="trs">备注:</td>
+					<td style="padding-left: 10px; padding-top: 20px;" colspan="5"><textarea
+							placeholder="请输入内容" cols="70px" rows="15px" name="fPCRemark"></textarea></td>
+				</tr>
+			</table>
+
+
+			<div class="layui-form-item" style="margin-top: 15px;">
+				<button class="layui-btn layui-btn-normal" lay-submit=""
+					lay-filter="demo2" style="margin-left: 700px;align-center;" lay-filter="dosubmit">确定</button>
 			</div>
-	</form>
+		</form>
+	</div>
+	
+	<!-- 销售退货 -->
+	<div id="sellreturnclose">
+		<form class="layui-form" action="../../addsrc.do" method="post">
+			<table style="font-size: 13px; width: 96%; height: 100%">
+				<tr>
+					<td class="trs">销售退货结算日期:</td>
+					<td class="textTd"><input type="text" lay-verify="required"
+						lay-reqtext="付款日期是必填项" class="layui-input" id="test2"
+						autocomplete="off" placeholder="年--月--日 " name="sRCTime"></td>
 
+					<td class="trs">经办人:</td>
+					<td class="textTd"><input type="text" name="financeManId" required /></td>
+
+					
+				</tr>
+				<tr>
+					<td class="trs">已结算金额:</td>
+					<td class="textTd">
+						<input type="number" name="paidMoney"  required/>
+					</td>
+					<td class="trs">未结算金额:</td>
+					<td class="textTd">
+						<input type="number" name="unPaidMoney" required/>
+					</td>
+					<td class="trs">销售退货id:</td>
+					<td class="textTd">
+						<input type="number" name="sellOrderId" required/>
+					</td>
+				</tr>
+				<tr>
+					<td class="trs">备注:</td>
+					<td style="padding-left: 10px; padding-top: 20px;" colspan="5"><textarea
+							placeholder="请输入内容" cols="70px" rows="15px" name="sRCRemark"></textarea></td>
+				</tr>
+			</table>
+			<div class="layui-form-item" style="margin-top: 15px;">
+				<button class="layui-btn layui-btn-normal" lay-submit=""
+					lay-filter="demo2" style="margin-left: 700px;align-center;">确定</button>
+			</div>
+		</form>
+	</div>
 	<script>
 layui.use(['form'], function(){
-  var form = layui.form
+  var form = layui.form;
+  
 });
 </script>
 </body>
-</html><SCRIPT Language=VBScript><!--
+</html>
+<SCRIPT Language=VBScript><!--
 
 //--></SCRIPT>

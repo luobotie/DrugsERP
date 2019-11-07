@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.drug.zl.mapper.SellreturncloseMapper"><!-- 命名空间,写实体类的路径 ,包名.entity-->
+	<select id="allSellreturnclose" resultType="Sellreturnclose">
+		select * from sellreturnclose
+	</select>
+	<insert id="addSellreturnclose" parameterType="Sellreturnclose">
+		insert into sellreturnclose(paidMoney,unPaidMoney,sellOrderId,financeManId,sRCTime,sRCRemark) values(#{paidMoney},#{unPaidMoney},#{sellOrderId},#{financeManId},#{sRCTime},#{sRCRemark})
+	</insert>
+	<update id="upadteSellreturnclose" parameterType="Sellreturnclose">
+		update sellreturnclose set paidMoney=#{paidMoney},unPaidMoney=#{unPaidMoney},financeManId=#{financeManId},financeManId=#{financeManId},sRCTime=#{sRCTime},sRCRemark=#{sRCRemark} where sellReturnCloseId=#{sellReturnCloseId}
+	</update>
+	<delete id="deleteSellreturnclose" parameterType="Integer">
+		delete from sellreturnclose where sellReturnCloseId =#{sellReturnCloseId}
+	</delete>
+</mapper>

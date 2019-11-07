@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="com.drug.zl.mapper.PurchasereturncloseMapper"><!-- 命名空间,写实体类的路径 ,包名.entity-->
+	<select id="allPurchasereturncloses" resultType="Purchasereturnclose">
+		select * from purchasereturnclose
+	</select>
+	<insert id="addPurchasereturnclose" parameterType="Purchasereturnclose">
+		insert into purchasereturnclose(paidMoney,unPaidMoney,purchaseorderId,financeManId,pRCTime,pRCRemark) values(#{paidMoney},#{unPaidMoney},#{purchaseorderId},#{financeManId},#{pRCTime},#{pRCRemark})
+	</insert>
+	<update id="upadtePurchasereturnclose" parameterType="Purchasereturnclose">
+		update purchasereturnclose set paidMoney=#{paidMoney},unPaidMoney=#{unPaidMoney},purchaseorderId=#{purchaseorderId},financeManId=#{financeManId},pRCTime=#{unPaidMoney},pRCRemark=#{pRCRemark} where purchasereturncloseId=#{purchasereturncloseId}
+	</update>
+	<delete id="deletePurchasereturnclose" parameterType="Integer">
+		delete from purchasereturnclose where purchasereturncloseId =#{purchasereturncloseId}
+	</delete>
+</mapper>
