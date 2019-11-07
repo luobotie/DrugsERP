@@ -8,6 +8,7 @@
 		<meta name="renderer" content="webkit">
   		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  		<script type="text/javascript" src="../../js/jquery-3.4.1.min.js"></script>
 		<link rel="stylesheet" href="../layui/css/layui.css" />
 		<link rel="stylesheet" href="../layui/css/notice.css" />
 
@@ -55,7 +56,8 @@
 		  	</div>
 		<table id="test" lay-filter="test"></table>
 		<div id="table2Div">
-			<table class="layui-hide" id="test2"  style="display:none;"></table>
+			<table class="layui-hide" style="display: none;" id="test2"
+			lay-data="{id: 'idTest'}" lay-filter="test2"></table>
 		</div>
 
 		<!-- 头部工具栏 -->
@@ -211,6 +213,7 @@
 					var data = obj.data; //获得当前行数据
 					var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
 					var tr = obj.tr; //获得当前行 tr 的DOM对象
+					
 					if (layEvent === 'edit') { //查看详情
 						layer.open({
 							type: 1,
@@ -225,12 +228,14 @@
 						    elem: '#test2'
 						    ,url:'../../getThisCheckProductInfo.do?podId='+data.podId
 						    ,cols: [[
-						      {field:'materialId', title:'原料编号', unresize:true,align:'center'}
-						      ,{field:'materialName', title:'原料名称',unresize:true,align:'center'}
+						    	{field:'dailyPlanid', title:'日计划编号', unresize:true,align:'center'}
+						      ,{field:'proId', title:'药品编号', unresize:true,align:'center'}
+						      ,{field:'chineseName', title:'药品名称',unresize:true,align:'center'}
 						      ,{field:'productionQuantity', title:'所需数量', unresize:true,align:'center'}
-						      ,{field:'proId', title:'产品编号', unresize:true,align:'center'} 
+						      ,{field:'daypracticalQuantity', title:'实际生产数量', edit: 'text',unresize:true,align:'center'}
 						    ]]
 						});
+						
 					} else if (layEvent === 'del') { //删除
 						layer.confirm('真的删除行么', function(index) {
 							$.ajax({
@@ -255,6 +260,28 @@
 						});
 					}
 				});
+				
+				//监听单元格编辑
+				  table.on('edit(test2)', function(obj){ //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+					  var data = obj.data;
+					  $.ajax({
+						  url:'../../updateRealNum.do?dpId='+data.dailyPlanid,
+						  data:obj.data,
+						  type:'post',
+						  dataType:'json',
+						  success:function(data){
+							if(data == '1'){
+								layer.msg('修改成功');
+								//notice.success("修改成功");
+								table.reload('test2',{});
+							}else{
+								layer.msg('修改失败');
+								//notice.error("修改失败");
+							}
+						  }
+					  });
+					});
+				
 			});
 		</script>
 		<div style="display:none;" id="nameAndTimeDiv" >

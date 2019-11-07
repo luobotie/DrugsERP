@@ -82,7 +82,6 @@ public class CheckProductConterller {
 	public Map<String, Object> getCheckProductWithStatus(String qualitystatus,Integer page,Integer limit){
 		Map<String, Object> map=null;
 		if ("-1".equals(qualitystatus)) {
-			System.out.println("jinlaile ..");
 			map = getAllCheckProduct(page,limit);
 		}else{
 			//分页查询
@@ -95,5 +94,22 @@ public class CheckProductConterller {
 			map.put("data", list);
 		}
 		return map;
+	}
+	
+	/**
+	 * 查询指定状态的质检单数量
+	 * @param qualitystatus  质检状态
+	 * @return count
+	 */
+	@RequestMapping("/updateRealNum.do")
+	public Integer updateRealNum(CheckProduct checkProduct){
+		System.out.println("修改数量进来了...");
+		Integer dpId = checkProduct.getDailyPlanid();
+		System.out.println(dpId);
+		int count = checkProductBiz.updateRealNum(checkProduct);
+		Integer sum = checkProductBiz.getDayPracticalQuantitySum(checkProduct);
+		System.out.println("数量:"+sum);
+		checkProductBiz.updateFinishNumber(sum, dpId);
+		return count;
 	}
 }

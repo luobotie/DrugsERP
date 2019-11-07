@@ -40,7 +40,6 @@ public Integer insertDailyplan(String monthPlanId,String monthPlanNum){
 	@RequestMapping("updatedailyPlanDetails.do")
 	@ResponseBody
 	public Integer updatedailyPlanDetails(DailyPlanDetails dailyPlanDetails){
-	
 		return dailyPlanBiz.updatedailyPlanDetails(dailyPlanDetails);
 	}
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.drug.dml.biz.MaterialOrderBiz;
+import com.drug.dml.entity.CheckProduct;
 import com.drug.dml.entity.MaterialOrder;
 
 @RestController
@@ -118,10 +119,38 @@ public class MaterialOrderController {
 		return count;
 	}
 	
+	/**
+	 * 在生产订单页面发送请求,新增领料单
+	 * @param materialOrder 领料单实体类
+	 * @return count
+	 */
+	@RequestMapping("/insertMaterialOrder.do")
+	public Integer insertMaterialOrder(MaterialOrder materialOrder,CheckProduct checkProduct,Integer orderId){
+		//新增领料表
+		int count = materialOrderBiz.insertMaterialOrder(materialOrder);
+		//新增质检表
+		materialOrderBiz.insertCheckProduct(checkProduct);
+		return count;
+	}
 	
-	
-	
-	
+	@RequestMapping("/reloadOrderProduct.do")
+	public Integer reloadOrderProduct(Integer orderId){
+		System.out.println("进来了,老哥");
+		int count = 0;
+		String moStatus = materialOrderBiz.selectMaterialOrderStatus(orderId);
+		String warehouseStatus = materialOrderBiz.selectMaterialOrderWarStatus(orderId);
+		String qualitystatus = materialOrderBiz.selectCheckProductStatus(orderId);
+		if ("已审核".equals(moStatus)&&"已出库".equals(warehouseStatus)) {
+			System.out.println("修改订单表领料状态.........");
+			count = materialOrderBiz.updateOrderProductStatus(orderId);
+		}else if ("已通过".equals(qualitystatus)) {
+			System.out.println("修改订单表生产状态.........");
+			count = materialOrderBiz.updateOrderProductProStatus(orderId);
+		}else{
+			count = 0;
+		} 
+		return count;
+	}
 	
 	
 	

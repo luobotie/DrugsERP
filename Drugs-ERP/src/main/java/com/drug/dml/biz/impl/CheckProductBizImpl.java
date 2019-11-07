@@ -52,4 +52,19 @@ public class CheckProductBizImpl implements CheckProductBiz{
 		return checkProductMapper.countCheckProductWithStatus(qualitystatus);
 	}
 
+	@Override
+	public Integer updateRealNum(CheckProduct checkProduct) {
+		return checkProductMapper.updateRealNum(checkProduct);
+	}
+
+	@Override
+	public Integer getDayPracticalQuantitySum(CheckProduct checkProduct) {
+		return checkProductMapper.getDayPracticalQuantitySum(checkProduct);
+	}
+
+	@Override
+	public Integer updateFinishNumber(Integer sum, Integer dpId) {
+		return checkProductMapper.updateFinishNumber(sum, dpId);
+	}
+
 }

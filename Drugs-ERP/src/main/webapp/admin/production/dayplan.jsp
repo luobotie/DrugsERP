@@ -88,6 +88,7 @@ layui.use(['table','laydate','form','layer','jquery'], function(){
   var table = layui.table;
   var laydate = layui.laydate;
   var form = layui.form;
+  var table2="";
   //常规用法
   laydate.render({
     elem: '#test1'
@@ -179,7 +180,7 @@ layui.use(['table','laydate','form','layer','jquery'], function(){
 								  dataType:'json',
 								  success:function(data){
 										  layer.msg('生产订单制定成功,可到生产订单查看详情');
-										  table2.reload(); 
+										  table.reload('test',{}); 
 								  }
 						});
 						});

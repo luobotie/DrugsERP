@@ -23,4 +23,10 @@ public interface CheckProductBiz {
 	List<CheckProduct> getCheckProductWithStatus(String qualitystatus,Integer pageno,Integer pageSize);
 	
 	Integer countCheckProductWithStatus(String qualitystatus);
+	
+	Integer updateRealNum(CheckProduct checkProduct);
+	
+	Integer getDayPracticalQuantitySum(CheckProduct checkProduct);
+	
+	Integer updateFinishNumber(Integer sum,Integer dpId);
 }

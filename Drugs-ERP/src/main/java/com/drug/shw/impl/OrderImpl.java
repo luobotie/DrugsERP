@@ -74,5 +74,17 @@ public class OrderImpl implements OrderBiz{
 	public List<DailyPlanDetails> selectorderproductdetail(Integer id) {
 		return orderDao.selectorderproductdetail(id);
 	}
+	@Override
+	public Integer updateorderproductauditState(Integer orderId) {
+		HashMap<String, Object> map=new HashMap<String, Object>();
+		Date date=new Date();
+		SimpleDateFormat simpleDateFormat=new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+		String date2=simpleDateFormat.format(date);
+		Employee e=(Employee)WebUtils.getHttpSession().getAttribute("employee");
+		
+		map.put("orderId",orderId);
+		map.put("auditState","已审核");
+		return orderDao.updateorderproductauditState(map);
+	}
 
 }

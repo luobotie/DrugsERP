@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.drug.dml.biz.MaterialOrderBiz;
+import com.drug.dml.entity.CheckProduct;
 import com.drug.dml.entity.MaterialOrder;
 import com.drug.dml.mapper.MaterialOrderMapper;
 
@@ -65,5 +66,42 @@ public class MaterialOrderBizImpl implements MaterialOrderBiz{
 	public Integer deleteMaterialOrderByMoId(Integer moId) {
 		return materialOrderMapper.deleteMaterialOrderByMoId(moId);
 	}
+
+	@Override
+	public Integer insertMaterialOrder(MaterialOrder materialOrder) {
+		return materialOrderMapper.insertMaterialOrder(materialOrder);
+	}
+
+	@Override
+	public Integer insertCheckProduct(CheckProduct checkProduct) {
+		return materialOrderMapper.insertCheckProduct(checkProduct);
+	}
+
+	@Override
+	public String selectMaterialOrderStatus(Integer orderId) {
+		return materialOrderMapper.selectMaterialOrderStatus(orderId);
+	}
+
+	@Override
+	public String selectMaterialOrderWarStatus(Integer orderId) {
+		return materialOrderMapper.selectMaterialOrderWarStatus(orderId);
+	}
+
+	@Override
+	public Integer updateOrderProductStatus(Integer orderId) {
+		return materialOrderMapper.updateOrderProductStatus(orderId);
+	}
+	
+	@Override
+	public String selectCheckProductStatus(Integer orderId) {
+		return materialOrderMapper.selectCheckProductStatus(orderId);
+	}
+
+	@Override
+	public Integer updateOrderProductProStatus(Integer orderId) {
+		return materialOrderMapper.updateOrderProductProStatus(orderId);
+	}
+
+	
 
 }

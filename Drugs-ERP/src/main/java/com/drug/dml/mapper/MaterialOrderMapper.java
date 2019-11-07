@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
+import com.drug.dml.entity.CheckProduct;
 import com.drug.dml.entity.MaterialOrder;
 
 @Repository
@@ -104,4 +105,46 @@ public interface MaterialOrderMapper {
 	 */
 	@Delete("delete from materialOrder where moId = #{moId}")
 	Integer deleteMaterialOrderByMoId(Integer moId);
+	
+	/**
+	 * 在生产订单页面发送请求,新增领料单
+	 * @return Integer
+	 */
+	@Insert("INSERT INTO materialOrder(orderId,applydate,proposerId,auditingdate,auditorId,materialOrderdes) VALUES "
+			+ "(#{orderId},#{applydate},#{proposerId},'1900-01-01 00:00:00',0,'')")
+	Integer insertMaterialOrder(MaterialOrder materialOrder);
+	
+	/**
+	 * 在生产订单页面发送请求,新增质检单
+	 * @return Integer
+	 */
+	@Insert("INSERT INTO check_Product(orderId,statusMan,statustime) VALUES(#{orderId},0,'1900-01-01 00:00:00');")
+	Integer insertCheckProduct(CheckProduct checkProduct);
+	
+	
+	@Select("select moStatus from materialOrder where orderId = #{orderId}")
+	String selectMaterialOrderStatus(Integer orderId);
+	
+	@Select("select warehouseStatus from materialOrder where orderId = #{orderId}")
+	String selectMaterialOrderWarStatus(Integer orderId);
+	
+	/**
+	 * 修改订单表领料状态
+	 * @param orderId  订单表ID
+	 * @return Integer
+	 */
+	@Update("update orderproduct set materialState = '已领料' where orderId = #{orderId}")
+	Integer updateOrderProductStatus(Integer orderId);
+	
+	@Select("select qualitystatus from check_Product where orderId = #{orderId}")
+	String selectCheckProductStatus(Integer orderId);
+	
+	/**
+	 * 修改订单表生产状态
+	 * @param orderId 订单表ID
+	 * @return Integer
+	 */
+	@Update("update orderproduct set produceState = '已完成' where orderId = #{orderId}")
+	Integer updateOrderProductProStatus(Integer orderId);
+	
 }

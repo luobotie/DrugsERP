@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -42,6 +43,33 @@
 	</div>
 </form>
  </div>	
+ 
+ <!-- 申请人和申请时间 -->
+<div style="display:none;" id="shenqing">
+<form class="layui-form" lay-filter="formAuthority3" id="formIdOne3">	  
+
+<div class="layui-inline" style="padding-left:0px;margin-top:20px;">
+	<label width="120px" style="margin:0 5px 0 20px;font-size:13px;">申请日期</label>
+	<div class="layui-input-inline">
+		<input type="text" class="layui-input" id="test3" placeholder="yyyy-MM-dd" name="applydate">
+	</div>
+</div>
+<div style="padding-left:0px;margin-top:15px;">
+<label width="120px" style="margin:0 5px 0 20px;font-size:13px;">申请人员</label>
+	<div class="layui-input-inline">
+		<input type="text" name="proposerId" lay-verify="number" value="${employee.employeeId }"  class="layui-input" readonly>
+	</div>
+	<div class="layui-input-inline" style="margin-top:10px;">
+				<label style="margin:0 10px 0 20px;font-size:13px;">备注信息</label>
+				<div class="layui-input-inline" style="margin-left:-5px;">
+      				<textarea name="des" required lay-verify="required" cols="35px" rows="4px" placeholder="请输入计划描述" class="layui-textarea"></textarea>
+    			</div>
+			</div>	
+	</div>
+</form>
+ </div>	
+ 
+ 
  <div id="xq" style="display:none;">
 <table class="layui-hide" id="testxq" lay-filter="testxq" ></table>
 </div>
@@ -132,6 +160,7 @@
   <div class="layui-btn-container" style="margin-top:10px;padding-left:20px;">
     <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckData"><i class="layui-icon layui-icon-friends"></i>审核生产订单 </button>
     <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckLength"><i class="layui-icon layui-icon-add-1"></i>生成领料单</button>
+	<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="reloadThis"><i class="layui-icon layui-icon-add-1"></i>刷新订单</button>
   </div>
 
 
@@ -155,9 +184,16 @@ layui.use(['table','form','laydate','layer','jquery'], function(){
   var laydate = layui.laydate;
   var layer=layui.layer;
   var tanIndex="";
+  
   laydate.render({
 		elem : '#test5'
+		,type: 'datetime'
 	});
+  laydate.render({
+		elem : '#test3'
+		,type: 'datetime'
+	});
+  
   var tableindex=table.render({
 	    elem: '#test'
 	    ,url:'../../selectorder.do'
@@ -189,8 +225,8 @@ layui.use(['table','form','laydate','layer','jquery'], function(){
     var checkStatus = table.checkStatus(obj.config.id);
     var data= checkStatus.data;
     switch(obj.event){
-      case 'getCheckData':
-    	  if(data.length == 1){
+    case 'getCheckData':
+  	  if(data.length == 1){
 				//判断订单审核状态
 				if(data[0].auditState == '未审核'){
 					var index2 = layer.confirm('你确认审核该生产订单？', {
@@ -201,24 +237,16 @@ layui.use(['table','form','laydate','layer','jquery'], function(){
 						  }
 						}, function(layero){
 							layer.close(index2);
-							var index88 = layer.open({
-								  type: 1,
-								  shade: 0.25,
-								  area: ['400px', '350px'],
-								  content:$("#shenhe"), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-								  success: function(layero, index){
-									  form.render();
-									  },
-								  btn: ['确认', '取消'],
-								  yes: function(layero){
-									  layer.close(index88);
-									  layer.msg('订单审核成功');
-									}
-								  ,btn2: function(index, layero){
-										  layer.close(index88);
-									}
-							});
-							
+							$.ajax({
+								type:"post",
+								url:'../../updateorderproduct.do',
+								data:"orderId="+data[0].orderId,
+								success:function(data){
+									//关闭弹出层
+									layer.msg('审核完成');
+									tableindex.reload();
+								}
+							 })	
 						});
 				}else{
 					layer.msg('该订单已审核');
@@ -229,11 +257,11 @@ layui.use(['table','form','laydate','layer','jquery'], function(){
 			}else {
 				layer.msg('请选择要审核的订单');
 			}
-      break;
+    break;
       case 'getCheckLength':	//生成领料单
     	  if(data.length == 1){
 				//判断日计划审核状态
-				if(data[0].sex == '男'){
+				if(data[0].auditState == '未审核'){
 					 var index2 = layer.confirm('你确认为该订单生成领料订单？', {
 						  btn: ['确认', '取消'] //可以无限个按钮
 						  ,btn2: function(index, layero){
@@ -241,8 +269,39 @@ layui.use(['table','form','laydate','layer','jquery'], function(){
 						  }
 						}, function(layero){
 							layer.close(index2);
-							layer.msg('领料订单生成成功');
-							
+							var index88 = layer.open({
+								  type: 1,
+								  shade: 0.25,
+								  area: ['400px', '350px'],
+								  content:$("#shenqing"), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+								  success: function(layero, index){
+									  form.render();
+									  },
+								  btn: ['确认', '取消'],
+								  yes: function(layero){
+									  layer.close(index88);
+									  $.ajax({
+										  url:'../../insertMaterialOrder.do?orderId='+data[0].orderId,
+										  data:$("#formIdOne3").serialize(),
+										  type:'post',
+										  dataType:'json',
+										  success:function(data){
+											if(data == '1'){
+												layer.msg('执行成功');
+												//notice.success("新增成功");
+												table.reload('test',{});
+											}else{
+												layer.msg('执行失败');
+												//notice.error("新增失败");
+											}
+										  }
+					                  //return false;
+					                });
+									}
+								  ,btn2: function(index, layero){
+										  layer.close(index88);
+									}
+							});
 						});
 				}else{
 					layer.msg('该生产订单未审核');
@@ -252,6 +311,38 @@ layui.use(['table','form','laydate','layer','jquery'], function(){
 				layer.msg('一次只能为一个订单生产领料单');
 			}else {
 				layer.msg('请选择要生成领料单的生产订单');
+			}
+      break;
+      case 'reloadThis':
+    	  if(data.length == 1){
+				//判断领料订单状态
+				if(data[0].auditState == '未审核'){
+					$.ajax({
+						url:'../../reloadOrderProduct.do?orderId='+data[0].orderId,
+						  type:'post',
+						  dataType:'json',
+						  success:function(data){
+							if(data == '1'){
+								layer.msg('刷新成功');
+								//notice.success("刷新成功");
+								table.reload("test",{});
+							}else{
+								layer.msg('领料未处理或质检未通过');
+								//notice.error("领料未申请或仓库未响应");
+							}
+						  }
+					});
+				}else{
+					layer.msg('该生产订单未审核');
+					//notice.warning("该领料订单未审核");
+				}
+				
+			}else if(data.length >1){
+				layer.msg('只能刷新一个生产订单');
+				//notice.warning("只能刷新一个领料订单");
+			}else {
+				layer.msg('请选择要刷新的领料订单');
+				//notice.warning("请选择要刷新的领料订单");
 			}
       break;
       case 'isAll':
