@@ -13,4 +13,5 @@ public interface OrderBiz{
 	Integer deleteorderproduct(String orderid);
 	Integer insertorderproduct(Dailyplan dailyplan);
 	List<DailyPlanDetails> selectorderproductdetail(Integer id);
+	Integer updateorderproductauditState(Integer orderId);
 }

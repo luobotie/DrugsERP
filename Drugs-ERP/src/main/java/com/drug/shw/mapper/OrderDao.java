@@ -15,4 +15,5 @@ public interface OrderDao {
   Integer insertorderproduct(orderproduct orderproduct);
   Integer insertorderproductdetail(DailyPlanDetails dailyPlanDetails);
   List<DailyPlanDetails> selectorderproductdetail(Integer id);
+  Integer updateorderproductauditState(HashMap<String, Object> map);
 }

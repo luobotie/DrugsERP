@@ -23,5 +23,8 @@ insert into orderproductdetail values(orderproductdetailid,#{dpId},#{proId},#{pr
 <select id="selectorderproductdetail" resultType="DailyPlanDetails" parameterType="integer">
 select d.*,j.chineseName from orderproductdetail d join product_Info j on j.proId=d.proId where orderproductId=#{orderid}
 </select>
+<update id="updateorderproductauditState"  parameterType="map">
+update orderproduct set auditState=#{auditState} where orderId=#{orderId}
+</update>
 </mapper>
 

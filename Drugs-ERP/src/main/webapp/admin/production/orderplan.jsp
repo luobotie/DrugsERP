@@ -201,24 +201,16 @@ layui.use(['table','form','laydate','layer','jquery'], function(){
 						  }
 						}, function(layero){
 							layer.close(index2);
-							var index88 = layer.open({
-								  type: 1,
-								  shade: 0.25,
-								  area: ['400px', '350px'],
-								  content:$("#shenhe"), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
-								  success: function(layero, index){
-									  form.render();
-									  },
-								  btn: ['确认', '取消'],
-								  yes: function(layero){
-									  layer.close(index88);
-									  layer.msg('订单审核成功');
-									}
-								  ,btn2: function(index, layero){
-										  layer.close(index88);
-									}
-							});
-							
+							$.ajax({
+								type:"post",
+								url:'../../updateorderproduct.do',
+								data:"orderId="+data[0].orderId,
+								success:function(data){
+									//关闭弹出层
+									layer.msg('审核完成');
+									tableindex.reload();
+								}
+							 })	
 						});
 				}else{
 					layer.msg('该订单已审核');

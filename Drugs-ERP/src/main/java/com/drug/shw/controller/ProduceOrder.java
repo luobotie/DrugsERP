@@ -43,4 +43,9 @@ private OrderBiz order;
 	public List<DailyPlanDetails> selectorderproductdetail(Integer dailyPlanid){
 		return order.selectorderproductdetail(dailyPlanid);
 }
+	@RequestMapping("updateorderproduct.do")
+	@ResponseBody
+	public Integer updateorderproduct(Integer orderId){
+		return order.updateorderproductauditState(orderId);
+}
 }
