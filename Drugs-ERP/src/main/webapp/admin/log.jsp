@@ -89,6 +89,29 @@
 			    ,height:'full-150'
 			    ,cellMinWidth:100 //设置列的最小默认宽度
 			    ,page: true  //是否启用分页
+			    ,done: function(res, curr, count){
+			    	//如果是异步请求数据方式，res即为你接口返回的信息。
+			    	//如果是直接赋值的方式，res即为：{data: [], count: 99} data为当前页数据、count为数据总长度
+			    	console.log(res);
+			    	//得到当前页码
+			    	console.log(curr);
+			    	//得到数据总量
+			    	console.log(count);
+			    	console.log(res.data.length);
+			    	var yeshu=curr;
+			    	if (res.data.length == 0) {
+			    	     if(yeshu==1){}else{
+			    		//执行重载函数 页码 curr - 1
+				        table.reload('logInfoTable', {
+				        	  url:"../loadAllLogInfo.do"
+							  ,page: {
+							    curr:(curr-1) //重新从第 1 页开始
+							  } 
+							}); //只重载数据
+			    	     }
+			    	}
+
+			    	}
 			    ,cols: [[   //列表数据
 			     {type: 'checkbox', fixed: 'left'}
 			      ,{field:'id', title:'ID',align:'center'}
@@ -102,7 +125,8 @@
 			$("#doSearch").click(function(){
 				var params=$("#searchFrm").serialize();
 				tableIns.reload({
-					url:"../loadAllLogInfo.action?"+params,
+					url:"../loadAllLogInfo.do?"+params,
+				    page:{curr:1}
 				})
 			});
 			

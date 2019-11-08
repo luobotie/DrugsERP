@@ -122,5 +122,11 @@ public class EmployeeBizImpl implements EmployeeBiz {
 			return ResultObj.UPDATE_ERROR;
 		}
 	}
+	@Override
+	public void deleteBatchEmp(Integer[] ids) {
+		for(Integer id:ids){
+			deleteEmpByEmpId(id);
+		}
+	}
 
 }

@@ -149,7 +149,8 @@
 			$("#doSearch").click(function(){
 				var params=$("#searchFrm").serialize();
 				tableIns.reload({
-					url:"../loadAllDepartment.do?"+params
+					url:"../loadAllDepartment.do?"+params,
+					page:{curr:1}
 				})
 			});
 			

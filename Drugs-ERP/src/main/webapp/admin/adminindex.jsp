@@ -15,7 +15,6 @@
 	<link rel="icon" href="favicon.ico">
 	<link rel="stylesheet" href="../resources/layui/css/layui.css" media="all" />
 	<link rel="stylesheet" href="../resources/css/index.css" media="all" />
-	  <script type="text/javascript" src="../js/jquery-3.4.1.min.js"></script>
 </head>
 <body class="main_body">
 	<div class="layui-layout layui-layout-admin">
@@ -80,7 +79,7 @@
 				    <a href="javascript:;"><i class="layui-icon caozuo">&#xe643;</i> 页面操作</a>
 				    <dl class="layui-nav-child">
 					  <dd><a href="javascript:;" class="refresh refreshThis"><i class="layui-icon">&#xe669;</i> 刷新当前</a></dd>
-				      <dd><a href="javascript:;" class="closePageOther"><i class="seraph icon-prohibit"></i> 关闭其他</a></dd>
+			      <dd><a href="javascript:;" class="closePageOther"><i class="seraph icon-prohibit"></i> 关闭其他</a></dd>
 				      <dd><a href="javascript:;" class="closePageAll"><i class="seraph icon-guanbi"></i> 关闭全部</a></dd>
 				    </dl>
 				  </li>

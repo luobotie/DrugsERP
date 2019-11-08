@@ -181,7 +181,8 @@
 			$("#doSearch").click(function(){
 				var params=$("#searchFrm").serialize();
 				tableIns.reload({
-					url:"../moHuMenu.do?"+params
+					url:"../moHuMenu.do?"+params,
+					page:{curr:1}		
 				})
 			});
 			

@@ -23,8 +23,8 @@
     <link rel="stylesheet" href="../css/custom.css">
     <!-- Favicon-->
     <link rel="shortcut icon" href="">
-    <link rel="stylesheet" type="text/css" href="layui/css/layui.css">
-    <script src="layui/layui.js"></script>
+    <link rel="stylesheet" type="text/css" href="../layui/css/layui.css">
+    <script src="../layui/layui.js"></script>
   </head>
   <body>
     <div class="page login-page">

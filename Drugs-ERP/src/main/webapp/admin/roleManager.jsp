@@ -204,7 +204,8 @@
 			$("#doSearch").click(function(){
 				var params=$("#searchFrm").serialize();
 				tableIns.reload({
-					url:"../loadAllRole.do?"+params
+					url:"../loadAllRole.do?"+params,
+					page:{curr:1}
 				})
 			});
 			

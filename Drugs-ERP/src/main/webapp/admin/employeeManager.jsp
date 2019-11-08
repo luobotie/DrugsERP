@@ -491,7 +491,8 @@
 			$("#doSearch").click(function(){
 				var params=$("#searchFrm").serialize();
 				tableIns.reload({
-					url:"../loadAllEmp.do?"+params
+					url:"../loadAllEmp.do?"+params,
+					page:{curr:1}		
 				})
 			});
 			

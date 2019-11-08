@@ -12,8 +12,15 @@ public class EmployeeVo extends Employee {
      private String  restPwd;
      private String  oldPwd;
      private String  newPwd;
+ 	//接收多个id
+ 	private Integer [] ids;
      
-     
+	public Integer[] getIds() {
+		return ids;
+	}
+	public void setIds(Integer[] ids) {
+		this.ids = ids;
+	}
 	public String getNewPwd() {
 		return newPwd;
 	}

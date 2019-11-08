@@ -23,4 +23,5 @@ public interface EmployeeBiz {
 	 ResultObj updatePersonalInfo(Employee employee);
 	 boolean  checkOldPwdByEmpId(EmployeeVo eVo);
 	 ResultObj updateNewPwdByEmpId(EmployeeVo eVo);
+	 void deleteBatchEmp(Integer[] ids);
 }
