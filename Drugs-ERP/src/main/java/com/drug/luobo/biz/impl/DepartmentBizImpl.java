@@ -55,8 +55,11 @@ public class DepartmentBizImpl implements DepartmentBiz {
 
 	@Override
 	public void deleteDepartment(Integer depId) {
+		//id删除部门
 		mapper.deleteDepartment(depId);
+		//id修改该部门下的员工
 		mapper.updateEmployee(depId);
+	   //根据部门id查询该部门的所有的角色，删除角色
 		List<Role> list = mapper.getRoleByDepId(depId);
 		for(Role r:list){
 			roleBiz.deleteRole(r.getRoleid());

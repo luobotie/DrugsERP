@@ -14,12 +14,21 @@ import com.drug.luobo.untils.ResultObj;
 public class LoginLogController {
 	 @Autowired
 	private LoginLogBiz biz;
-	 
+	 /**
+	  * 功能：查询所有的日志文件
+	  * @param logVo 用于模糊查询
+	  * @return  日志对象的集合
+	  */
 	@RequestMapping("/loadAllLogInfo.do")
 	@ResponseBody
 	public LayuiTableData loadAllLogInfo(LoginLogVo logVo){
 		return biz.queryAllLogInfo(logVo);
 	} 
+	/**
+	 * 功能：根据日志id删除日志
+	 * @param id  日志id
+	 * @return  ResultObj
+	 */
 	@RequestMapping("/deleteLogInfo.do")
 	@ResponseBody
 	public ResultObj deleteLogInfo(Integer id){
@@ -31,6 +40,11 @@ public class LoginLogController {
 			return ResultObj.DELETE_ERROR;
 		}
 	}
+	/**
+	 * 功能：批量删除日志文件
+	 * @param logVo  日志对象
+	 * @return  ResultObj
+	 */
 	@RequestMapping("/deleteBatchLogInfo.do")
 	@ResponseBody
 	public ResultObj deleteBatchLogInfo(LoginLogVo logVo){

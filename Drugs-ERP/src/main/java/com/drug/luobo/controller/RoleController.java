@@ -158,7 +158,11 @@ public class RoleController {
     		return false;
     	}
     }
-    
+    /**
+     * 功能：将角色保存到部门
+     * @param role
+     * @return
+     */
 	@RequestMapping("/saveDepByRoleId.do")
 	@ResponseBody
 	public ResultObj saveDepByRoleId(Role role){

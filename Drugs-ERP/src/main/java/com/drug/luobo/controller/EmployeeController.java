@@ -27,7 +27,12 @@ public class EmployeeController {
 	private EmployeeBiz biz;
 	 @Autowired
 	private LoginLogBiz loginBiz; 
-	 
+	 /**
+	  * 功能：用于用户的登录和记录该用户的登录信息的日志
+	  * @param loginUsername  登录名
+	  * @param loginPassword   登录密码
+	  * @return  一个员工对象
+	  */
 	 @RequestMapping("/login.do")
 	 @ResponseBody
      public boolean login(String loginUsername,String loginPassword ){
@@ -52,18 +57,30 @@ public class EmployeeController {
 			}
 			
 	 }
-	 
+	 /**
+	  * 功能：查询所有的员工信息
+	  * @param eVo 用户模糊查询
+	  * @return  所有员工对象的集合
+	  */
 	 @RequestMapping("/loadAllEmp.do")
 	 @ResponseBody
 	 public LayuiTableData loadAllEmp(EmployeeVo eVo){
 		 return biz.loadAllEmp(eVo);
 	 }
+	 /**
+	  * 功能：修改员工的头像路径
+	  * @param employee  员工对象
+	  */
 	 @RequestMapping("/updateHeadImage.do")
 	 @ResponseBody
 	 public void  updateHeadImage(Employee employee){
 		biz.updateHeadImage(employee);
 	 }
-	 
+	    /**
+	     * 功能：检查新增员工的登录名是否重复
+	     * @param employeeName  员工登录名
+	     * @return  boolean
+	     */
 	    @RequestMapping("/checkAddEmpName.do")
 	    @ResponseBody
 	    public boolean  checkAddEmpName(String employeeName){
@@ -74,7 +91,11 @@ public class EmployeeController {
 	    		return false;
 	    	}
 	    }
-	    
+	    /**
+	     * 功能：检查修改员工的登录名是否重复
+	     * @param employee  员工对象
+	     * @return boolean
+	     */
 	    @RequestMapping("/checkUpdateEmpName.do")
 	    @ResponseBody
 	    public boolean  checkUpdateEmpName(Employee employee){
@@ -85,6 +106,11 @@ public class EmployeeController {
 	    		return false;
 	    	}
 	    }
+	    /**
+	     * 功能：新增员工信息 
+	     * @param employee 员工对象
+	     * @return ResultObj
+	     */
 	    @RequestMapping("/addEmp.do")
 	    @ResponseBody
 	    public ResultObj addEmp(Employee employee){
@@ -97,12 +123,21 @@ public class EmployeeController {
 				return ResultObj.ADD_ERROR;
 			}
 	    }
+	    /**
+	     * 功能：根据部门id查询该部门下所有的角色
+	     * @param depId 部门id
+	     * @return  角色对象的集合
+	     */
 	    @RequestMapping("/getAllRoleByDepId.do")
 	    @ResponseBody
 	    public List<Role> getAllRoleByDepId(Integer depId) {
 			return biz.getAllRoleByDepId(depId);
 		}
-	    
+	    /**
+	     * 功能：修改员工信息
+	     * @param employee 员工对象
+	     * @return  ResultObj 
+	     */
 	    @RequestMapping("/updateEmp.do")
 	    @ResponseBody
 	    public ResultObj updateEmp(Employee employee){
@@ -114,7 +149,11 @@ public class EmployeeController {
 				return ResultObj.UPDATE_ERROR;
 			}
 	    }
-	    
+	    /**
+	     * 功能：删除部门
+	     * @param employeeId  部门id
+	     * @return   ResultObj
+	     */
 	    @RequestMapping("/deleteEmpByEmpId.do")
 	    @ResponseBody
 	    public ResultObj deleteEmpByEmpId(Integer employeeId){
@@ -126,22 +165,41 @@ public class EmployeeController {
 				return ResultObj.DELETE_ERROR;
 			}
 	    }
+	    /**
+	     * 功能：重置用户密码
+	     * @param eVo 员工对象
+	     * @return ResultObj
+	     */
 	    @RequestMapping("/restPwd.do")
 	    @ResponseBody
 	    public ResultObj restPwd(EmployeeVo eVo){
-	    	System.err.println(eVo.getEmployeeId()+"\t"+eVo.getRestPwd());
 	    	return biz.restPwd(eVo);
 	    }
+	    /**
+	     * 功能：修改个人信息
+	     * @param employee 员工对象
+	     * @return ResultObj
+	     */
 	    @RequestMapping("/updatePersonalInfo.do")
 	    @ResponseBody
 	    public ResultObj updatePersonalInfo(Employee employee){
 	    	return biz.updatePersonalInfo(employee);
 	    }
+	    /**
+	     * 功能：用户修改自己的密码，验证原来的密码
+	     * @param eVo 员工对象
+	     * @return  boolean
+	     */
 	    @RequestMapping("/checkOldPwdByEmpId.do")
 	    @ResponseBody
 	    public boolean checkOldPwdByEmpId(EmployeeVo eVo){
 	    	return biz.checkOldPwdByEmpId(eVo);
 	    }
+	    /**
+	     * 功能：根据员工id，修改密码
+	     * @param eVo  员工对象
+	     * @return  ResultObj
+	     */
 	    @RequestMapping("/updateNewPwdByEmpId.do")
 	    @ResponseBody
 	    public ResultObj updateNewPwdByEmpId(EmployeeVo eVo){

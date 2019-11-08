@@ -76,7 +76,7 @@ public class MenusController {
     }
     /**
      * 功能：获得菜单管理页面的树形结构数据
-     * @return
+     * @return LayuiTableData
      */
     @RequestMapping("/loadMenuManagerLeftTree.do")
     @ResponseBody
@@ -101,7 +101,7 @@ public class MenusController {
     /**
      * 功能：菜单管理页面右边的layui数据表格
      * @param layuiPage
-     * @return
+     * @return LayuiTableData
      */
     @RequestMapping("/loadAllMenu.do")
     @ResponseBody
@@ -116,7 +116,7 @@ public class MenusController {
     /**
      * 功能：模糊查询菜单
      * @param layuiPage
-     * @return
+     * @return   LayuiTableData
      */
     @RequestMapping("/moHuMenu.do")
     @ResponseBody
@@ -133,7 +133,7 @@ public class MenusController {
     /**
      * 功能：菜单管理页面新增一个菜单
      * @param layuiPage
-     * @return
+     * @return ResultObj
      */
     @RequestMapping("/addMenu")
     @ResponseBody
@@ -150,7 +150,7 @@ public class MenusController {
     /**
      * 功能：检测新增菜单名是否重复
      * @param layuiPage
-     * @return
+     * @return  boolean
      */
     @RequestMapping("/checkTitle.do")
     @ResponseBody

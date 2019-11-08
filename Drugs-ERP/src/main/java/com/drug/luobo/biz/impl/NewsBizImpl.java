@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.drug.luobo.biz.Newsbiz;
-import com.drug.luobo.entity.LoginLog;
 import com.drug.luobo.entity.News;
 import com.drug.luobo.mapper.NewsMapper;
 import com.drug.luobo.untils.LayuiTableData;

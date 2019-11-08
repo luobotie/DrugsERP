@@ -1,9 +1,5 @@
 package com.drug.luobo.untils;
 
-import java.util.Date;
-
-import org.springframework.format.annotation.DateTimeFormat;
-
 import com.drug.luobo.entity.LoginLog;
 
 public class LoginLogVo extends LoginLog{

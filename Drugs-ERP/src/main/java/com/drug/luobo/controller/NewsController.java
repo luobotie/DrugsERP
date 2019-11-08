@@ -29,7 +29,7 @@ public class NewsController {
 	private Newsbiz newsService;
 
 	/**
-	 * 加载公告列表返回DataGridView
+	 * 加载公告列表返回LayuiTableData
 	 */
 	@RequestMapping("loadAllNews")
 	public LayuiTableData loadAllNews(NewsVo newsVo) {
