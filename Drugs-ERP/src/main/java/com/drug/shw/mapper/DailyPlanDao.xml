@@ -29,4 +29,7 @@ select d.*,j.chineseName from dailyPlanDetails d join product_Info j on j.proId=
 <update id="updateDailyPlanDetails" parameterType="DailyPlanDetails">
 update dailyPlanDetails set productionQuantity=#{productionQuantity} where dpdId=#{dpdId}
 </update>
+<select id="selectFinalGoodsInventory" resultType="FinalGoodsInventoryshw">
+select * from FinalGoods_Inventory f join product_info p on f.proId=p.proId
+</select>
 </mapper> 
