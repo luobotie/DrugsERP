@@ -1,6 +1,10 @@
 package com.drug.hxb.entity;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
+
+import com.drug.dml.entity.ProductMaterial;
 
 /**
  * @说明:原料库存表
@@ -13,7 +17,7 @@ public class MaterialInventory {
 	/**
 	 * 原料表id 外键
 	 */
-	private Integer rawMaterialId;
+	private Integer materialId;
 	/**
 	 * 库存数量
 	 */
@@ -26,11 +30,12 @@ public class MaterialInventory {
 	 * 仓库id
 	 */
 	private Integer warId;
-	public Integer getRawMaterialId() {
-		return rawMaterialId;
+	
+	public Integer getMaterialId() {
+		return materialId;
 	}
-	public void setRawMaterialId(Integer rawMaterialId) {
-		this.rawMaterialId = rawMaterialId;
+	public void setMaterialId(Integer materialId) {
+		this.materialId = materialId;
 	}
 	public Integer getMiNumber() {
 		return miNumber;
@@ -50,5 +55,4 @@ public class MaterialInventory {
 	public void setWarId(Integer warId) {
 		this.warId = warId;
 	}
-	
 }

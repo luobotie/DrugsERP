@@ -26,6 +26,12 @@ public class WasteInventory {
 	 * 仓库id
 	 */
 	private Integer warId;
+	/**
+	 * 仓库对象
+	 */
+	private Warehouse warehouse;
+	
+	
 	public Integer getWasteId() {
 		return wasteId;
 	}
@@ -49,6 +55,12 @@ public class WasteInventory {
 	}
 	public void setWarId(Integer warId) {
 		this.warId = warId;
+	}
+	public Warehouse getWarehouse() {
+		return warehouse;
+	}
+	public void setWarehouse(Warehouse warehouse) {
+		this.warehouse = warehouse;
 	}
 	
 	

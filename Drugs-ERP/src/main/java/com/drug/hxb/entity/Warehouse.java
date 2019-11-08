@@ -30,6 +30,8 @@ public class Warehouse {
 	 * 仓库电话
 	 */
 	private String warTel;
+	
+	
 	public Integer getWarId() {
 		return warId;
 	}

@@ -1,7 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
-<mapper namespace="com.drug.hxb.mapper.Warehousemapper">
+<mapper namespace="com.drug.hxb.mapper.WarehouseMapper">
+	<!-- 新增仓库 -->
 	<insert id="addWarehouse" parameterType="Warehouse">
-	  insert into Warehouse values(warid,#{warName},#{warType},#{warAddress},#{warTel});
+	  insert into Warehouse values(null,#{warName},#{warType},#{warAddress},#{warTel});
 	</insert>
+	<!-- 查询仓库 -->
+	<select id="getWarehouse" resultType="Warehouse" parameterType="map">
+		select * from Warehouse 
+		<where>
+		<if test="warType!=null">
+			and warType=#{warType}
+		</if>
+		</where> 
+			limit #{pages},#{limits}
+		
+	</select>
+	<select id="getWarehouseCount" resultType="Integer" parameterType="map">
+		select count(*) from Warehouse
+	</select>
+	<!-- 删除仓库 -->
+	<delete id="delWarehouse" parameterType="Integer">
+		delete from Warehouse where warId=#{id}
+	</delete>
+	<!-- 修改仓库信息 -->
+	<update id="upWarehouse" parameterType="Warehouse">
+		update Warehouse set warName=#{warName},warType=#{warType},warAddress=#{warAddress},warTel=#{warTel}  where  warId=#{warId}
+	</update>
 </mapper>
