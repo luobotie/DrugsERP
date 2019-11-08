@@ -103,7 +103,6 @@ public class ProductController {
 		//添加产品后的配方表ID值为0,新增一个配方表(),倒序获得最新配方表ID,然后添加原材料(在配方详情表中),
 		//倒序查询配方表第一个ID
 		int recipeId = productBiz.selectRecipeIdByProId(proId);
-		System.out.println("配方表ID:"+recipeId);
 		int rawMaterrialId = productMaterial.getMaterialId();
 		int count = productBiz.insertProductMaterial(rawMaterrialId,recipeId);
 		productBiz.updateProductRecipeStatuesAgain(recipeId);
@@ -124,7 +123,6 @@ public class ProductController {
 		int recipeId = productBiz.selectRecipeId(proId);*/
 		//修改配方审核状态(删除某一个配方详情后)
 		productBiz.updateProductRecipeStatuesAgain(recipeId);
-		System.out.println("进来了...");
 		return count;
 	}
 	
@@ -153,10 +151,8 @@ public class ProductController {
 		//新增配方
 		productBiz.insertProductRecipe(recipeName);
 		int proId = productBiz.seletctProductInfoTop();
-		System.out.println("倒序查询出的产品表ID:"+proId);
 		//倒序查询配方表第一个ID
 		int recipeId = productBiz.seletctProductRecipeTop();
-		System.out.println("倒序查询出的配方表ID:"+recipeId);
 		productBiz.updateProductByProId(recipeId,proId);
 		return count;
 	}

@@ -103,12 +103,9 @@ public class CheckProductConterller {
 	 */
 	@RequestMapping("/updateRealNum.do")
 	public Integer updateRealNum(CheckProduct checkProduct){
-		System.out.println("修改数量进来了...");
 		Integer dpId = checkProduct.getDailyPlanid();
-		System.out.println(dpId);
 		int count = checkProductBiz.updateRealNum(checkProduct);
 		Integer sum = checkProductBiz.getDayPracticalQuantitySum(checkProduct);
-		System.out.println("数量:"+sum);
 		checkProductBiz.updateFinishNumber(sum, dpId);
 		return count;
 	}

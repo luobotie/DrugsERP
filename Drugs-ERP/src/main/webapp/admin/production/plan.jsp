@@ -591,7 +591,7 @@
 											  }
 						                  //return false;
 						                }); 
-
+										layer.close(index2);
 									});
 								} else {
 									//layer.msg('该月计划未审核');

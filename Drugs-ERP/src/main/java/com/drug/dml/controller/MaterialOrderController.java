@@ -63,7 +63,6 @@ public class MaterialOrderController {
 		int count = 0;
 		List<MaterialOrder> list = materialOrderBiz.selectMoId(moId);
 		if (list.size() > 0) {
-			System.out.println("进来了...");
 			count = 0;
 		}else{
 			count = materialOrderBiz.insertRawMaterialOutbound(moId);
@@ -83,15 +82,12 @@ public class MaterialOrderController {
 		if (list.size() > 0) {
 			Integer rmoId = materialOrderBiz.selectRmoIdTop();
 			String rmoStatus = materialOrderBiz.selectRmoStatusByRmoId(rmoId);
-			System.out.println(rmoStatus);
 			if ("已出库".equals(rmoStatus)) {
-				System.out.println("进来了...");
 				count = materialOrderBiz.updateMaterialOrderStatus(moId);
 			}else{
 				count = 0;
 			}
 		}else{
-			System.out.println("未提交数据");
 			count = 0;
 		}
 		return count;
@@ -135,19 +131,15 @@ public class MaterialOrderController {
 	
 	@RequestMapping("/reloadOrderProduct.do")
 	public Integer reloadOrderProduct(Integer orderId){
-		System.out.println("进来了,老哥");
 		int count = 0;
 		String moStatus = materialOrderBiz.selectMaterialOrderStatus(orderId);
 		String warehouseStatus = materialOrderBiz.selectMaterialOrderWarStatus(orderId);
 		String qualitystatus = materialOrderBiz.selectCheckProductStatus(orderId);
 		if ("已审核".equals(moStatus)&&"已出库".equals(warehouseStatus)) {
-			System.out.println("修改订单表领料状态.........");
 			count = materialOrderBiz.updateOrderProductStatus(orderId);
-		}else if ("已通过".equals(qualitystatus)) {
-			System.out.println("修改订单表生产状态.........");
+		}
+		if ("已通过".equals(qualitystatus)) {
 			count = materialOrderBiz.updateOrderProductProStatus(orderId);
-		}else{
-			count = 0;
 		} 
 		return count;
 	}

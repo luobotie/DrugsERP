@@ -160,7 +160,7 @@
   <div class="layui-btn-container" style="margin-top:10px;padding-left:20px;">
     <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckData"><i class="layui-icon layui-icon-friends"></i>审核生产订单 </button>
     <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckLength"><i class="layui-icon layui-icon-add-1"></i>生成领料单</button>
-	<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="reloadThis"><i class="layui-icon layui-icon-add-1"></i>刷新订单</button>
+	<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="reloadThis"><i class="layui-icon layui-icon-refresh-3"></i>刷新订单</button>
   </div>
 
 
@@ -261,7 +261,7 @@ layui.use(['table','form','laydate','layer','jquery'], function(){
       case 'getCheckLength':	//生成领料单
     	  if(data.length == 1){
 				//判断日计划审核状态
-				if(data[0].auditState == '未审核'){
+				if(data[0].auditState == '已审核'){
 					 var index2 = layer.confirm('你确认为该订单生成领料订单？', {
 						  btn: ['确认', '取消'] //可以无限个按钮
 						  ,btn2: function(index, layero){
@@ -313,10 +313,10 @@ layui.use(['table','form','laydate','layer','jquery'], function(){
 				layer.msg('请选择要生成领料单的生产订单');
 			}
       break;
-      case 'reloadThis':
+      case 'reloadThis':		//刷新领料单
     	  if(data.length == 1){
 				//判断领料订单状态
-				if(data[0].auditState == '未审核'){
+				if(data[0].auditState == '已审核'){
 					$.ajax({
 						url:'../../reloadOrderProduct.do?orderId='+data[0].orderId,
 						  type:'post',

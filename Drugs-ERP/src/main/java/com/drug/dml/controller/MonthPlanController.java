@@ -128,12 +128,10 @@ public class MonthPlanController {
 		int count = monthPlanBiz.insertMonthPlan(drugsMonthPlan);
 		//倒序获得最新的月计划ID
 		int monthPlanId = monthPlanBiz.selectMonthPlanTop(); 
-		System.out.println("月计划Id:"+monthPlanId);
 		//将ID为9999的月计划改为倒序获得的最新月计划ID
 		monthPlanBiz.updateMonthPlanDetailsByMonthPlanId(monthPlanId);
 		//查询当月的所有月计划详情商品数量的总和并返回
 		int monthPlanNum = monthPlanBiz.selectMonPlanAndPlanDetails(monthPlanId);
-		System.out.println("月计划Id:"+monthPlanNum);
 		//根据月计划ID以及获得的月计划详情商品数量的总和,更新月计划生产总数
 		monthPlanBiz.updateMonthPlan(monthPlanNum,monthPlanId);
 		return count;
@@ -203,7 +201,7 @@ public class MonthPlanController {
 		//根据月计划ID删除指定月计划
 		int count = monthPlanBiz.deleteThisMonthPlan(monthPlanId);
 		//根据月计划ID删除指定月计划的月计划详情
-		int counts = monthPlanBiz.deleteThisMonthPlanAndMonthPlanDetail(monthPlanId);
+		monthPlanBiz.deleteThisMonthPlanAndMonthPlanDetail(monthPlanId);
 		return count;
 	}
 	
@@ -217,8 +215,7 @@ public class MonthPlanController {
 	public Integer deleteThisMonthPlanDetailId(Integer monthPlanDetailId,Integer monthPlanId){
 		//删除月计划ID为9999的月计划详情(根据月计划详情ID进行删除)
 		int count = monthPlanBiz.deleteThisMonthPlanDetailId(monthPlanDetailId);
-		int x = monthPlanBiz.updateThisMonthPlanStatus(monthPlanId);
-		System.out.println("删除后..修改成功:"+x);
+		monthPlanBiz.updateThisMonthPlanStatus(monthPlanId);
 		return count;
 	}
 	
@@ -260,8 +257,7 @@ public class MonthPlanController {
 				if(p.getProId().equals(proId)){
 					//更新月计划详情相同药药品的数量
 					count = monthPlanBiz.updateProduceNum(produceNum,p.getMonthPlanDetailId());
-					int z = monthPlanBiz.updateThisMonthPlanStatus(monthPlanId);
-					System.out.println("修改成功4:"+z);
+					monthPlanBiz.updateThisMonthPlanStatus(monthPlanId);
 					flag = false;
 				}
 			}
@@ -269,14 +265,12 @@ public class MonthPlanController {
 			if(flag){
 				//给指定月计划ID新增月计划详情
 				count = monthPlanBiz.insertMonthPlanDetailsAgain(monthPlanId,proId,produceNum);
-				int x = monthPlanBiz.updateThisMonthPlanStatus(monthPlanId);
-				System.out.println("修改成功2:"+x);
+				monthPlanBiz.updateThisMonthPlanStatus(monthPlanId);
 			}
 		}else {
 			//给指定月计划ID新增月计划详情
 			count = monthPlanBiz.insertMonthPlanDetailsAgain(monthPlanId,proId,produceNum);
-			int c = monthPlanBiz.updateThisMonthPlanStatus(monthPlanId);
-			System.out.println("修改成功3:"+c);
+			monthPlanBiz.updateThisMonthPlanStatus(monthPlanId);
 		}
 		return count;
 	}
@@ -310,9 +304,7 @@ public class MonthPlanController {
 		//monthPlanBiz.updateMonthPlanDetailsByMonthPlanId(drugsMonthPlan.getMonthPlanId());
 		//查询当月的所有月计划详情商品数量的总和并返回
 		Integer monthPlanNum = monthPlanBiz.selectMonPlanAndPlanDetails(monthPlanId);
-		System.out.println("生产总数:"+monthPlanNum);
-		int x = monthPlanBiz.updateThisMonthPlanStatus(monthPlanId);
-		System.out.println("修改成功:"+x);
+		monthPlanBiz.updateThisMonthPlanStatus(monthPlanId);
 		//根据月计划ID以及获得的月计划详情商品数量的总和,更新月计划生产总数
 		int count =monthPlanBiz.updateMonthPlan(monthPlanNum,monthPlanId);
 		return count;

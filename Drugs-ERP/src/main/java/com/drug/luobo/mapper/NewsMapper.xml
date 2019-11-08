@@ -103,7 +103,7 @@
   </select>
   <select id="getCount" resultType="Long" parameterType="NewsVo">
     select 
-   *
+   count(id)
     from sys_news
     <where>
     	<if test="title!=null and title!=''">

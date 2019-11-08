@@ -587,7 +587,7 @@
 			var mainIndex;
 			//打开添加页面
 			function openAddMenu(){
-				 $("#myImage").attr("src","../downloadFile.do?path=2019-11-05/201911051113117759630.png");
+				 $("#myImage").attr("src","../downloadFile.do?path=2019-11-08/201911081353426137804.png");
 				 element.progress('jindu', '0%');
 				 $("#employeeId").attr("value","");
 				 $("#headUrl").prop("value","");
