@@ -7,39 +7,42 @@
 <meta charset="utf-8">
 <title>菜单</title>
 <link rel="stylesheet" href="../layui/css/layui.css">
-<script src="../layui/layui.js"></script>
+<script src="../layui/layui.js" charset="utf-8"> </script>
 <script type="text/javascript" src="../../js/jquery-3.4.1.min.js"></script>
 <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
 <body>
-	<table class="layui-hide" id="test" lay-filter="test" ></table>
-	<script type="text/html" id="toolbarDemo">
-			<div class="layui-form-item">
-				<div class="layui-row layui-col-space10">
-					<form class="layui-form" action="" lay-filter="searchform" id="searchform">
-						<div class="layui-col-md1">
-							<label>仓库类型</label>
-						</div>
-						<div class="layui-col-md2">						
-							<select id="warId" name="warId" lay-filter="warId" lay-verify="" style="font-size:13px;">
-							</select>
-						</div>
-						<div class="layui-col-md1" >
-							<label>&emsp;&emsp;供应商</label>
-						</div>
-						<div class="layui-col-md3">						
-							<select id="supplierId" name="supplierId" lay-filter="supplierId" lay-verify="" style="font-size:13px;">
-							</select>
-						</div>
-						<div class="layui-col-md1">
-							<label>&emsp;&emsp;药材名</label>
-						</div>
-						<div class="layui-col-md2">						
-							<input type="text" name="materialName" name="materialName" id="materialName" lay-verify="" placeholder="请输入药材名" autocomplete="off" class="layui-input"/> 
-						</div>
-					</form>
-			</div>
-</script>
+	<div class="layui-form-item" type="text/html">
+		<div class="layui-row layui-col-space10">
+		<form class="layui-form" action="" lay-filter="searchform" id="searchform">
+			<div class="layui-col-md1">
+					<label class="layui-form-label">仓库名</label>
+				</div>
+				<div class="layui-col-md2">						
+					<select id="warId" name="warId" lay-filter="warId" lay-verify="" style="font-size:13px;">
+					</select>
+				</div>
+				<div class="layui-col-md1" >
+					<label class="layui-form-label">供应商</label>
+				</div>
+				<div class="layui-col-md3">						
+					<select id="supplierId" name="supplierId" lay-filter="supplierId" lay-verify="" style="font-size:13px;">
+					</select>
+				</div>
+			
+				<div class="layui-col-md1">
+					<label class="layui-form-label">药材名</label>
+				</div>
+				<div class="layui-col-md2">						
+					<input type="text" id="materialName" name="materialName" lay-filter="materialName" lay-verify="" placeholder="请输入药材名" autocomplete="off" class="layui-input"/> 
+				</div>
+				<div class="layui-col-md1">
+				   	<button class="layui-btn" lay-submit   lay-filter="search">搜索</button>
+				</div>
+			</form>
+	</div>
+	</div>
+	<table class="layui-hide"  id="test" lay-data="{id: 'idtest'}" lay-filter="test" ></table>
 	<script>
 	layui.use(['form', 'table', 'layedit', 'laydate','jquery'], function() {
 		var table = layui.table;
@@ -48,8 +51,8 @@
 		var layedit = layui.layedit;
 		var laydate = layui.laydate;
 		var $=layui.jquery;
-		var wheres = {warId : 1, supplierId: 1, materialName:''};
-		/*/  供货商
+		var wheres = {warId : 0, supplierId: 0, materialName:''};
+		//  供货商
 		$.ajax({
 			url : "../../getSupplierSelects.do"
 			, dataType : "json"
@@ -68,8 +71,10 @@
 				//alert(debugObj(wheres));  
 			}
 		});  //*/
+		// 仓库
 		$.ajax({
 			url : "../../getWarehouseSelects.do"
+			, data : {warType : '原料仓库'}
 			, dataType : "json"
 			, error : function(xhr, err){alert(err);}
 			, success : function(data){
@@ -89,38 +94,40 @@
 		form.on("select(warId)", function(data){
 			wheres.warId = data.value;
 			//alert(wheres.warId);
-			tableIns.reload({
+			table.reload('idtest',{
 				where : wheres,
-				done : function(){
-					$("#warId").val(wheres.warId);
-					form.render();
-				}
+				page: {
+				    curr: 1 //重新从第 1 页开始
+				  }
 			});
-			
 		});
-		/*/监听下拉框
+		//监听下拉框
 		form.on("select(supplierId)", function(data){
 			wheres.supplierId = data.value;
-			tableIns.reload({
+			table.reload('idtest',{
 				where : wheres
 			});
-			form.val("searchform", wheres);
+			//form.reload("searchform", wheres);
 		});  //*/
-		/*/监听输入框
-		$("#materialName").bind('input propertychange', function () {
-			wheres.materialName = $("#materialName").val();
-			tableIns.reload({
+		form.on("submit(search)", function(data){
+			wheres.materialName= $('#materialName').val();
+			//wheres.materialName =mName.value;
+			alert(wheres.materialName);
+			table.reload('idtest',{
 				where : wheres
 			});
-			form.val("searchform", wheres);
-		}); //*/
+			return  false;
+			//form.reload("searchform", wheres);
+		});
+		//*/
 		
 			var tableIns=table.render({
 				elem : '#test',
 				url : '../../getMaterialInventory.do',
-				toolbar : '#toolbarDemo',
+				//toolbar : '#toolbarDemo',
 				where : wheres,
 				title : '原料库存表',
+				id : 'idtest',
 				cols : [ [ {
 					type : 'checkbox',
 					fixed : 'left'

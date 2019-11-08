@@ -42,6 +42,10 @@ public class FinishedProductStorage {
 	 * 药品id
 	 */
 	private int proId;
+	/**
+	 * 药品名称
+	 */
+	private String proName;
 	public int getFpsId() {
 		return fpsId;
 	}
@@ -89,6 +93,12 @@ public class FinishedProductStorage {
 	}
 	public void setProId(int proId) {
 		this.proId = proId;
+	}
+	public String getProName() {
+		return proName;
+	}
+	public void setProName(String proName) {
+		this.proName = proName;
 	}
 	
 	

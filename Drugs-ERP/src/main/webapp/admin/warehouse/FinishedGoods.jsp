@@ -11,7 +11,7 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1, maximum-scale=1">
 <link rel="stylesheet" href="../layui/css/layui.css">
-<script src="../layui/layui.js"></script>
+<script src="../layui/layui.js" charset="utf-8"></script>
 <script type="text/javascript" src="../../js/jquery-3.4.1.min.js"></script>
 <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
@@ -19,14 +19,32 @@
 
 	<table class="layui-hide" id="test" lay-filter="test"></table>
 	<div id="v6" style="display: none;">
-		<form class="layui-form" action="">
+		<form class="layui-form" action="" lay-filter="EnterWarehouse">
 			<div class="layui-form-item">
-
+				<div class="layui-inline">
+					<label class="layui-form-label">订单编号</label>
+					<div class="layui-input-inline">
+						<input type="text" name="orderId" id="orderId" lay-verify=""
+							 autocomplete="off" class="layui-input">
+					</div>
+					<div class="layui-input-inline" Style="display:none;">
+						<input type="text" name="finishNumber" id="finishNumber" lay-verify=""
+							 autocomplete="off" class="layui-input">
+						<input type="text" name="statusMan" id="statusMan" lay-verify=""
+							 autocomplete="off" class="layui-input">
+						<input type="text" name="produceMoney" id="produceMoney" lay-verify=""
+							 autocomplete="off" class="layui-input">
+						<input type="text" name="qualitystatus" id="qualitystatus" lay-verify=""
+							 autocomplete="off" class="layui-input">
+						<input type="text" name="statustime" id="statustime" lay-verify=""
+							 autocomplete="off" class="layui-input">
+					</div>
+				</div>
+				
 				<div class="layui-inline">
 					<label class="layui-form-label">审核人</label>
 					<div class="layui-input-inline">
-						<select name="Employeeid" lay-verify="">
-							<option value="">审核人</option>
+						<select id="employeeId" name="employeeId" lay-filter="employeeId" lay-verify="">
 							<%--<c:forEach var="a" items=${Emps}>
 								<option value="${a.Employeeid}">${a.empName}</option>
 							</c:forEach> --%>
@@ -34,22 +52,11 @@
 					</div>
 				</div>
 
-				<div class="layui-inline">
-					<label class="layui-form-label">审核</label>
-					<div class="layui-input-inline">
-						<select name="rmoStatus" lay-verify="">
-							<option value="" selected>全部</option>
-							<option value="已审核">已审核</option>
-							<option value="未审核">未审核</option>
-						</select>
-					</div>
-				</div>
 
 				<div class="layui-inline">
 					<label class="layui-form-label">入库仓库</label>
 					<div class="layui-input-inline">
-						<select name="warName" lay-verify="">
-							<option value="">仓库选择</option>
+						<select id="warId" name="warId" lay-filter="warId" lay-verify="">
 							<%--<c:forEach var="w" items=${Warehouses}>
 								<option value="${w.warId}">${w.warName}</option>
 							</c:forEach>--%>
@@ -60,15 +67,15 @@
 				<div class="layui-inline">
 					<label class="layui-form-label">入库时间</label>
 					<div class="layui-input-inline">
-						<input type="text" name="date" id="date" lay-verify="date"
-							placeholder="yyyy-MM-dd" autocomplete="off" class="layui-input">
+						<input type="text" name="fpsTime" id="fpsTime" lay-verify="fpsTime"
+							placeholder="yyyy-MM-dd HH:mm:ss" autocomplete="off" class="layui-input">
 					</div>
 				</div>
 
 				<div class="layui-inline">
 					<label class="layui-form-label">备注</label>
 					<div class="layui-input-inline"">
-						<input type=" tel" name="phone" lay-verify="required"
+						<input type=" tel" name="remark" lay-verify=""
 							autocomplete="off" class="layui-input">
 					</div>
 				</div>
@@ -124,18 +131,12 @@
 						  <a href="http://www.layui.com"class="layui-btn layui-btn-sm layui-btn-normal">搜索</a>
 					</div>
 				</div>
-				<div class="layui-inline">
-					<div class="layui-input-inline">
-						   <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckData" >批量审核</button>
-					</div>
-				</div>
 			</div>
 </script>
 
 	<script type="text/html" id="barDemo">
 			<a class="layui-btn layui-btn-xs" lay-event="edit">详情</a>
-			<a class="layui-btn layui-btn-xs" lay-event="shenhe">审核</a>
-            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+			<a class="layui-btn layui-btn-xs" lay-event="shenhe">入库</a>
 </script>
 
 
@@ -150,36 +151,72 @@
 		var layedit = layui.layedit;
 		var laydate = layui.laydate;
 		var $=layui.jquery;
-			table.render({
+		// 获取仓库
+		$.ajax({
+			url : "../../getWarehouseSelects.do"
+			, data : {warType : '成品仓库'}
+			, dataType : "json"
+			, error : function(xhr, err){alert(err);}
+			, success : function(data){
+				for(var i in data.data){
+					var s = "<option value='";
+					s += data.data[i].warId;
+					s += "'>";
+					s += data.data[i].warName;
+					s += "</option>";
+					$("#warId").prepend(s);
+				}
+				//渲染下拉框
+				form.render();
+			}
+		});
+		// 获取审核员工
+			$.ajax({
+			url : "../../getEmployeeSelects.do"
+			, dataType : "json"
+			, error : function(xhr, err){alert(err);}
+			, success : function(data){
+				for(var i in data.data){ 
+					//alert(data.data[i].employeeName+data.data[i].employeeId);
+				// if(data){
+					var s = "<option value='";
+					s += data.data[i].employeeId;
+					s += "'>";
+					s += data.data[i].employeeName;
+					s += "</option>";
+					$("#employeeId").prepend(s);
+				}	
+				//渲染下拉框
+				form.render();
+			}
+		});
+			tableIns=table.render({
 				elem : '#test',
-				url : '../json/FinishedGoods.json',
+				url : '../../getQualityhxb.do',
 				toolbar : '#toolbarDemo',
-				title : '用户数据表',
+				title : '生产订单表',
 				page : true,
 				cols : [ [ {
 					type : 'checkbox',
 					fixed : 'left'
 				}, {
-					field : 'Serial',
-					title : '入库编号'
+					field : 'orderId',
+					title : '订单编号'
 				}, {
-					field : 'Quantity',
-					title : '货物类型'
+					field : 'finishNumber',
+					title : '订单数量'
 				}, {
-					field : 'Serial',
-					title : '货物数量'
+					field : 'produceMoney',
+					title : '订单金额'
 				}, {
-					field : 'Quantity',
-					title : '货物金额'
+					field : 'qualitystatus',
+					title : '质检状态'
 				}, {
-					field : 'Serial',
-					title : '入库编号'
+					field : 'statusMan',
+					title : '质检人'
 				}, {
-					field : 'Time',
-					title : '订单生成时间'
-				}, {
-					field : 'examine',
-					title : '审核状态'
+					field : 'statustime',
+					title : '质检时间'
 				}, {
 					fixed : 'right',
 					title : '操作',
@@ -188,68 +225,99 @@
 				} ] ]
 			});
 			<!--弹出层表数据 -->
-			table.render({
+			var detailtable = table.render({
 				elem : '#detail',
-				url : '../json/FinishedGoods.json',
-				title : '原料出库详情表',
+				url : '../../getQualityDetailshxb.do',
+				title : '质检详情表',
 				page : true,
 				cols : [ [ {
-					field : 'Serial',
-					title : '入库编号'
+					field : 'proId',
+					title : '药品ID'
 				}, {
-					field : 'Quantity',
-					title : '货物类型'
+					field : 'chineseName',
+					title : '药品名'
 				}, {
-					field : 'Quantity',
-					title : '货物类型'
+					field : 'packaging',
+					title : '包装'
 				}, {
-					field : 'Serial',
-					title : '货物数量'
+					field : 'retailPrice',
+					title : '价格'
 				}, {
-					field : 'Time',
-					title : '订单生成时间'
-				}, {
-					field : 'examine',
-					title : '审核状态'
-				}] ]
+					field : 'productionQuantity',
+					title : '数量'
+				} ] ]
 			});
 			
-			//头工具栏事件
-			table.on('toolbar(test)', function(obj) {
-				var checkStatus = table.checkStatus(obj.config.id);
-				switch (obj.event) {
-				case 'getCheckData':
-					var data = checkStatus.data;
-					layer.open({
-						type : 1,
-						content : $('#v6')
-					});
-					break;
-				}
-				;
-			});
-
+			//时间渲染
+			laydate.render({ 
+				  elem: '#fpsTime'
+				  ,type: 'datetime'
+				});
 			//监听行工具事件
 			table.on('tool(test)', function(obj) {
 				var data = obj.data;
 				//console.log(obj)
-				if (obj.event === 'del') {
+				/* if (obj.event === 'del') {
 					layer.confirm('真的删除行么', function(index) {
 						obj.del();
 						layer.close(index);
 					});
-				} else if (obj.event === 'edit') {
+				} else */
+				if (obj.event === 'edit') {
 					layer.open({
 						type : 1,
-						content : $('#div14')
+						title : '生产详情单',
+						area : [ '520px', '300px' ],
+						content : $('#div14'),
+						success : function(index, data1) {
+							detailtable.reload({
+								where : {orderId : data.orderId}
+							});							
+						}
 					});
 				} else if (obj.event === 'shenhe') {
-					layer.open({
+					dlg=layer.open({
 						type : 1,
-						area : [ '500px', '300px' ],
-						content : $('#div13')
+						title : '成品入库',
+						area : [ '350px', '360px' ],
+						content : $('#v6'),
+						success : function(index, data1) {
+							form.val("EnterWarehouse", data);
+						}
 					});
 				}
+			});
+		//监听提交按钮
+				//监听提交
+			form.on('submit(demo1)', function(obj) {
+				var data=obj.data;
+				$.ajax({
+					type : 'post',
+					url : '../../addFinishedGoodswarehouse.do',
+					data:obj.field,
+					success:function(data){
+						if(data===1){
+							layer.alert('入库成功', {
+								icon: 1,
+								title: "入库提示"
+								});
+						}else if(data===0){
+							layer.alert('入库失败', {
+								icon: 2,
+								title: "入库提示"
+								});
+						}
+						//alert(dlg);
+						// 清空表单 （“EnterWarehouse”是表单的id）
+		                //$("#EnterWarehouse")[0].reset();
+		                //layui.form.render();
+		                //关闭弹出层
+		                layer.close(dlg);
+		                //刷新数据表格
+						tableIns.reload();
+					}
+				});
+				return false;
 			});
 		});
 	</script>

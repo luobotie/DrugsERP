@@ -9,6 +9,14 @@ public class MaterialSelects {
 	private int warId;                     //仓库id
 	private int supplierId;                		//供应商id
 	private String materialName;				//药材名
+	private int proTypeId;					//药品类别
+	
+	public int getProTypeId() {
+		return proTypeId;
+	}
+	public void setProTypeId(int proTypeId) {
+		this.proTypeId = proTypeId;
+	}
 	public int getWarId() {
 		return warId;
 	}

@@ -13,7 +13,7 @@
 	<!-- 原料库存查询 -->
 	<select id="getMaterialInventory" resultType="RawMaterialInventory" parameterType="map">
 		SELECT mi.miNumber,mi.`miMax`,wh.`warName`,minfo.*,s.`supplierName`,s.`supplierId` FROM `material_inventory` mi  JOIN `warehouse` wh ON mi.`warId`=wh.`warId`
-		JOIN `material_info` minfo ON mi.`materialId`=minfo.`materialId` 
+		JOIN `material_info` minfo ON mi.`rawMaterialId`=minfo.`materialId` 
 		JOIN `supplier` s ON s.`supplierId`=minfo.`supplierInfoId`
 		where minfo.`visibles`=1
 			<if test="warId!=0">
@@ -29,11 +29,20 @@
 	</select>
 	
 	<!-- 查询原料的条数 -->
-	<select id="getMaterialInventoryCount" resultType="Integer">
+	<select id="getMaterialInventoryCount" resultType="Integer" parameterType="map">
 		SELECT count(*) FROM `material_inventory` mi  JOIN `warehouse` wh ON mi.`warId`=wh.`warId`
-		JOIN `material_info` minfo ON mi.`materialId`=minfo.`materialId` 
+		JOIN `material_info` minfo ON mi.`rawMaterialId`=minfo.`materialId` 
 		JOIN `supplier` s ON s.`supplierId`=minfo.`supplierInfoId`
-		WHERE minfo.`visibles`=1
+		where minfo.`visibles`=1
+			<if test="warId!=0">
+				and wh.warId=#{warId}
+			</if>
+			<if test="supplierId!=0">
+				and s.supplierId=#{supplierId}
+			</if>
+			<if test="materialName!=null">
+				and minfo.materialName like concat('%', #{materialName},'%')
+			</if>
 	</select>
 	
 	<!-- 原料出库  -->
@@ -49,8 +58,8 @@
 		WHERE minfo.`visibles`=1 AND wh.warType='原料仓库'
 	</select>
 	<!-- 查询仓库 -->
-	<select id="getWarehouseSelects" resultType="Warehouse" parameterType="String">
-		select * from Warehouse where warType="原料仓库"
+	<select id="getWarehouseSelects" resultType="Warehouse" parameterType="String" >
+		select * from Warehouse where warType=#{warType}
 	</select>
 	<!-- 查询员工  -->
 	<select id="getEmployeeSelects" resultType="Employee" parameterType="Integer">
@@ -66,4 +75,133 @@
 	<select id="getSupplierCounts" resultType="Integer">
 		select count(*) from Supplier
 	</select>
+	<!-- 查询成品库存 -->
+	<select id="getGoodsInventory" resultType="GoodsInventory" parameterType="map">
+		SELECT pro.proId,pro.chineseName,pro.expirationdate,pro.specification,pro.packaging,pro.proImage,pro.proRecipe,pro.retailPrice,pro.costPice,pro.proTypeId,pro.recipeId,fi.warId,fi.fgiNumber,fi.fgiMax,wh.`warName`,pt.proTypeName FROM product_info pro JOIN finalgoods_inventory  fi ON pro.proId = fi.proId
+		JOIN warehouse wh ON wh.`warId`=fi.warId
+		JOIN product_Type pt ON pt.proTypeId=pro.proTypeId
+		WHERE pro.visibles=1 
+		<if test="warId!=0">
+		  and wh.warId=#{warId}
+		</if>
+		<if test="proTypeId!=0">
+		  and pro.proTypeId=#{proTypeId}
+		</if>
+		<if test="materialName!=null">
+		  and pro.chineseName like concat('%', #{materialName},'%') 
+		</if>
+		  LIMIT #{pages},#{limits}
+	</select>
+	<!-- 查询成品条数 -->
+	<select id="getGoodSselects" resultType="Integer" parameterType="map">
+		SELECT count(*) FROM product_info pro JOIN finalgoods_inventory  fi ON pro.proId = fi.proId
+		JOIN warehouse wh ON wh.`warId`=fi.warId
+		JOIN product_Type pt ON pt.proTypeId=pro.proTypeId
+		WHERE pro.visibles=1 
+		<if test="warId!=0">
+		  and fi.warId=#{warId}
+		</if>
+		<if test="proTypeId!=0">
+		  and pro.proTypeId=#{proTypeId}
+		</if>
+		
+		<if test="materialName!=null">
+		  and pro.chineseName=#{materialName}
+		</if>
+	</select>
+	<!-- 查询药品类别 -->
+	<select id="getGoodsType" resultType="ProductType">
+		SELECT * FROM `product_type` 
+	</select>
+	<!-- 查询药品类别数量 -->
+	<select id="getGoodsTypeCounts" resultType="Integer">
+		SELECT count(*) FROM `product_type`
+	</select>
+	<!-- 查询成品入库单 /质检单-->
+	<!-- <select id="getGoodsQuality" resultType="Quality">
+		SELECT c_p.`podId`,o_p.`orderId`,p_i.`proId`,c_p.`qualitystatus`,c_p.`statusMan`,c_p.`statusTime` FROM check_Product AS c_p
+		JOIN orderproduct AS o_p
+		ON c_p.`orderId` = o_p.`orderId`
+		JOIN Dailyplan AS d_p 
+		ON o_p.`dayPlanId` = d_p.`dailyPlanid` 	
+		JOIN dailyPlanDetails AS d_p_d	
+		ON d_p.`dailyPlanid` = d_p_d.`dpId` 	
+		JOIN product_Info AS p_i
+		ON p_i.`proId` = d_p_d.`proId`
+		WHERE qualitystatus='已质检';
+	</select> -->
+	<!-- 查询生产订单/质检单 -->
+	<select id="getGoodsQuality" resultType="QualityDetailshxb" parameterType="map">
+		SELECT cp.*,op.`finishNumber`,op.`produceMoney` -- ,opd.`productionQuantity` ,pro.`chineseName`,pro.`retailPrice`,pro.`packaging`
+		FROM check_product cp
+		JOIN orderproduct op
+		ON cp.`orderId` = op.`orderId`
+		WHERE cp.`qualitystatus`='已质检' 
+			and op.`produceState`='未完成'
+		<if test="orderId!=0">
+			and cp.orderId like concat('%', #{orderId},'%')
+		</if>
+		<if test="pages!=0 and limits!=0">
+		    limit #{pages},#{limits}
+		</if>
+	</select>
+	<!-- 查询订单数量 -->	
+	<select id="getGoodsQualityCount" resultType="Integer" parameterType="map">
+		SELECT count(*)
+		FROM check_product cp
+		JOIN orderproduct op
+		ON cp.`orderId` = op.`orderId`
+		WHERE cp.`qualitystatus`='已质检'
+		    and op.`produceState`='未完成'
+		<if test="orderId!=0">
+			and cp.orderId like concat('%', #{orderId},'%')
+		</if>
+	</select>
+	<!-- 查询生产订单/质检单详情单 -->
+	<select id="getGoodsQualityDetails" resultType="QualityDetailshxb" parameterType="map">
+		SELECT pro.proId,opd.`productionQuantity` ,pro.`chineseName`,pro.`retailPrice`,pro.`packaging` FROM orderproduct op
+		JOIN orderproductdetail opd
+		ON op.`orderId`=opd.`orderproductId`
+		JOIN product_info pro
+		ON pro.proId = opd.`proId`
+		WHERE op.orderId=#{orderId}
+		<if test="pages!=0 and limits!=0">
+		    limit #{pages},#{limits}
+		</if>
+	</select>
+	<!-- 查询订单中的药品数量 -->
+	<select id="getGoodsQualityDetailsCount" resultType="Integer" parameterType="map">
+		SELECT count(*) FROM orderproduct op
+		JOIN orderproductdetail opd
+		ON op.`orderId`=opd.`orderproductId`
+		JOIN product_info pro
+		ON pro.proId = opd.`proId`
+		WHERE op.orderId=#{orderId}
+	</select>
+	<!-- 新增入库单 -->
+	<insert id="addFinishedProductStorage" parameterType="QualityDetailshxb">
+		<selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="fpsId">
+          SELECT LAST_INSERT_ID()
+      	</selectKey>
+		insert into FinishedProduct_Storage(fpsTime,deliveryMan,fpsStatus,warId,employeeId,orderId,remark) 
+		values(#{fpsTime},#{statusMan},'已入库',#{warId},#{employeeId},#{orderId},#{remark})
+	</insert>
+	<!-- 新增入库详情单 -->
+	<insert id="addFinishedProductStorageDetails" parameterType="QualityDetailshxb" useGeneratedKeys="true">
+		insert into FinishedProduct_Storage_Details values	(null,#{productionQuantity},#{fpsId},#{proId})
+	</insert>
+	<!-- 修改订单完成状态 -->
+	<update id="updateOrderproduct" parameterType="Integer">
+		update orderproduct set produceState='已完成' where orderId=#{orderId}
+	</update>
+	<!-- 成品入库 -->
+	<select id="selInventory" resultType="GoodsInventory" parameterType="Integer">
+		select * from finalgoods_inventory where proId=#{proId}
+	</select>
+	<insert id="insertStorage" parameterType="QualityDetailshxb">
+		insert into finalgoods_inventory values(#{proId},#{productionQuantity},10000,#{warId})
+	</insert>
+	<update id="addFStorage" parameterType="QualityDetailshxb">
+		update `finalgoods_inventory` set fgiNumber=fgiNumber+#{productionQuantity} where warId=#{warId} and proId=#{proId}
+	</update>
 </mapper>

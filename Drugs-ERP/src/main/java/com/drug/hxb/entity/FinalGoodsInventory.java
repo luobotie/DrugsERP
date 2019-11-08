@@ -27,11 +27,6 @@ public class FinalGoodsInventory {
 	 */
 	private Integer warId;
 	
-	/**
-	 * 仓库对象
-	 */
-	private Warehouse warehouse;
-	
 	public Integer getProId() {
 		return proId;
 	}
@@ -56,13 +51,4 @@ public class FinalGoodsInventory {
 	public void setWarId(Integer warId) {
 		this.warId = warId;
 	}
-	
-	public Warehouse getWarehouse() {
-		return warehouse;
-	}
-	public void setWarehouse(Warehouse warehouse) {
-		this.warehouse = warehouse;
-	}
-	
-	
 }

@@ -47,22 +47,29 @@ public class WarehouseController {
 	public Map<String,Object> getWarehouse(PageLimit pl,String warType){
 		//创建一个map集合装取查询条件
 		Map<String, Object> map=new HashMap<String,Object>();
+		//计算分页的开始位置
 		int page=pl.getLimit()*(pl.getPage()-1);
+		//将pages装入map集合
 		map.put("pages", page);
+		//将limits装入map集合
 		map.put("limits", pl.getLimit());
+		//判断前台的仓库类型字符为空
 		if(warType.equals("")){
 			warType=null;
 		}
+		//将仓库类型装入map集合
 		map.put("warType", warType);
 		//调用查询仓库的方法
 		List<Warehouse> list=biz.getWarehouse(map);
 		//调用仓库总数的方法
 		int rows=biz.getWarehouseCount();
+		//创建一个map集合装取对象
 		Map<String, Object> maps=new HashMap<String,Object>();
 		maps.put("code", 0);
 		maps.put("msg", "");
 		maps.put("count", rows);
 		maps.put("data", list);
+		//返回map集合
 		return maps;
 	}
 	/**
@@ -73,11 +80,14 @@ public class WarehouseController {
 	@RequestMapping("/delWarehouse")
 	@ResponseBody
 	public int delWarehouse(String warId){
-		System.out.println(warId);
+		//定义一个变量
 		int id=0;
+		//判断仓库ID是不是有效
 		if(warId!=null||!"".equals(warId)){
+			//将字符串类型转换成int类型
 			id=Integer.parseInt(warId);
 		}
+		//调用删除仓库的方法
 		int row=biz.delWarehouse(id);
 		return row;
 	}
