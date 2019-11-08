@@ -9,7 +9,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <link rel="stylesheet" href="../layui/css/layui.css"  media="all">
+  <link rel="stylesheet" href="../layui/css/notice.css" />
+  
   <script src="../layui/layui.js"></script>
+  <script type="text/javascript" >
+		 layui.config({
+		        base: '../layui/'
+		    });
+  </script>
   <script type="text/javascript" src="../../js/jquery-3.4.1.min.js"></script>
   <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 </head>
@@ -36,9 +43,9 @@
 <script type="text/html" id="toolbarDemo">
 <div class="layui-input-inline">
   <div class="layui-btn-container" style="margin-top:10px;padding-left:20px;">
-    <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckData"><i class="layui-icon layui-icon-friends"></i>审核领料单 </button>
-    <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckLength"><i class="layui-icon layui-icon-upload-circle"></i>申请领料</button>
-	<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckDataAgain"><i class="layui-icon layui-icon-friends"></i>刷新出库状态 </button>
+    <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckData"><i class="layui-icon layui-icon-survey"></i>审核领料单 </button>
+    <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckLength"><i class="layui-icon layui-icon-release"></i>申请领料</button>
+	<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckDataAgain"><i class="layui-icon layui-icon-refresh-3"></i>刷新出库状态 </button>
   </div>
 </div>
 </script>
@@ -49,11 +56,29 @@
 </script>
 
 <script>
-layui.use(['table','laydate','form','layer'], function(){
-  var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+layui.use(['table','laydate','form','layer','notice'], function(){
+  var $ = layui.jquery; 
+  var layer = layui.layer; //独立版的layer无需执行这一句
   var table = layui.table;
   var laydate = layui.laydate;
   var form = layui.form;
+  var notice = layui.notice;
+  
+//初始化配置，同一样式只需要配置一次，非必须初始化，有默认配置
+	notice.options = {
+		closeButton: true, //显示关闭按钮
+		debug: false, //启用debug
+		positionClass: "toast-top-center", //弹出的位置,
+		showDuration: "500", //显示的时间
+		hideDuration: "1000", //消失的时间
+		timeOut: "2000", //停留的时间
+		extendedTimeOut: "1000", //控制时间
+		showEasing: "swing", //显示时的动画缓冲方式
+		hideEasing: "linear", //消失时的动画缓冲方式
+		iconClass: 'layui-icon-tips', // 自定义图标，有内置，如不需要则传空 支持layui内置图标/自定义iconfont类名
+		onclick: null, // 点击关闭回调
+	};
+	
   //常规用法
   laydate.render({
     elem: '#test5'
@@ -120,10 +145,12 @@ layui.use(['table','laydate','form','layer'], function(){
 										  dataType:'json',
 										  success:function(data){
 											if(data == '1'){
-												layer.msg('审核成功');
+												//layer.msg('审核成功');
+												notice.success("审核成功");
 												table.reload("test",{});
 											}else{
-												layer.msg('审核失败');
+												//layer.msg('审核失败');
+												notice.error("审核失败");
 											}
 										  }
 					                  //return false;
@@ -137,12 +164,15 @@ layui.use(['table','laydate','form','layer'], function(){
 							
 						});
 				}else{
-					layer.msg('该订单已审核');
+					//layer.msg('该订单已审核');
+					notice.warning("该订单已审核");
 				}
 			}else if(data.length >1){
-				layer.msg('最多只能审核一个订单');
+				//layer.msg('最多只能审核一个订单');
+				notice.warning("最多只能审核一个订单");
 			}else {
-				layer.msg('请选择要审核的订单');
+				//layer.msg('请选择要审核的订单');
+				notice.warning("请选择要审核的订单");
 			}
     	  
       break;
@@ -162,23 +192,28 @@ layui.use(['table','laydate','form','layer'], function(){
 								  dataType:'json',
 								  success:function(data){
 									if(data == '1'){
-										layer.msg('发起领料成功');
+										//layer.msg('发起领料成功');
+										notice.success("发起领料成功");
 										table.reload("test",{});
 									}else{
-										layer.msg('发起领料失败');
+										//layer.msg('发起领料失败');
+										notice.error("发起领料失败");
 									}
 								  }
 							});
 							layer.close(index2);
 						});
 				}else{
-					layer.msg('该领料订单未审核');
+					//layer.msg('该领料订单未审核');
+					notice.warning("该领料订单未审核");
 				}
 				
 			}else if(data.length >1){
-				layer.msg('一次只能为一个订单领料');
+				//layer.msg('只能为一个订单领料审核');
+				notice.warning("只能为一个订单领料审核");
 			}else {
-				layer.msg('请选择要领料的领料订单');
+				//layer.msg('请选择要领料的领料订单');
+				notice.warning("请选择要领料的领料订单");
 			}
       break;
       case 'getCheckDataAgain':
@@ -191,21 +226,26 @@ layui.use(['table','laydate','form','layer'], function(){
 						  dataType:'json',
 						  success:function(data){
 							if(data == '1'){
-								layer.msg('刷新成功');
+								//layer.msg('刷新成功');
+								notice.success("刷新成功");
 								table.reload("test",{});
 							}else{
-								layer.msg('请先申请领料');
+								//layer.msg('领料未申请或仓库未响应');
+								notice.error("领料未申请或仓库未响应");
 							}
 						  }
 					});
 				}else{
-					layer.msg('该领料订单未审核');
+					//layer.msg('该领料订单未审核');
+					notice.warning("该领料订单未审核");
 				}
 				
 			}else if(data.length >1){
-				layer.msg('一次只能为一个订单领料');
+				//layer.msg('只能刷新一个领料订单');
+				notice.warning("只能刷新一个领料订单");
 			}else {
-				layer.msg('请选择要领料的领料订单');
+				//layer.msg('请选择要刷新的领料订单');
+				notice.warning("请选择要刷新的领料订单");
 			}
       break;
     };
@@ -223,7 +263,6 @@ layui.use(['table','laydate','form','layer'], function(){
 				end : function() {
 					$('[lay-id="test2"]').css("display", "none");
 				}
-  		  
   		});
   	  
   	  table.render({
@@ -233,11 +272,31 @@ layui.use(['table','laydate','form','layer'], function(){
 		      {field:'materialId', title:'原料编号', unresize:true,align:'center'}
 		      ,{field:'materialName', title:'原料名称',unresize:true,align:'center'}
 		      ,{field:'productionQuantity', title:'所需数量', unresize:true,align:'center'}
+		      ,{field:'proId', title:'产品编号', unresize:true,align:'center'} 
 		    ]]
 		});
   	} else if(obj.event === 'del'){
       layer.confirm('确认删除该计划？', function(index){
-        obj.del();
+    	  $.ajax({
+				url:'../../deleteMaterialOrderByMoId.do?moId='+data.moId,
+				  type:'post',
+				  dataType:'json',
+				  success:function(data){
+					if(data == '1'){
+						//layer.msg('删除成功');
+						notice.success("删除成功");
+						table.reload("test",{});
+						
+						/* notice.warning("成功");
+						notice.info("提示信息：毛都没有...");
+						notice.error("大佬，我咋知道怎么肥四！");
+						notice.success("大佬，我咋知道怎么肥四！"); */
+					}else{
+						//layer.msg('删除失败');
+						notice.error("删除失败");
+					}
+				  }
+			});
         layer.close(index);
       });
     } else if(obj.event === 'edit'){

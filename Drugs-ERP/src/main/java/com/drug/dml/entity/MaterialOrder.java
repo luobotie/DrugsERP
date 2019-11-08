@@ -20,7 +20,8 @@ public class MaterialOrder {
 	private Integer materialId;				// 原材料ID
 	private String materialName;			// 原材料名字
 	private String materialPrice;			// 原材料价格
-	private Integer productionQuantity; 	//所需原料数量
+	private Integer productionQuantity; 	// 所需原料数量
+	private Integer proId;					// 产品ID
 	private Integer rmoId; 					// 原料出库表主键
 	private String rmoTime; 				// 创建时间
 	private String rmoStatus; 				// 出库状态
@@ -104,6 +105,12 @@ public class MaterialOrder {
 	}
 	public void setProductionQuantity(Integer productionQuantity) {
 		this.productionQuantity = productionQuantity;
+	}
+	public Integer getProId() {
+		return proId;
+	}
+	public void setProId(Integer proId) {
+		this.proId = proId;
 	}
 	public Integer getRmoId() {
 		return rmoId;

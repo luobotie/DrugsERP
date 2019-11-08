@@ -27,6 +27,7 @@ public class EmployeeController {
 	private EmployeeBiz biz;
 	 @Autowired
 	private LoginLogBiz loginBiz; 
+	 
 	 @RequestMapping("/login.do")
 	 @ResponseBody
      public boolean login(String loginUsername,String loginPassword ){

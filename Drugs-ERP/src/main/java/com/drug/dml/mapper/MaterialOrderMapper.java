@@ -2,13 +2,13 @@ package com.drug.dml.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
-import com.drug.dml.entity.DrugsMonthPlan;
 import com.drug.dml.entity.MaterialOrder;
 
 @Repository
@@ -35,7 +35,7 @@ public interface MaterialOrderMapper {
 	 * @param orderId 订单ID
 	 * @return List<materialOrder> 
 	 */
-	@Select("SELECT m_i.`materialId`,m_i.`materialName`,d_p_d.`productionQuantity` FROM materialOrder AS m_o "
+	@Select("SELECT m_i.`materialId`,m_i.`materialName`,d_p_d.`productionQuantity`,p_i.`proId` FROM materialOrder AS m_o "
 			+"JOIN orderproduct AS o_p "
 			+"ON m_o.`orderId` = o_p.`orderId` "
 			+"JOIN Dailyplan AS d_p "				
@@ -97,5 +97,11 @@ public interface MaterialOrderMapper {
 	@Update("UPDATE materialOrder SET auditingdate = #{auditingdate},moStatus = '已审核',auditorId = 1 where moId = #{moId}")
 	Integer updateThisMaterialOrderStatus(MaterialOrder materialOrder);
 	
-	
+	/**
+	 * 根据领料单ID删除领料信息
+	 * @param moId 领料单ID
+	 * @return  Integer
+	 */
+	@Delete("delete from materialOrder where moId = #{moId}")
+	Integer deleteMaterialOrderByMoId(Integer moId);
 }

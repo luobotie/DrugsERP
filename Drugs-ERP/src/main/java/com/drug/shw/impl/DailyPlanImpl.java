@@ -19,6 +19,7 @@ import com.drug.shw.biz.DailyPlanBiz;
 import com.drug.shw.entity.DailyPlanDetails;
 import com.drug.shw.entity.Dailyplan;
 import com.drug.shw.entity.Drug;
+import com.drug.shw.entity.FinalGoodsInventoryshw;
 import com.drug.shw.entity.orderproduct;
 import com.drug.shw.mapper.DailyPlanDao;
 @Service
@@ -127,6 +128,11 @@ public class DailyPlanImpl implements DailyPlanBiz {
 	public Integer updatedailyPlanDetails(DailyPlanDetails dailyPlanDetails) {
 		
 		return dailyPlandao.updateDailyPlanDetails(dailyPlanDetails);
+	}
+	@Override
+	public ArrayList<FinalGoodsInventoryshw> selectFinalGoodsInventory() {
+		
+		return dailyPlandao.selectFinalGoodsInventory();
 	}
 
 }

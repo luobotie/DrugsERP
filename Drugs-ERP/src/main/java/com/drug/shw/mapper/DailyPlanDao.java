@@ -10,6 +10,7 @@ import java.util.Map;
 import com.drug.shw.entity.DailyPlanDetails;
 import com.drug.shw.entity.Dailyplan;
 import com.drug.shw.entity.Drug;
+import com.drug.shw.entity.FinalGoodsInventoryshw;
 
 public interface DailyPlanDao {
 	Integer insertDailyplan(Dailyplan dailplan);
@@ -21,5 +22,6 @@ public interface DailyPlanDao {
 	Integer updateDailyplan(Map<String, Object> map);
 	ArrayList<DailyPlanDetails> selectdailyPlanDetails(Integer dpid);
 	Integer updateDailyPlanDetails(DailyPlanDetails dailyPlanDetails);
+	ArrayList<FinalGoodsInventoryshw> selectFinalGoodsInventory();
 }       
 

@@ -2,6 +2,10 @@ package com.drug.dml.entity;
 
 import org.springframework.stereotype.Component;
 
+/**
+ * 产品图片实体类
+ * @author dml
+ */
 @Component
 public class ProductImage {
 	private Integer imgId; 			// 图片主键

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.drug.shw.biz.DailyPlanBiz;
 import com.drug.shw.entity.DailyPlanDetails;
+import com.drug.shw.entity.FinalGoodsInventoryshw;
 
 @Controller
 public class DailyPlanController {
@@ -41,5 +42,14 @@ public Integer insertDailyplan(String monthPlanId,String monthPlanNum){
 	@ResponseBody
 	public Integer updatedailyPlanDetails(DailyPlanDetails dailyPlanDetails){
 		return dailyPlanBiz.updatedailyPlanDetails(dailyPlanDetails);
+	}
+	@RequestMapping("selcetFinalGoodsInventory.do")
+	@ResponseBody
+	public ArrayList<FinalGoodsInventoryshw> selcetFinalGoodsInventory(DailyPlanDetails dailyPlanDetails){
+		ArrayList<FinalGoodsInventoryshw> list = dailyPlanBiz.selectFinalGoodsInventory();
+		for (FinalGoodsInventoryshw o: list) {
+			System.err.println("chineseName = " + o.getChineseName());
+		}
+		return list;
 	}
 }

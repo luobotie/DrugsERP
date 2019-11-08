@@ -61,4 +61,9 @@ public class MaterialOrderBizImpl implements MaterialOrderBiz{
 		return materialOrderMapper.updateThisMaterialOrderStatus(materialOrder);
 	}
 
+	@Override
+	public Integer deleteMaterialOrderByMoId(Integer moId) {
+		return materialOrderMapper.deleteMaterialOrderByMoId(moId);
+	}
+
 }

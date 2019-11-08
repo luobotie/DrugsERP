@@ -6,7 +6,14 @@
 <meta charset="utf-8">
 <title>月生产计划</title>
 <link rel="stylesheet" href="../layui/css/layui.css">
+<link rel="stylesheet" href="../layui/css/notice.css" />
+
 <script src="../layui/layui.js"></script>
+<script type="text/javascript" >
+		 layui.config({
+		        base: '../layui/'
+		    });
+  </script>
 <script type="text/javascript" src="../../js/jquery-3.4.1.min.js"></script>
 <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 -->
 <style>
@@ -42,8 +49,12 @@
 <script type="text/html" id="toolbarDemo">
   <div class="layui-btn-container" style="margin-top:20px;padding-left:20px;">
     <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckData"><i class="layui-icon layui-icon-add-1"></i>制定月计划 </button>
+<<<<<<< HEAD
+=======
+	<button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="details"><i class="layui-icon layui-icon-edit"></i>修改月计划</button>
+>>>>>>> branch 'master' of https://github.com/luobotie/DrugsERP.git
     <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="getCheckLength"><i class="layui-icon layui-icon-add-1"></i>制定日计划</button>
-    <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="isAll"><i class="layui-icon layui-icon-friends"></i>审核月计划</button>
+    <button class="layui-btn layui-btn-sm layui-btn-normal" lay-event="isAll"><i class="layui-icon layui-icon-survey"></i>审核月计划</button>
   </div>
 </script>
 
@@ -77,13 +88,30 @@
 			<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="manageMe">删除</a>
 	</script>
 	<script>
-		layui.use([ 'table', 'laydate', 'element', 'form', 'layer' ],
+		layui.use([ 'table', 'laydate', 'element', 'form', 'layer' ,'notice'],
 				function() {
+					var $ = layui.jquery; 
 					var layer = layui.layer;
 					var element = layui.element;
 					var table = layui.table;
 					var laydate = layui.laydate;
 					var form = layui.form;
+					var notice = layui.notice;
+					
+					//初始化配置，同一样式只需要配置一次，非必须初始化，有默认配置
+					notice.options = {
+						closeButton: true, //显示关闭按钮
+						debug: false, //启用debug
+						positionClass: "toast-top-center", //弹出的位置,
+						showDuration: "500", //显示的时间
+						hideDuration: "1000", //消失的时间
+						timeOut: "2000", //停留的时间
+						extendedTimeOut: "1000", //控制时间
+						showEasing: "swing", //显示时的动画缓冲方式
+						hideEasing: "linear", //消失时的动画缓冲方式
+						iconClass: 'layui-icon-tips', // 自定义图标，有内置，如不需要则传空 支持layui内置图标/自定义iconfont类名
+						onclick: null, // 点击关闭回调
+					};
 					
 					var option = "<option value='-1'>请选择药品</option>";//初始化option的选项
 			        $.ajax({
@@ -164,7 +192,10 @@
 							title : '审核人编号',
 							unresize : true
 						}, {
+<<<<<<< HEAD
 							
+=======
+>>>>>>> branch 'master' of https://github.com/luobotie/DrugsERP.git
 							width : 178,
 							align : 'center',
 							toolbar : '#barDemo',
@@ -235,10 +266,12 @@
 																  dataType:'json',
 																  success:function(data){
 																	if(data == '1'){
-																		layer.msg('执行成功');
+																		//layer.msg('执行成功');
+																		notice.success("执行成功");
 																		table2.reload();
 																	}else{
-																		layer.msg('执行失败');
+																		//layer.msg('执行失败');
+																		notice.error("执行失败");
 																	}
 																  }
 											                  //return false;
@@ -252,7 +285,8 @@
 													});
 												});
 											}else{
-												layer.msg('请添加商品');
+												//layer.msg('请添加商品');
+												notice.warning("请添加商品");
 											}
 										  }
 					                }); 
@@ -280,13 +314,27 @@
 						            	//获取表单区域所有值
 						            	//alert(data.field.titletype);
 						            	//console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+<<<<<<< HEAD
 						            	$.ajax({
+=======
+							    	var typeselectBox = $("#typeselectBox").val();
+									var produceNum = $("#produceNum").val();
+									if(typeselectBox == '-1'||produceNum == ''||produceNum <= '0'){
+										/* layer.msg('信息有误', {
+						            		  icon: 2,
+						            		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+						            		}); */
+										notice.info("信息有误");
+									}else{
+										$.ajax({
+>>>>>>> branch 'master' of https://github.com/luobotie/DrugsERP.git
 											  url:'../../insertMonthPlanDetails.do',
 											  data:$("#we").serialize(),
 											  type:'post',
 											  dataType:'json',
 											  success:function(data){
 												if(data == '1'){
+<<<<<<< HEAD
 													layer.msg('添加成功');
 													table.render({
 														elem : '#test2',
@@ -321,8 +369,14 @@
 															unresize : true
 														} ] ]
 													});
+=======
+													//layer.msg('添加成功');
+													notice.success("添加成功");
+													table3.reload();
+>>>>>>> branch 'master' of https://github.com/luobotie/DrugsERP.git
 												}else{
-													layer.msg('添加失败');
+													//layer.msg('添加失败');
+													notice.error("添加失败");
 												}
 											  }
 						                  //return false;
@@ -364,6 +418,164 @@
 									unresize : true
 								} ] ]
 							});
+<<<<<<< HEAD
+=======
+							break;
+						case 'details':
+							if (data.length == 1) {
+								var index = layer.open({
+									type : 1,//样式
+									shade : 0,
+									offset : [ '5%', '15%' ],//设置位移
+									btn : [ '确认', '取消' ], 
+									yes : function(index, layero) {
+										/* //点击确认添加,验证是否添加了商品
+										$.ajax({
+											  url:'../../selectMonthPlanDetailIfNullAgain.do?monthPlanId='+data[0].monthPlanId,
+											  type:'post',
+											  dataType:'json',
+											  success:function(data){
+												if(data != '0'){
+													
+												}else{
+													layer.msg('请添加商品');
+												}
+											  }
+						                });  */
+											var index88 = layer.open({
+												type : 1,
+												shade : 0.25,
+												area : [ '400px', '350px' ],
+												content : $('#nameAndTimeDiv'), //这里content是一个DOM，注意：最好该元素要存放在body最外层，否则可能被其它的相对元素所影响
+												success : function(layero, index) {
+													form.render();
+												},
+												btn : [ '确认', '取消' ],
+												yes : function(layero) {
+														$.ajax({
+															  url:'../../insertAndUpdateAgain.do?monthPlanId='+data[0].monthPlanId,
+															  data:$("#formIdOne").serialize(),
+															  type:'post',
+															  dataType:'json',
+															  success:function(data){
+																if(data == '1'){
+																	//layer.msg('执行成功');
+																	notice.success("执行成功");
+																	table2.reload();
+																}else{
+																	//layer.msg('执行失败');
+																	notice.error("执行失败");
+																}
+															  }
+										                  //return false;
+										                }); 
+														layer.close(index);
+														layer.close(index88);
+												},//yes按钮结束
+												btn2 : function(index, layero) {
+													layer.close(index88);
+												}
+											});
+									},
+									btn2 : function(index, layero) {
+										layer.close(index);
+									},
+									area : [ '880px', '550px' ],
+									content : $("#table2Div"),
+									success : function(layero) {
+										var mask = $(".layui-layer-shade");
+										mask.appendTo(layero.parent());
+									},
+									end : function() {
+										$('[lay-id="test2"]').css("display", "none");
+									}
+								});
+								
+								//监听事件
+								table.on('toolbar(test2)', function(obj){
+								  var checkStatus = table.checkStatus(obj.config.id);
+								  switch(obj.event){
+								    case 'update2':
+								    	//监听button
+							            	//获取表单区域所有值
+							            	//alert(data.field.titletype);
+							            	//console.log(data.field) //当前容器的全部表单字段，名值对形式：{name: value}
+								    	var typeselectBox1 = $("#typeselectBox1").val();
+										var produceNum2 = $("#produceNum2").val();
+										if(typeselectBox1 == '-1'||produceNum2 == ''||produceNum2 <= '0'){
+											/* layer.msg('信息有误', {
+							            		  icon: 2,
+							            		  time: 2000 //2秒关闭（如果不配置，默认是3秒）
+							            		}); */
+											notice.info("信息有误");
+										}else{
+											$.ajax({
+												  url:'../../insertMonthPlanDetailsAgain.do?monthPlanId='+data[0].monthPlanId,
+												  data:$("#wo").serialize(),
+												  type:'post',
+												  dataType:'json',
+												  success:function(data){
+													if(data == '1'){
+														//layer.msg('添加成功');
+														notice.success("添加成功");
+														table.reload("test",{});
+														table4.reload();
+													}else{
+														//layer.msg('添加失败');
+														notice.error("添加失败");
+													}
+												  }
+							                  //return false;
+							                }); 
+										}
+								    break;
+								  };
+								});
+								
+								var table4 = table.render({
+									elem : '#test2',
+									url : '../../selectMonthPlanDetailsAgain.do?monthPlanId='+data[0].monthPlanId,
+									toolbar : '#toolbarDemo3',
+									cols : [ [ {
+										type : 'numbers'
+									}, {
+										field : 'monthPlanId',
+										title : '月计划编号',
+										unresize : true
+									}, {
+										field : 'monthPlanDetailId',
+										title : '月计划详情编号',
+										hide : true,
+										unresize : true
+									}, {
+										field : 'proId',
+										title : '药品编号',
+										unresize : true
+									}, {
+										field : 'chineseName',
+										title : '药品名称',
+										edit : 'text',
+										unresize : true
+									}, {
+										field : 'produceNum',
+										title : '生产数量',
+										edit : 'text',
+										unresize : true
+									}, {
+										align : 'center',
+										toolbar : '#barDemo2',
+										unresize : true
+									} ] ]
+								});
+								
+							} else if (data.length > 1) {
+								//layer.msg('最多只能选择一条月计划');
+								notice.warning("最多只能选择一条月计划");
+							} else {
+								//layer.msg('请选择一条月计划');
+								notice.warning("请选择一条月计划");
+							}
+>>>>>>> branch 'master' of https://github.com/luobotie/DrugsERP.git
 							break;
 						case 'getCheckLength':
 							var data = checkStatus.data;
@@ -375,17 +587,21 @@
 										,
 										btn2 : function(index, layero) {
 											layer.close(index2);
-											
 										}
 									}, function() {
 										$.ajax({
 											  url:'../../insertDailyplan.do',
 											  data:{'monthPlanId':data[0].monthPlanId,'monthPlanNum':data[0].monthPlanNum},
+<<<<<<< HEAD
 											  type:'post'
 											  ,
+=======
+											  type:'post',
+>>>>>>> branch 'master' of https://github.com/luobotie/DrugsERP.git
 											  dataType:'json',
 											  success:function(data){
-													  layer.msg('日计划制定成功,可到日生产计划查看详情');
+													  //layer.msg('日计划制定成功,可到日生产计划查看详情');
+													  notice.success("日计划制定成功,可到日生产计划查看详情");
 													  table2.reload(); 
 											  }
 						                  //return false;
@@ -393,15 +609,17 @@
 
 									});
 								} else {
-									layer.msg('该月计划未审核');
+									//layer.msg('该月计划未审核');
+									notice.warning("该月计划未审核");
 								}
 
 							} else if (data.length > 1) {
-								layer.msg('最多只能选择一条月计划');
+								//layer.msg('最多只能选择一条月计划');
+								notice.warning("最多只能选择一条月计划");
 							} else {
-								layer.msg('请选择一条月计划');
+								//layer.msg('请选择一条月计划');
+								notice.warning("请选择一条月计划");
 							}
-
 							break;
 						case 'isAll':
 							var data = checkStatus.data;
@@ -433,10 +651,12 @@
 													  dataType:'json',
 													  success:function(data){
 														  if(data == '1'){
-															  layer.msg('计划审核成功');
+															  //layer.msg('计划审核成功');
+															  notice.success("计划审核成功");
 															  table2.reload();
 														  }else{
-															  layer.msg('计划审核失败');
+															  //layer.msg('计划审核失败');
+															  notice.error("计划审核失败");
 														  }
 													  }
 								                  //return false;
@@ -451,13 +671,16 @@
 
 									});
 								} else {
-									layer.msg('该月计划已审核');
+									//layer.msg('该月计划已审核');
+									notice.warning("该月计划已审核");
 								}
 
 							} else if (data.length > 1) {
-								layer.msg('最多只能审核一条月计划');
+								//layer.msg('最多只能审核一条月计划');
+								notice.warning("最多只能审核一条月计划");
 							} else {
-								layer.msg('请选择一条要审核月计划');
+								//layer.msg('请选择一条要审核月计划');
+								notice.warning("请选择一条要审核月计划");
 							}
 							break;
 						}
@@ -520,10 +743,12 @@
 									  type:'post',
 									  success:function(data){
 										if(data == '1'){
-											layer.msg('删除成功');
+											//layer.msg('删除成功');
+											notice.success("删除成功");
 											table2.reload();
 										}else{
-											layer.msg('删除失败');
+											//layer.msg('删除失败');
+											notice.error("删除失败");
 										}
 									  }
 				                  //return false;
@@ -532,9 +757,10 @@
 							});
 						} else if (obj.event === 'edit') {
 							if (data.reviewStatus == '未审核') {
-								layer.alert('当前订单未审核,无法修改生产状态', {
+								/* layer.alert('当前订单未审核,无法修改生产状态', {
 									icon : 2
-								});
+								}); */
+								notice.warning("当前订单未审核,无法修改生产状态");
 							} else if (data.reviewStatus == '已审核') {
 
 								var index = layer.open({
@@ -633,10 +859,17 @@
 							  dataType:'json',
 							  success:function(data){
 								if(data == '1'){
+<<<<<<< HEAD
 									layer.msg('修改成功');
 									table2.reload();
+=======
+									//layer.msg('修改成功');
+									notice.success("修改成功");
+									table.reload('test',{});
+>>>>>>> branch 'master' of https://github.com/luobotie/DrugsERP.git
 								}else{
-									layer.msg('修改失败');
+									//layer.msg('修改失败');
+									notice.error("修改失败");
 								}
 							  }
 						  });
@@ -681,10 +914,22 @@
 									  type:'post',
 									  success:function(data){
 										if(data == '1'){
+<<<<<<< HEAD
 											layer.msg('删除成功');
 											table2.reload();
+=======
+											//layer.msg('删除成功');
+											notice.success("删除成功");
+											table.reload("test2",{});
+											table.reload("test",{});
+											/* notice.warning("成功");
+											notice.info("提示信息：毛都没有...");
+											notice.error("大佬，我咋知道怎么肥四！");
+											notice.success("大佬，我咋知道怎么肥四！"); */
+>>>>>>> branch 'master' of https://github.com/luobotie/DrugsERP.git
 										}else{
-											layer.msg('删除失败');
+											//layer.msg('删除失败');
+											notice.error("删除失败");
 										}
 									  }
 				                  //return false;

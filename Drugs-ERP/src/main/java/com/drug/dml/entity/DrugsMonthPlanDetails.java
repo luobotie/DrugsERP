@@ -1,9 +1,12 @@
 package com.drug.dml.entity;
 
+import org.springframework.stereotype.Component;
+
 /**
  * 月计划详情实体类
  * @author dml
  */
+@Component
 public class DrugsMonthPlanDetails {
 	private Integer monthPlanDetailId;	// 生产月计划明细编号(主键)
 	private Integer monthPlanId;		// 生产月计划编号（外键 表：drugs_monthPlan  主键：monthPlanId） REFERENCES drugs_monthPlan(monthPlanId)
